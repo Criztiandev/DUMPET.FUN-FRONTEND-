@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 
 import { MutationOptions, QueryKey, useMutation } from "@tanstack/react-query";
-import { ErrorResponse } from "@/feature/shared/other/error.interface";
 
 interface Props extends MutationOptions {
   queryKey?: QueryKey;
@@ -12,7 +11,7 @@ const useMutate = (options: Props) => {
     ...options,
     onError: (error: AxiosError) => {
       if (error instanceof AxiosError && error.response) {
-        const { error: errorMessage } = error.response?.data as ErrorResponse;
+        const { error: errorMessage } = error.response?.data as any;
         throw new Error(errorMessage);
       } else if (error?.request) {
         throw new Error(

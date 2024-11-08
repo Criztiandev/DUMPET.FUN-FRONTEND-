@@ -8,7 +8,7 @@ import {
   FormControl,
   FormDescription,
   FormMessage,
-} from "@/common/components/ui/form";
+} from "@/common/components/atoms/ui/form";
 import { cn } from "@/common/lib/utils";
 import { Button } from "../ui/button";
 

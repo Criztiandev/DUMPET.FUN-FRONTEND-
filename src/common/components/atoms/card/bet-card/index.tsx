@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 export interface Props extends BetPayload {}
 
-const BetCard = ({ url, title, details, author, mcap, createdAt }: Props) => {
+const BetCard = ({ title, details, author, mcap, createdAt }: Props) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {

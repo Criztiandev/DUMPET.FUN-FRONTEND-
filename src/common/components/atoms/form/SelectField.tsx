@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/common/components/ui/select";
+} from "@/common/components/atoms/ui/select";
 
 import { FC, SelectHTMLAttributes } from "react";
 import { useFormContext } from "react-hook-form";

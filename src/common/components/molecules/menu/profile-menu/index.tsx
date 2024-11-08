@@ -22,11 +22,9 @@ import {
   AvatarFallback,
 } from "@/common/components/atoms/ui/avatar";
 import { useNavigate } from "react-router-dom";
-import { useActiveAddress } from "arweave-wallet-kit";
 import LogoutDrawer from "../../drawer/logout-drawer";
 
 function ProfileDropdownMenu() {
-  const address = useActiveAddress();
   const navigate = useNavigate();
 
   const handleNavigateAddress = () => {

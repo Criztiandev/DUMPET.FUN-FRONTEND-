@@ -1,4 +1,3 @@
-import { TrendingUp } from "lucide-react";
 import {
   Bar,
   BarChart as BarChartParent,
@@ -9,7 +8,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/common/components/atoms/ui/card";
