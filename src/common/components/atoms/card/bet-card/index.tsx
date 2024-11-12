@@ -14,11 +14,11 @@ const BetCard = ({ title, details, author, mcap, createdAt }: Props) => {
   };
   return (
     <Card
-      className="grid grid-cols-[44%_auto] cursor-pointer hover:border hover:border-stone-400"
+      className="flex flex-col lg:grid lg:grid-cols-[44%_auto] cursor-pointer hover:border hover:border-stone-400"
       onClick={handleNavigate}
     >
       <CardHeader className="p-4 ">
-        <div className="w-full h-full rounded-md bg-[#F0F0F0]"></div>
+        <div className="w-full h-[200px] lg:h-full rounded-md bg-[#F0F0F0] "></div>
       </CardHeader>
       <CardContent className="p-4">
         <div className="mb-4">

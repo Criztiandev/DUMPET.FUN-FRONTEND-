@@ -3,6 +3,7 @@ import MainScreen from "./pages/main-screen";
 import NotFoundScreen from "@/common/components/page/helper/no-found";
 import DetailsScreen from "./pages/details-screen";
 import ProfileScreen from "./pages/profile-screen";
+import CreateBetScreen from "./pages/create-bet-screen";
 
 const routes = [
   { path: "*", element: <NotFoundScreen /> },
@@ -17,6 +18,10 @@ const routes = [
   {
     path: "/profile",
     element: <ProfileScreen />,
+  },
+  {
+    path: "/create/bet",
+    element: <CreateBetScreen />,
   },
 ];
 

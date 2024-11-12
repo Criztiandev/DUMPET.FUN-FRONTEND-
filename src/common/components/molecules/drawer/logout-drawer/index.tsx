@@ -9,18 +9,28 @@ import {
   DrawerTrigger,
 } from "@/common/components/atoms/ui/drawer";
 import { Button } from "@/common/components/atoms/ui/button";
-import { LogOut } from "lucide-react";
 import { Card, CardContent } from "@/common/components/atoms/ui/card";
 import { DisconnectWalletButton } from "@/common/components/atoms/button/wallet-connect-button";
+import { LogOut } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/common/lib/utils";
 
 const LogoutDrawer = () => {
+  const isSmallScreen = useIsMobile();
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <div className="space-x-2 flex px-3 py-1 cursor-pointer">
-          <LogOut size={22} />
-          <span>Log out</span>
-        </div>
+        <Button
+          className={cn(
+            `w-full space-x-2 items-center flex  px-3 ${
+              isSmallScreen ? "justify-center" : "justify-start"
+            }`
+          )}
+          variant={isSmallScreen ? "outline" : "ghost"}
+        >
+          <LogOut size={18} />
+          <span>Logout</span>
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm">

@@ -13,12 +13,16 @@ import { useConnection } from "arweave-wallet-kit";
 import { ConnectWalletButton } from "@/common/components/atoms/button/wallet-connect-button";
 import ProfileDropdownMenu from "@/common/components/molecules/menu/profile-menu";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
+import MobileMenu from "@/common/components/molecules/menu/mobile-menu";
+import CreateButton from "@/common/components/atoms/button/create-button";
 
 const Topbar = () => {
-  const { theme } = useTheme();
+  const isMobile = useIsMobile();
   const { connected } = useConnection();
+
   return (
-    <header className="p-4 flex justify-between items-center">
+    <header className="p-4 flex justify-between items-center border w-full">
       <Link to="/">
         <XStack className="items-center gap-4">
           <Avatar className="w-14 h-14">
@@ -28,37 +32,37 @@ const Topbar = () => {
           <div className="font-bold items-center text-xl">DUMPET.FUN</div>
         </XStack>
       </Link>
-      <div className="flex gap-4">
-        <div className="space-x-2">
-          {!connected && (
-            <>
-              <Button
-                size="icon"
-                variant={theme === "light" ? "outline" : "default"}
-              >
-                <FacebookIcon size={22} />
-              </Button>
-              <Button
-                size="icon"
-                variant={theme === "light" ? "outline" : "default"}
-              >
-                <InstagramIcon size={22} />
-              </Button>
-
-              <Button
-                size="icon"
-                variant={theme === "light" ? "outline" : "default"}
-              >
-                <TwitterIcon size={22} />
-              </Button>
-            </>
-          )}
-          <ThemeButton />
+      {isMobile ? (
+        <MobileMenu />
+      ) : (
+        <div className="flex gap-4">
+          <div className="space-x-2 flex">
+            {!connected ? <Socials /> : <CreateButton />}
+            <ThemeButton />
+          </div>
+          {connected ? <ProfileDropdownMenu /> : <ConnectWalletButton />}
         </div>
-        {connected ? <ProfileDropdownMenu /> : <ConnectWalletButton />}
-      </div>
+      )}
     </header>
   );
 };
 
 export default Topbar;
+
+const Socials = () => {
+  const { theme } = useTheme();
+  return (
+    <div className="flex gap-2">
+      <Button size="icon" variant={theme === "light" ? "outline" : "default"}>
+        <FacebookIcon size={22} />
+      </Button>
+      <Button size="icon" variant={theme === "light" ? "outline" : "default"}>
+        <InstagramIcon size={22} />
+      </Button>
+
+      <Button size="icon" variant={theme === "light" ? "outline" : "default"}>
+        <TwitterIcon size={22} />
+      </Button>
+    </div>
+  );
+};

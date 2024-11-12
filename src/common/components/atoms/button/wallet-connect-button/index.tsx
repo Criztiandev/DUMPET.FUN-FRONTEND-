@@ -13,7 +13,7 @@ export const WalletButton = ({ children, ...props }: WalletButtonProps) => {
   return (
     <Button
       {...props}
-      className={cn(`space-x-2 ${theme === "dark" && "bg-purple-600"}`)}
+      className={cn(`space-x-2 w-full`)}
       variant={theme === "light" ? "default" : "outline"}
     >
       <Wallet size={22} />
