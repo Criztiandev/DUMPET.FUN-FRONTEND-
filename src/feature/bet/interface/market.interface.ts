@@ -1,4 +1,5 @@
 export interface Market {
+  url?: string;
   BlockHeight: string;
   Creator: string;
   Duration: string;
