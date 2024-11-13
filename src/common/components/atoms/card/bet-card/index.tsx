@@ -1,12 +1,12 @@
 import { Card, CardHeader, CardContent } from "../../ui/card";
 import { XStack } from "../../ui/stack";
 import { Badge } from "../../ui/badge";
-import { BetPayload } from "@/feature/bet/interface/bet-card.interface";
 import { useNavigate } from "react-router-dom";
 import { Clock, Flame } from "lucide-react";
 import { Separator } from "../../ui/separator";
+import { Market } from "@/feature/bet/interface/market.interface";
 
-export interface Props extends BetPayload {}
+export interface Props extends Market {}
 
 const BetCard = ({
   Title,
