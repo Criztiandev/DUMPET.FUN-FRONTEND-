@@ -3,14 +3,25 @@ import { XStack } from "../../ui/stack";
 import { Badge } from "../../ui/badge";
 import { BetPayload } from "@/feature/bet/interface/bet-card.interface";
 import { useNavigate } from "react-router-dom";
+import { Clock, Flame } from "lucide-react";
+import { Separator } from "../../ui/separator";
 
 export interface Props extends BetPayload {}
 
-const BetCard = ({ title, details, author, mcap, createdAt }: Props) => {
+const BetCard = ({
+  Title,
+  Timestamp,
+  TokenTxId,
+  BlockHeight,
+  Creator,
+  Duration,
+  OptionA,
+  OptionB,
+}: Props) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate(`/details/${12313123}`);
+    navigate(`/details/${TokenTxId}`);
   };
   return (
     <Card
@@ -22,27 +33,40 @@ const BetCard = ({ title, details, author, mcap, createdAt }: Props) => {
       </CardHeader>
       <CardContent className="p-4">
         <div className="mb-4">
-          <h3 className="font-bold text-lg">
-            {title.length > 25
-              ? `${title.substring(0, 20)}...`
-              : title || "Thonald Dump"}
+          <h3 className="font-bold text-lg capitalize">
+            {Title.length > 25
+              ? `${Title.substring(0, 20)}...`
+              : Title || "Thonald Dump"}
           </h3>
           <XStack className="gap-2 opacity-60">
-            <span className="text-sm font-semibold">Created by</span>
-            <span className="text-purple-400 font-semibold text-sm">
-              {author || "Joe Doe"}
+            <span className="text-sm ">Created by</span>
+            <span className="text-purple-400  text-sm">
+              {Creator.substring(0, 5) + "..." + Creator.substring(10, 15) ||
+                "Joe Doe"}
             </span>
           </XStack>
         </div>
         <div className="flex flex-col">
-          <span className="text-sm">{details}</span>
+          <span className="flex flex-col gap-2  ">
+            <span className="flex gap-2 text-sm items-center">
+              <Flame />
+              {OptionA}
+            </span>
+            <span className="flex gap-2 text-sm items-center">
+              <Flame />
+              {OptionB}
+            </span>
+
+            <Separator />
+
+            <span className="flex gap-2 text-sm items-center">
+              <Clock />
+              {Duration} Sec
+            </span>
+          </span>
           <div className="flex justify-start items-start my-4 flex-col space-y-2">
-            <span className="font-semibold">MCAP: ${mcap}</span>
-            <Badge>
-              {createdAt.toString().length > 3
-                ? `${createdAt.toString().substring(0, 3)}...`
-                : createdAt}{" "}
-              days ago
+            <Badge className="space-x-2">
+              <span>{getDaysFromTimestamp(Number(Timestamp))}</span>
             </Badge>
           </div>
         </div>
@@ -52,3 +76,18 @@ const BetCard = ({ title, details, author, mcap, createdAt }: Props) => {
 };
 
 export default BetCard;
+
+function getDaysFromTimestamp(timestamp: number): string {
+  const date = new Date(timestamp);
+  const now = new Date();
+
+  // Get difference in milliseconds
+  const diffTime = date.getTime() - now.getTime();
+  // Convert to days and round
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) {
+    return `${Math.abs(diffDays)} days ago`;
+  }
+  return `${diffDays} days left`;
+}
