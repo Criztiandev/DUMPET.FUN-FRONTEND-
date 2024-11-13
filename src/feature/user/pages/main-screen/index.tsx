@@ -5,10 +5,17 @@ import FilterMenu from "@/common/components/molecules/menu/filter-menu";
 import SearchInput from "@/common/components/molecules/input/search-input";
 import UseFetchMarket from "../../hooks/market/use-fetch-market";
 import { Button } from "@/common/components/atoms/ui/button";
+import { Market } from "@/feature/bet/interface/market.interface";
 
 const MainScreen = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     UseFetchMarket();
+
+  // Combine all markets from all pages into a single array
+  const allMarkets =
+    data?.pages?.reduce((acc, page) => {
+      return acc.concat(page.markets || []);
+    }, []) || [];
 
   return (
     <div className="min-h-screen w-full">
@@ -28,16 +35,11 @@ const MainScreen = () => {
 
         {/* Markets Grid Section */}
         <section className="space-y-8">
-          {data.pages.map((page, pageIndex) => (
-            <div
-              key={pageIndex}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
-            >
-              {page.markets?.map((market: any) => (
-                <BetCard key={market.id || market.title} {...market} />
-              ))}
-            </div>
-          ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {allMarkets.map((market: Market) => (
+              <BetCard key={market.TokenTxId || market.Title} {...market} />
+            ))}
+          </div>
 
           {/* Load More Button */}
           {hasNextPage && (
