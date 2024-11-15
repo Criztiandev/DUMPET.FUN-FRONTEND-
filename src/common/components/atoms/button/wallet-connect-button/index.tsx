@@ -1,10 +1,11 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { Button, ButtonProps } from "../../ui/button";
 import { cn } from "@/common/lib/utils";
 import { useTheme } from "@/common/components/template/provider/theme-provider";
 import { Wallet } from "lucide-react";
 import useConnectWallet from "@/common/hooks/wallet/useConnectWallet";
 import useDisconnectWallet from "@/common/hooks/wallet/useDisconnectWallet";
+import { useConnection } from "arweave-wallet-kit";
 
 interface WalletButtonProps extends ButtonProps, PropsWithChildren {}
 
@@ -14,7 +15,7 @@ export const WalletButton = ({ children, ...props }: WalletButtonProps) => {
     <Button
       {...props}
       className={cn(`space-x-2 w-full`)}
-      variant={theme === "light" ? "default" : "outline"}
+      variant={theme === "light" ? "default" : "default"}
     >
       <Wallet size={22} />
       <span>{children}</span>
@@ -23,9 +24,21 @@ export const WalletButton = ({ children, ...props }: WalletButtonProps) => {
 };
 
 export const ConnectWalletButton = () => {
+  const { connected } = useConnection();
   const { mutate, isPending } = useConnectWallet();
+
+  const onToggle = () => {
+    mutate(); // Use the mutation instead of calling connect directly
+  };
+
+  useEffect(() => {
+    if (connected) {
+      // Check the connected state, not the connect function
+      console.log("Wallet is connected");
+    }
+  }, [connected]);
   return (
-    <WalletButton onClick={() => mutate()} disabled={isPending}>
+    <WalletButton onClick={onToggle} disabled={isPending}>
       Connect Wallet
     </WalletButton>
   );
@@ -34,8 +47,11 @@ export const ConnectWalletButton = () => {
 export const DisconnectWalletButton = () => {
   const { mutate, isPending } = useDisconnectWallet();
 
+  const onToggle = () => {
+    mutate();
+  };
   return (
-    <WalletButton onClick={() => mutate()} disabled={isPending}>
+    <WalletButton onClick={onToggle} disabled={isPending}>
       Disconnect Wallet
     </WalletButton>
   );

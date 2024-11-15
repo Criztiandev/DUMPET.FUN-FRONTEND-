@@ -1,8 +1,18 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { dryrun } from "@permaweb/aoconnect";
+import useMarketStore from "@/feature/market/store/market.store";
+import {
+  Market,
+  MarketResponse,
+} from "@/feature/market/interface/market.interface";
+import { useEffect } from "react";
+
+// sort the market from latest to old
 
 const UseFetchMarket = () => {
-  return useSuspenseInfiniteQuery({
+  const { setMarkets, markets } = useMarketStore();
+
+  const query = useSuspenseInfiniteQuery({
     queryKey: ["/GET /market/list"],
     queryFn: async ({ pageParam = 1 }) => {
       const { Messages } = await dryrun({
@@ -13,9 +23,7 @@ const UseFetchMarket = () => {
         ],
       });
 
-      const payload = JSON.parse(Messages[0]?.Data);
-
-      console.log(payload);
+      const payload: MarketResponse = JSON.parse(Messages[0]?.Data);
 
       return {
         markets: payload.Markets,
@@ -29,6 +37,21 @@ const UseFetchMarket = () => {
     },
     initialPageParam: 1,
   });
+
+  useEffect(() => {
+    if (query.data) {
+      const allMarket = query.data.pages.reduce<Market[]>((acc, page) => {
+        return acc.concat(page.markets || []);
+      }, []);
+
+      // Only update if the markets have changed
+      if (JSON.stringify(allMarket) !== JSON.stringify(markets)) {
+        setMarkets(allMarket);
+      }
+    }
+  }, [query.data, setMarkets, markets]);
+
+  return query;
 };
 
 export default UseFetchMarket;

@@ -12,17 +12,11 @@ const ThemeButton = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
 
-  const selectedTheme = isSmallScreen
-    ? "outline"
-    : theme === "light"
-    ? "default"
-    : "default";
-
   return (
     <Button
       size={isSmallScreen ? "default" : "icon"}
       onClick={handleChangeTheme}
-      variant={selectedTheme}
+      variant="ghost"
       className={cn(`${isSmallScreen && "w-full"}`)}
     >
       {theme === "dark" ? (

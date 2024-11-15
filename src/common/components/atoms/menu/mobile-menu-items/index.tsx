@@ -8,7 +8,7 @@ const MobileMenuItems = (props: MobileTopbarItem) => {
   return (
     <DrawerClose asChild>
       <Button
-        variant="outline"
+        variant="ghost"
         className="w-full space-x-2"
         onClick={() => navigate(props.path)}
       >

@@ -9,17 +9,16 @@ const CreateButton = () => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate("/create/bet");
+    navigate("/create/market");
   };
 
   return (
     <Button
-      className={cn(`${isSmallScreen && "w-full"} space-x-2`)}
-      variant="outline"
+      className={cn(`${isSmallScreen && "w-full"} space-x-2 bg-primary`)}
       onClick={handleNavigate}
     >
       <Coins size={18} />
-      <span>Create Bet</span>
+      <span>Create</span>
     </Button>
   );
 };

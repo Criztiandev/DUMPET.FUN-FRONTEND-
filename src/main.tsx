@@ -15,7 +15,8 @@ import ErrorScreen from "./common/components/page/helper/error-screen/index.tsx"
 import { ThemeProvider } from "./common/components/template/provider/theme-provider/index.tsx";
 // @ts-ignore
 import { ArweaveWalletKit } from "arweave-wallet-kit";
-import { Toast, ToastProvider } from "./common/components/atoms/ui/toast.tsx";
+import { Toaster } from "./common/components/atoms/ui/toaster.tsx";
+import { Toaster as SoonerToaster } from "./common/components/atoms/ui/sonner.tsx";
 
 const queryClient = new QueryClient();
 
@@ -42,12 +43,11 @@ createRoot(document.getElementById("root")!).render(
                     ensurePermissions: true,
                   }}
                 >
-                  <ToastProvider>
-                    <SidebarProvider>
-                      <App />
-                      <Toast />
-                    </SidebarProvider>
-                  </ToastProvider>
+                  <SidebarProvider>
+                    <App />
+                    <Toaster />
+                    <SoonerToaster />
+                  </SidebarProvider>
                 </ArweaveWalletKit>
               </ErrorBoundary>
             )}

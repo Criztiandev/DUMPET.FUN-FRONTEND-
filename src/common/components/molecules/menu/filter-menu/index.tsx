@@ -12,7 +12,7 @@ const FilterMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button size="icon" className="w-[42px]" variant="outline">
+        <Button size="icon" className="w-[42px]" variant="ghost">
           <Settings size={22} />
         </Button>
       </DropdownMenuTrigger>

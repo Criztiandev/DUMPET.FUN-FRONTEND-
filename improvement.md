@@ -1,0 +1,1 @@
+1. move the authentication to the backend using nodejs for secure login and repsonsei,                      

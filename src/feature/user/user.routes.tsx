@@ -3,7 +3,7 @@ import MainScreen from "./pages/main-screen";
 import NotFoundScreen from "@/common/components/page/helper/no-found";
 import DetailsScreen from "./pages/details-screen";
 import ProfileScreen from "./pages/profile-screen";
-import CreateBetScreen from "./pages/create-bet-screen";
+import CreateBetScreen from "./pages/create-market-screen";
 
 const routes = [
   { path: "*", element: <NotFoundScreen /> },
@@ -12,7 +12,7 @@ const routes = [
     element: <MainScreen />,
   },
   {
-    path: "/details/:id",
+    path: "/market/details/:id",
     element: <DetailsScreen />,
   },
   {
@@ -20,7 +20,7 @@ const routes = [
     element: <ProfileScreen />,
   },
   {
-    path: "/create/bet",
+    path: "/create/market",
     element: <CreateBetScreen />,
   },
 ];

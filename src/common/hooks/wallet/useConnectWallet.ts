@@ -1,25 +1,27 @@
 import { useConnection } from "arweave-wallet-kit";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "../utils/use-toast";
 
 const useConnectWallet = () => {
-  const { connect } = useConnection();
-  const queryClient = useQueryClient();
+  const { connect, connected } = useConnection();
 
   return useMutation({
     mutationKey: ["connect-wallet"],
     mutationFn: async () => {
-      const result = await connect();
-      return result;
+      if (connected) {
+        throw new Error("Wallet is already connected");
+      }
+      await connect();
+
+      return true;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data);
       toast({
         title: "Success",
         description: "Wallet connected successfully",
         variant: "default",
       });
-      // Invalidate any queries that depend on wallet state
-      queryClient.invalidateQueries({ queryKey: ["wallet-status"] });
     },
     onError: (error) => {
       toast({

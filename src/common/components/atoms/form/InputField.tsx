@@ -42,7 +42,7 @@ const InputField: FC<Props> = ({ label, description, ...props }) => {
               ref={divRef}
               tabIndex={-1}
               className={cn(
-                "rounded-base flex items-center rounded-md border border-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                "rounded-base flex items-center rounded-md border dark:border-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
                 props.className
               )}
             >
@@ -61,7 +61,7 @@ const InputField: FC<Props> = ({ label, description, ...props }) => {
               <Input
                 {...props}
                 {...field}
-                className={cn("border-none bg-white")}
+                className={cn("border-none bg-primary/50 dark:bg-primary/20")}
               />
               {props.dir === "right" && props.icon && (
                 <Button

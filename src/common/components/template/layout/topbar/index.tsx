@@ -12,7 +12,7 @@ import ThemeButton from "@/common/components/atoms/button/theme-button";
 import { useConnection } from "arweave-wallet-kit";
 import { ConnectWalletButton } from "@/common/components/atoms/button/wallet-connect-button";
 import ProfileDropdownMenu from "@/common/components/molecules/menu/profile-menu";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileMenu from "@/common/components/molecules/menu/mobile-menu";
 import CreateButton from "@/common/components/atoms/button/create-button";
@@ -20,9 +20,10 @@ import CreateButton from "@/common/components/atoms/button/create-button";
 const Topbar = () => {
   const isMobile = useIsMobile();
   const { connected } = useConnection();
+  const location = useLocation();
 
   return (
-    <header className="p-4 flex justify-between items-center border w-full">
+    <header className=" absolute top-0 z-50 p-4 flex justify-between items-center  border-stone-50 w-full">
       <Link to="/">
         <XStack className="items-center gap-4">
           <Avatar className="w-14 h-14">
@@ -35,12 +36,13 @@ const Topbar = () => {
       {isMobile ? (
         <MobileMenu />
       ) : (
-        <div className="flex gap-4">
-          <div className="space-x-2 flex">
-            {!connected ? <Socials /> : <CreateButton />}
-            <ThemeButton />
-          </div>
+        <div className="flex gap-4 items-center">
+          {!connected && <Socials />}
+          {connected && !location.pathname.includes("/create/market") && (
+            <CreateButton />
+          )}
           {connected ? <ProfileDropdownMenu /> : <ConnectWalletButton />}
+          <ThemeButton />
         </div>
       )}
     </header>

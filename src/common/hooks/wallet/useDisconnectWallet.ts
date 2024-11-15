@@ -3,24 +3,25 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "../utils/use-toast";
 
 const useDisconnectWallet = () => {
-  const { disconnect } = useConnection();
-  const queryClient = useQueryClient();
+  const { disconnect, connected } = useConnection();
 
   return useMutation({
     mutationKey: ["disconnect-wallet"],
     mutationFn: async () => {
+      if (!connected) {
+        throw new Error("Invalid Action");
+      }
+
       await disconnect();
       return true;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      // Show success message
       toast({
-        title: "Success",
+        className: "bg-green-500 text-black",
         description: "Wallet disconnected successfully",
         variant: "default",
       });
-      // Invalidate any queries that depend on wallet state
-      queryClient.cancelQueries();
-      location.reload;
     },
     onError: (error) => {
       toast({

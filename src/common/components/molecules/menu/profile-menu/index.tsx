@@ -4,6 +4,7 @@ import {
   TwitterIcon,
   InstagramIcon,
   Plane,
+  Wallet,
 } from "lucide-react";
 
 import {
@@ -22,9 +23,10 @@ import {
   AvatarFallback,
 } from "@/common/components/atoms/ui/avatar";
 import { useNavigate } from "react-router-dom";
-import LogoutDrawer from "../../drawer/logout-drawer";
+import { useProfileModal } from "arweave-wallet-kit";
 
 function ProfileDropdownMenu() {
+  const profile = useProfileModal();
   const navigate = useNavigate();
 
   const handleNavigateAddress = () => {
@@ -75,7 +77,13 @@ function ProfileDropdownMenu() {
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
-        <LogoutDrawer />
+        <DropdownMenuItem
+          className="space-x-2"
+          onClick={() => profile.setOpen(true)}
+        >
+          <Wallet />
+          <span>Logout</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
