@@ -1,9 +1,12 @@
 import { useConnection } from "arweave-wallet-kit";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "../utils/use-toast";
+import { useAccountStore } from "@/feature/user/store/account-store";
 
 const useDisconnectWallet = () => {
   const { disconnect, connected } = useConnection();
+  const { logout } = useAccountStore();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ["disconnect-wallet"],
@@ -16,12 +19,14 @@ const useDisconnectWallet = () => {
       return true;
     },
     onSuccess: async () => {
-      // Show success message
       toast({
-        className: "bg-green-500 text-black",
+        className: "bg-green-500 text-black border-none",
         description: "Wallet disconnected successfully",
         variant: "default",
       });
+
+      logout();
+      queryClient.invalidateQueries();
     },
     onError: (error) => {
       toast({

@@ -4,7 +4,6 @@ const useFetchCreatedMarkets = () => {
   //   const profile = useProfileModal();
   const address = useActiveAddress();
 
-  console.log(address);
   //   profile.setOpen(true);
   //   return useSuspenseQuery({
   //     queryKey: ["/GET /market/created/list"],

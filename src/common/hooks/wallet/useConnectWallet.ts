@@ -1,9 +1,11 @@
 import { useConnection } from "arweave-wallet-kit";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "../utils/use-toast";
+import { useAccountStore } from "@/feature/user/store/account-store";
 
 const useConnectWallet = () => {
-  const { connect, connected } = useConnection();
+  const { connect: connectWallet, connected } = useConnection();
+  const { connect } = useAccountStore();
 
   return useMutation({
     mutationKey: ["connect-wallet"],
@@ -11,15 +13,24 @@ const useConnectWallet = () => {
       if (connected) {
         throw new Error("Wallet is already connected");
       }
-      await connect();
+      await connectWallet();
 
-      return true;
+      return {
+        data: {
+          connection: true,
+          message: "Wallet connected successfully",
+        },
+      };
     },
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: async ({ data }) => {
+      const { message } = data;
+
+      connect();
+
       toast({
+        className: "bg-green-600 text-white border-none",
         title: "Success",
-        description: "Wallet connected successfully",
+        description: message,
         variant: "default",
       });
     },

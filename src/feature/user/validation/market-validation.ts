@@ -13,6 +13,7 @@ maxDate.setDate(maxDate.getDate() + 90);
 
 // Zod validation schema
 export const createMarketValidation = z.object({
+  thumbnail: z.instanceof(File).nullable(),
   Title: z
     .string()
     .min(8, { message: "Title is too short" })

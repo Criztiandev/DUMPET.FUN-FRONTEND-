@@ -24,19 +24,12 @@ export const WalletButton = ({ children, ...props }: WalletButtonProps) => {
 };
 
 export const ConnectWalletButton = () => {
-  const { connected } = useConnection();
   const { mutate, isPending } = useConnectWallet();
 
   const onToggle = () => {
     mutate(); // Use the mutation instead of calling connect directly
   };
 
-  useEffect(() => {
-    if (connected) {
-      // Check the connected state, not the connect function
-      console.log("Wallet is connected");
-    }
-  }, [connected]);
   return (
     <WalletButton onClick={onToggle} disabled={isPending}>
       Connect Wallet

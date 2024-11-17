@@ -1,7 +1,7 @@
 import {
   MarketFormValue,
   MarketRequestValue,
-} from "@/feature/bet/interface/market.interface";
+} from "@/feature/market/interface/market.interface";
 import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -19,8 +19,6 @@ const useCreateMarket = () => {
     mutationKey: ["/POST /create/market"],
     mutationFn: async (payload: MarketRequestValue) => {
       const { Title, Duration, TokenTxId, OptionA, OptionB } = payload;
-
-      console.log(Duration);
 
       const createTags = [
         {

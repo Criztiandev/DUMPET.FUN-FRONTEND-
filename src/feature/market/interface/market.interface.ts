@@ -20,6 +20,7 @@ export interface MarketResponse {
 
 export interface MarketFormValue
   extends Pick<Market, "Title" | "TokenTxId" | "OptionA" | "OptionB"> {
+  thumbnail: string;
   date: Date;
   time: string;
 }

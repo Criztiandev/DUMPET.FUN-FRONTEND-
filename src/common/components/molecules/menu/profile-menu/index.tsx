@@ -23,10 +23,10 @@ import {
   AvatarFallback,
 } from "@/common/components/atoms/ui/avatar";
 import { useNavigate } from "react-router-dom";
-import { useProfileModal } from "arweave-wallet-kit";
+import useDisconnectWallet from "@/common/hooks/wallet/useDisconnectWallet";
 
 function ProfileDropdownMenu() {
-  const profile = useProfileModal();
+  const { mutate } = useDisconnectWallet();
   const navigate = useNavigate();
 
   const handleNavigateAddress = () => {
@@ -77,10 +77,7 @@ function ProfileDropdownMenu() {
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="space-x-2"
-          onClick={() => profile.setOpen(true)}
-        >
+        <DropdownMenuItem className="space-x-2" onClick={() => mutate()}>
           <Wallet />
           <span>Logout</span>
         </DropdownMenuItem>
