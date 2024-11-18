@@ -19,7 +19,6 @@ const CreateMarketStatusSheet = () => {
   const { data: createdMarket } = useFetchAllCreatedMarket();
 
   const navigate = useNavigate();
-
   console.log(marketStatus);
 
   return (
@@ -44,7 +43,7 @@ const CreateMarketStatusSheet = () => {
 
               <Card className="bg-transparent">
                 <CardHeader>
-                  <h2>TIasdfsdfsfsfsfsf</h2>
+                  <h2>No Pending Market</h2>
                 </CardHeader>
               </Card>
             </YStack>
