@@ -11,6 +11,10 @@ import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileMenu from "@/common/components/molecules/menu/mobile-menu";
 import CreateMarketStatusSheet from "@/common/components/molecules/sheet/create-market-status-sheet";
+import { Suspense } from "react";
+import { Skeleton } from "@/common/components/atoms/ui/skeleton";
+import { cn } from "@/common/lib/utils";
+import { buttonVariants } from "@/common/components/atoms/ui/button";
 
 const CreateMarketTopbar = () => {
   const isMobile = useIsMobile();
@@ -30,7 +34,18 @@ const CreateMarketTopbar = () => {
         <MobileMenu />
       ) : (
         <div className="flex gap-4 items-center">
-          <CreateMarketStatusSheet />
+          <Suspense
+            fallback={
+              <Skeleton
+                className={cn(
+                  buttonVariants({ variant: "default" }),
+                  "w-[100px]"
+                )}
+              />
+            }
+          >
+            <CreateMarketStatusSheet />
+          </Suspense>
           <ProfileDropdownMenu />
           <ThemeButton />
         </div>

@@ -26,6 +26,10 @@ const useCreateMarket = () => {
           value: "Create",
         },
         {
+          name: "thumbnail",
+          value: "thumbnail",
+        },
+        {
           name: "Title",
           value: Title,
         },

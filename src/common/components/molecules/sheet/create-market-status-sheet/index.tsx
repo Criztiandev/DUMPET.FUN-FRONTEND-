@@ -10,10 +10,17 @@ import { Button } from "@/common/components/atoms/ui/button";
 import { YStack } from "@/common/components/atoms/ui/stack";
 import { Separator } from "@/common/components/atoms/ui/separator";
 import { Card, CardHeader } from "@/common/components/atoms/ui/card";
-import useFetchCreatedMarkets from "@/feature/market/hooks/market/use-fetch-created-market";
+import useFetchMarketStatus from "@/feature/market/hooks/market/use-fetch-market-status";
+import useFetchAllCreatedMarket from "@/feature/market/hooks/market/use-fetch-all-created-market";
+import { useNavigate } from "react-router-dom";
 
 const CreateMarketStatusSheet = () => {
-  const sheet = useFetchCreatedMarkets();
+  const { data: marketStatus } = useFetchMarketStatus();
+  const { data: createdMarket } = useFetchAllCreatedMarket();
+
+  const navigate = useNavigate();
+
+  console.log(marketStatus);
 
   return (
     <Sheet>
@@ -45,14 +52,23 @@ const CreateMarketStatusSheet = () => {
             <YStack className="my-4">
               <h2 className="text-xl font-bold mb-2">Done</h2>
               <Separator />
+
+              <div className="space-y-2 py-3">
+                {createdMarket &&
+                  createdMarket.Markets.map((title: any) => (
+                    <Card
+                      className="bg-transparent border border-green-500 cursor-pointer "
+                      onClick={() => navigate(`/market/details/${title}`)}
+                    >
+                      <CardHeader>
+                        <h2 className="break-words">{title}</h2>
+                      </CardHeader>
+                    </Card>
+                  ))}
+              </div>
             </YStack>
           </div>
         </div>
-        {/* <SheetFooter>
-          <SheetClose asChild>
-            <Button >Save changes</Button>
-          </SheetClose>
-        </SheetFooter> */}
       </SheetContent>
     </Sheet>
   );

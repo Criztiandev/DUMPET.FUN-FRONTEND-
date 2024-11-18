@@ -3,12 +3,16 @@ import {
   CardBody,
   CardItem,
 } from "@/common/components/atoms/ui/3d-card";
-import { Market } from "@/feature/bet/interface/market.interface";
+import { Market } from "@/feature/market/interface/market.interface";
 import { Clock, Flame } from "lucide-react";
 import { Separator } from "../../ui/separator";
 import { XStack } from "../../ui/stack";
 import { useNavigate } from "react-router-dom";
-import { getDaysFromTimestamp } from "@/common/utils/time.utilts";
+import {
+  getDaysFromTimestamp,
+  formatEventTime,
+  formatDuration,
+} from "@/common/utils/time.utilts";
 
 interface Props extends Market {}
 
@@ -25,7 +29,7 @@ const HeroCard = ({
   const navigate = useNavigate();
   return (
     <div className=" flex justify-center items-center">
-      <div onClick={() => navigate(`/details/${TokenTxId}`)}>
+      <div onClick={() => navigate(`/market/details/${TokenTxId}`)}>
         <CardContainer className="inter-var cursor-pointer">
           <CardBody className="bg-card border- dark:bg-transparent relative group/card  dark:hover:shadow-2xl dark:hover:shadow-purple-500/[0.1]  w-auto sm:w-[30rem] h-auto rounded-xl p-6 border border-primary/30 dark:border-primary/30  ">
             <CardItem
@@ -73,7 +77,7 @@ const HeroCard = ({
 
                 <span className="flex gap-2 text-sm items-center">
                   <Clock />
-                  {Duration} Sec
+                  {formatDuration(Number(Duration))}
                 </span>
               </CardItem>
               <div className="flex justify-between items-center ">

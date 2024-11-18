@@ -5,7 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { Clock, Flame } from "lucide-react";
 import { Separator } from "../../ui/separator";
 import { Market } from "@/feature/market/interface/market.interface";
-import { getDaysFromTimestamp } from "@/common/utils/time.utilts";
+import {
+  getDaysFromTimestamp,
+  formatDuration,
+} from "@/common/utils/time.utilts";
 
 export interface Props extends Market {}
 
@@ -24,6 +27,8 @@ const MarketCard = ({
   const handleNavigate = () => {
     navigate(`/market/details/${TokenTxId}`);
   };
+
+  console.log(Duration);
   return (
     <Card
       className=" flex flex-col lg:grid lg:grid-cols-[44%_auto] cursor-pointer border-primary/50   dark:bg-transparent "
@@ -62,7 +67,7 @@ const MarketCard = ({
 
             <span className="flex gap-2 text-sm items-center">
               <Clock />
-              {Duration} Sec
+              {formatDuration(Number(Duration))}
             </span>
           </span>
           <div className="flex justify-start items-start my-4 flex-col space-y-2">

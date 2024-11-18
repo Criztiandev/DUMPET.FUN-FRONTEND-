@@ -1,6 +1,5 @@
 import { Button } from "../../ui/button";
 import { Wallet } from "lucide-react";
-import { useProfileModal } from "arweave-wallet-kit";
 
 const LogoutButton = () => {
   return (

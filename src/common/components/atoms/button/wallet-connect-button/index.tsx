@@ -5,7 +5,7 @@ import { useTheme } from "@/common/components/template/provider/theme-provider";
 import { Wallet } from "lucide-react";
 import useConnectWallet from "@/common/hooks/wallet/useConnectWallet";
 import useDisconnectWallet from "@/common/hooks/wallet/useDisconnectWallet";
-import { useConnection } from "arweave-wallet-kit";
+import { useActiveAddress, useConnection } from "arweave-wallet-kit";
 
 interface WalletButtonProps extends ButtonProps, PropsWithChildren {}
 
@@ -24,6 +24,7 @@ export const WalletButton = ({ children, ...props }: WalletButtonProps) => {
 };
 
 export const ConnectWalletButton = () => {
+  const activeAddress = useActiveAddress();
   const { mutate, isPending } = useConnectWallet();
 
   const onToggle = () => {

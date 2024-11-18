@@ -5,7 +5,7 @@ import { useAccountStore } from "@/feature/user/store/account-store";
 
 const useConnectWallet = () => {
   const { connect: connectWallet, connected } = useConnection();
-  const { connect } = useAccountStore();
+  const accountStore = useAccountStore();
 
   return useMutation({
     mutationKey: ["connect-wallet"],
@@ -24,8 +24,7 @@ const useConnectWallet = () => {
     },
     onSuccess: async ({ data }) => {
       const { message } = data;
-
-      connect();
+      accountStore.credentials();
 
       toast({
         className: "bg-green-600 text-white border-none",

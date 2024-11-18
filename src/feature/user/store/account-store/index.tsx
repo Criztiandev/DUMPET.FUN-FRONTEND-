@@ -3,12 +3,15 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 interface AccountState {
   isOnline: boolean;
-  connect: () => void;
-  logout: () => Promise<void>;
+  address: string;
+  setAddres: (value: string) => void;
+  credentials: () => void;
+  clearCredentials: () => Promise<void>;
 }
 
 const INITIAL_STATE = {
   isOnline: false,
+  address: "",
 };
 
 export const useAccountStore = create<AccountState>()(
@@ -16,11 +19,9 @@ export const useAccountStore = create<AccountState>()(
     (set) => ({
       ...INITIAL_STATE,
 
-      connect: () => {
+      credentials: () => {
         try {
-          set({
-            isOnline: true,
-          });
+          set({ isOnline: true, address: "" });
         } catch (error) {
           console.error("Failed to connect wallet:", error);
           set({
@@ -29,7 +30,11 @@ export const useAccountStore = create<AccountState>()(
         }
       },
 
-      logout: async () => {
+      setAddres(value) {
+        return set((prev) => ({ ...prev, address: value }));
+      },
+
+      clearCredentials: async () => {
         try {
           // Clear all persisted state
           localStorage.removeItem("account-storage");
@@ -48,6 +53,7 @@ export const useAccountStore = create<AccountState>()(
       partialize: (state) => ({
         // only persist these fields
         isOnline: state.isOnline,
+        address: state.address,
       }),
     }
   )

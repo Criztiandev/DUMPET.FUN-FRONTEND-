@@ -5,7 +5,7 @@ import { useAccountStore } from "@/feature/user/store/account-store";
 
 const useDisconnectWallet = () => {
   const { disconnect, connected } = useConnection();
-  const { logout } = useAccountStore();
+  const { clearCredentials } = useAccountStore();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -25,7 +25,7 @@ const useDisconnectWallet = () => {
         variant: "default",
       });
 
-      logout();
+      clearCredentials();
       queryClient.invalidateQueries();
     },
     onError: (error) => {
