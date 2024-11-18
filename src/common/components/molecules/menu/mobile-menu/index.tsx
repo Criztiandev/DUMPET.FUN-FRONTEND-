@@ -10,11 +10,16 @@ import { DrawerClose } from "@/common/components/atoms/ui/drawer";
 import { useRef } from "react";
 import { Button } from "@/common/components/atoms/ui/button";
 import { Wallet } from "lucide-react";
+import { useAccountStore } from "@/feature/user/store/account-store";
+import { useLocation } from "react-router-dom";
+import MarketStatusButton from "@/common/components/atoms/button/market-status-button";
 
 const MobileMenu = () => {
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const profileModal = useProfileModal();
-  const { connected } = useConnection();
+
+  const url = useLocation();
+  const { isOnline } = useAccountStore();
 
   const toggleDrawer = () => {
     if (drawerRef.current) {
@@ -28,16 +33,24 @@ const MobileMenu = () => {
 
   return (
     <MenuDrawer className="px-4 pb-2 space-y-2">
-      {connected && (
+      {isOnline && !url.pathname.includes("/create") && (
         <DrawerClose asChild>
           <CreateButton />
         </DrawerClose>
       )}
-      {connected && (
-        <DrawerClose asChild>
-          <ProfileButton />
-        </DrawerClose>
+      {isOnline && (
+        <>
+          <DrawerClose asChild>
+            <ProfileButton />
+          </DrawerClose>
+
+          <DrawerClose asChild>
+            <MarketStatusButton />
+          </DrawerClose>
+        </>
       )}
+
+      {isOnline && <DrawerClose asChild></DrawerClose>}
 
       {SocialsLinks.map((link) => (
         <MobileMenuItems {...link} key={link.title} />
@@ -51,12 +64,12 @@ const MobileMenu = () => {
           onClick={toggleDrawer}
         >
           <Wallet size={22} />
-          {connected ? <span>Logout</span> : <span>Connect Wallet</span>}
+          {isOnline ? <span>Logout</span> : <span>Connect Wallet</span>}
         </Button>
       </DrawerClose>
 
       <div ref={drawerRef} className="hidden">
-        {connected ? (
+        {isOnline ? (
           <Button
             className="w-full space-x-2"
             variant="ghost"
