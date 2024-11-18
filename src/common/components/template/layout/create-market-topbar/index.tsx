@@ -20,7 +20,7 @@ const CreateMarketTopbar = () => {
   const isMobile = useIsMobile();
 
   return (
-    <header className=" absolute top-0 z-50 p-4 flex justify-between items-center  border-stone-50 w-full">
+    <header className="p-4 flex justify-between items-center  border-stone-50 w-full mb-18">
       <Link to="/">
         <XStack className="items-center gap-4">
           <Avatar className="w-14 h-14">

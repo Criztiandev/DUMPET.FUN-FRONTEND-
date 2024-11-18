@@ -8,11 +8,14 @@ import CreateMarketTopbar from "@/common/components/template/layout/create-marke
 import { cn } from "@/common/lib/utils";
 import useCreateMarket from "@/feature/market/hooks/market/use-create-market";
 import { MarketFormValue } from "@/feature/market/interface/market.interface";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect, useState } from "react";
 import { FormProvider, useFormContext } from "react-hook-form";
 
 const CreateMarketCreen = () => {
   const { form, mutation } = useCreateMarket();
+  const isMobile = useIsMobile();
+
   const onSubmit = (data: MarketFormValue) => {
     // Convert date and time to Unix timestamp
     const date = new Date(data.date);
@@ -39,59 +42,65 @@ const CreateMarketCreen = () => {
     <div className="w-full min-h-screen">
       <CreateMarketTopbar />
 
-      <div className="flex flex-col justify-center items-center h-full absolute left-0 top-0 w-full z-10">
+      <div className="">
         <div className="flex justify-center items-center">
           <h1 className="text-4xl font-bold my-4">Create Market</h1>
         </div>
         <div className="max-w-lg mx-auto   p-4 rounded-md ">
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <ImagePreview />
+              <div className="space-y-4">
+                <ImagePreview />
 
-              <FileInputField
-                label="Thumbnai"
-                name="thumbnail"
-                placeholder="Select Images"
-                accept="image/*"
-              />
-
-              <InputField
-                label="TokenTxId"
-                name="TokenTxId"
-                placeholder="Enter TokenTxId"
-              />
-              <InputField
-                label="Title"
-                name="Title"
-                placeholder="Enter title"
-              />
-
-              <XStack className="grid grid-cols-[auto_35%] gap-4 items-end">
-                <DateField label="Date" />
-
-                <InputField
-                  label="Time"
-                  type="time"
-                  name="time"
-                  placeholder="Enter Time"
-                />
-              </XStack>
-              <div className="flex justify-between items-end gap-4">
-                <InputField
-                  label="Option A"
-                  name="OptionA"
-                  placeholder="Enter Option A"
+                <FileInputField
+                  label="Thumbnai"
+                  name="thumbnail"
+                  placeholder="Select Images"
+                  accept="image/*"
                 />
 
-                <span className={cn(buttonVariants({ variant: "outline" }))}>
-                  VS
-                </span>
-
                 <InputField
-                  label="Option B"
-                  name="OptionB"
-                  placeholder="Enter Option B`"
+                  label="TokenTxId"
+                  name="TokenTxId"
+                  placeholder="Enter TokenTxId"
                 />
+                <InputField
+                  label="Title"
+                  name="Title"
+                  placeholder="Enter title"
+                />
+
+                <div className="flex flex-col gap-4 md:grid md:grid-cols-[auto_35%] md:items-end">
+                  <DateField label="Date" />
+
+                  <InputField
+                    label="Time"
+                    type="time"
+                    name="time"
+                    placeholder="Enter Time"
+                  />
+                </div>
+                <div className="flex justify-between gap-4 flex-col md:grid md:grid-cols-[auto_10%_auto] md:items-end">
+                  <InputField
+                    label="Option A"
+                    name="OptionA"
+                    placeholder="Enter Option A"
+                  />
+
+                  {!isMobile && (
+                    <span
+                      className={cn(buttonVariants({ variant: "outline" }))}
+                    >
+                      VS
+                    </span>
+                  )}
+
+                  <InputField
+                    label="Option B"
+                    name="OptionB"
+                    placeholder="Enter Option B`"
+                  />
+                </div>
               </div>
 
               <Button
