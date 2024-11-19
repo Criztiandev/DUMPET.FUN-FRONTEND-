@@ -1,14 +1,13 @@
 import { Badge } from "@/common/components/atoms/ui/badge";
 import { Button } from "@/common/components/atoms/ui/button";
 import Topbar from "@/common/components/template/layout/topbar";
-import { useActiveAddress } from "arweave-wallet-kit";
-import { ArrowUp, Coins, Edit } from "lucide-react";
+import { Coins } from "lucide-react";
 import { useAccountStore } from "../../store/account-store";
 import useFetchAllCreatedMarket from "@/feature/market/hooks/market/use-fetch-all-created-market";
 import { useNavigate } from "react-router-dom";
 
 const ProfileScreen = () => {
-  const { isOnline, address } = useAccountStore();
+  const { address } = useAccountStore();
   const { data: result } = useFetchAllCreatedMarket();
 
   const navigate = useNavigate();

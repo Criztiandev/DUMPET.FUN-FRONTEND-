@@ -1,6 +1,4 @@
 import { Skeleton } from "@/common/components/atoms/ui/skeleton";
-import { cn } from "@/common/lib/utils";
-import React from "react";
 
 const CardLoadingScreen = () => {
   return (

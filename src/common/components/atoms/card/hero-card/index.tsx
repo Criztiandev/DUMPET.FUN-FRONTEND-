@@ -10,7 +10,6 @@ import { XStack } from "../../ui/stack";
 import { useNavigate } from "react-router-dom";
 import {
   getDaysFromTimestamp,
-  formatEventTime,
   formatDuration,
 } from "@/common/utils/time.utilts";
 
@@ -20,7 +19,6 @@ const HeroCard = ({
   Title,
   Timestamp,
   TokenTxId,
-  BlockHeight,
   Creator,
   Duration,
   OptionA,

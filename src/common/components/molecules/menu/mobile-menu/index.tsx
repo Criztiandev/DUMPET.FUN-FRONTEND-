@@ -2,7 +2,7 @@ import { SocialsLinks } from "@/common/data/static/topbar-link";
 import MenuDrawer from "../../drawer/menu-drawer";
 import MobileMenuItems from "@/common/components/atoms/menu/mobile-menu-items";
 import ThemeButton from "@/common/components/atoms/button/theme-button";
-import { useConnection, useProfileModal } from "arweave-wallet-kit";
+import { useProfileModal } from "arweave-wallet-kit";
 import { ConnectWalletButton } from "@/common/components/atoms/button/wallet-connect-button";
 import ProfileButton from "@/common/components/atoms/button/profile-button";
 import CreateButton from "@/common/components/atoms/button/create-button";

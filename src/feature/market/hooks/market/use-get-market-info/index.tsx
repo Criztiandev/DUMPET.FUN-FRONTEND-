@@ -1,4 +1,4 @@
-const useGetMarketInfo = (id: string) => {
+const useGetMarketInfo = () => {
   return <div>useGetMarketInfo</div>;
 };
 

@@ -11,34 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/common/components/atoms/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/common/components/atoms/ui/select";
 import { Label } from "../ui/label";
-
-// Memoize time options generation
-const generateTimeOptions = () => {
-  const times = [];
-  for (let hour = 0; hour < 24; hour++) {
-    for (let minute of ["00", "30"]) {
-      const period = hour >= 12 ? "PM" : "AM";
-      let displayHour = hour % 12;
-      if (displayHour === 0) displayHour = 12;
-
-      const time = `${displayHour}:${minute} ${period}`;
-      const value = `${hour.toString().padStart(2, "0")}:${minute}`;
-
-      times.push({ label: time, value });
-    }
-  }
-  return times;
-};
-
-const timeOptions = generateTimeOptions();
 
 interface Props {
   label?: string;

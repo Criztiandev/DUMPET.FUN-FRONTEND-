@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Twitch, Twitter } from "lucide-react";
+import { Facebook, Instagram, Twitter } from "lucide-react";
 import { TopbarItem } from "./types";
 
 export const SocialsLinks: TopbarItem[] = [
