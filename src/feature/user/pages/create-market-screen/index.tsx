@@ -31,10 +31,10 @@ const CreateMarketCreen = () => {
     console.log(formData);
 
     // Add Duration field and submit
-    // mutation.mutate({
-    //   ...formData,
-    //   Duration: unixDuration.toString(),
-    // });
+    mutation.mutate({
+      ...formData,
+      Duration: unixDuration.toString(),
+    });
   };
   return (
     <div className="w-full min-h-screen">

@@ -16,7 +16,6 @@ const MarketCard = ({
   Title,
   Timestamp,
   TokenTxId,
-  BlockHeight,
   Creator,
   Duration,
   OptionA,

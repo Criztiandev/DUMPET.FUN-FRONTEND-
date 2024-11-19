@@ -16,7 +16,7 @@ import { toast } from "sonner";
 
 const DesktopMarketAction = () => {
   const handleVote = (value: string) => {
-    toast(`Successfully Voted Option A`, {
+    toast(`Successfully Voted ${value}`, {
       position: "top-center",
       style: {
         background: "#38A068",
@@ -26,7 +26,7 @@ const DesktopMarketAction = () => {
   };
 
   const handleCancelVote = (value: string) => {
-    toast(`Cancelled Voted Option A`, {
+    toast(`Cancelled Voted ${value}`, {
       position: "top-center",
       style: {
         background: "#E43E3F",
