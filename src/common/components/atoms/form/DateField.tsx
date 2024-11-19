@@ -77,11 +77,6 @@ const DateField = (props: Props) => {
               {errors.date.message as string}
             </span>
           )}
-          {errors.time && (
-            <span className="text-sm text-red-500">
-              {errors.time.message as string}
-            </span>
-          )}
         </div>
       </div>
     </Popover>

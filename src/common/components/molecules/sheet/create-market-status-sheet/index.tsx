@@ -10,16 +10,15 @@ import { Button } from "@/common/components/atoms/ui/button";
 import { YStack } from "@/common/components/atoms/ui/stack";
 import { Separator } from "@/common/components/atoms/ui/separator";
 import { Card, CardHeader } from "@/common/components/atoms/ui/card";
-import useFetchMarketStatus from "@/feature/market/hooks/market/use-fetch-market-status";
+// import useFetchMarketStatus from "@/feature/market/hooks/market/use-fetch-market-status";
 import useFetchAllCreatedMarket from "@/feature/market/hooks/market/use-fetch-all-created-market";
 import { useNavigate } from "react-router-dom";
 
 const CreateMarketStatusSheet = () => {
-  const { data: marketStatus } = useFetchMarketStatus();
+  // const { data: marketStatus } = useFetchMarketStatus();
   const { data: createdMarket } = useFetchAllCreatedMarket();
 
   const navigate = useNavigate();
-  console.log(marketStatus);
 
   return (
     <Sheet>

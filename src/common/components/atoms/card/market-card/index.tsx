@@ -26,8 +26,6 @@ const MarketCard = ({
   const handleNavigate = () => {
     navigate(`/market/details/${TokenTxId}`);
   };
-
-  console.log(Duration);
   return (
     <Card
       className=" flex flex-col lg:grid lg:grid-cols-[44%_auto] cursor-pointer border-primary/50   dark:bg-transparent "

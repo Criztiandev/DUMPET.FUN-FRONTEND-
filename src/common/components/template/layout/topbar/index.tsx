@@ -8,7 +8,6 @@ import { XStack } from "@/common/components/atoms/ui/stack";
 
 import { FacebookIcon, InstagramIcon, TwitterIcon } from "lucide-react";
 import { useTheme } from "../../provider/theme-provider";
-import ThemeButton from "@/common/components/atoms/button/theme-button";
 import { useConnection } from "arweave-wallet-kit";
 import { ConnectWalletButton } from "@/common/components/atoms/button/wallet-connect-button";
 import ProfileDropdownMenu from "@/common/components/molecules/menu/profile-menu";
@@ -42,7 +41,6 @@ const Topbar = () => {
             <CreateButton />
           )}
           {connected ? <ProfileDropdownMenu /> : <ConnectWalletButton />}
-          <ThemeButton />
         </div>
       )}
     </header>
