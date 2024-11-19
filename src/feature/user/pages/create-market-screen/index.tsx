@@ -9,6 +9,7 @@ import useCreateMarket from "@/feature/market/hooks/market/use-create-market";
 import { MarketFormValue } from "@/feature/market/interface/market.interface";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FormProvider, useFormContext } from "react-hook-form";
+import { toast } from "sonner";
 
 const CreateMarketCreen = () => {
   const { form, mutation } = useCreateMarket();
@@ -25,16 +26,18 @@ const CreateMarketCreen = () => {
     date.setMilliseconds(0);
 
     const unixDuration = Math.floor(date.getTime() / 1000) * 1000;
+    console.log(unixDuration);
 
     const { date: _, time: __, ...formData } = data;
 
     console.log(formData);
 
     // Add Duration field and submit
-    mutation.mutate({
-      ...formData,
-      Duration: unixDuration.toString(),
-    });
+    // mutation.mutate({
+    //   ...formData,
+    //   Duration: unixDuration.toString(),
+    // });
+    toast("Sorry, File upload is on going, wait for next update");
   };
   return (
     <div className="w-full min-h-screen">

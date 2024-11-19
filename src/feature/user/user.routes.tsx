@@ -39,7 +39,7 @@ const routes = [
 ];
 
 const userRoutes =
-  import.meta.env.VITE_DEV_ENVIRONMENT === "developments"
+  import.meta.env.VITE_DEV_ENVIRONMENT === "development"
     ? createBrowserRouter(routes)
     : createHashRouter(routes);
 
