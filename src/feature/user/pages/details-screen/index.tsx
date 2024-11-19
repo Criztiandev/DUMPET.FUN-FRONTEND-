@@ -2,65 +2,30 @@ import BarChart from "@/common/components/molecules/charts/bar-chart";
 import Topbar from "@/common/components/template/layout/topbar";
 
 import { FormProvider, useForm } from "react-hook-form";
-import SelectField from "@/common/components/atoms/form/SelectField";
-import InputField from "@/common/components/atoms/form/InputField";
-import { Separator } from "@/common/components/atoms/ui/separator";
-import { Button } from "@/common/components/atoms/ui/button";
-import { XStack } from "@/common/components/atoms/ui/stack";
+import { useIsMobile } from "@/hooks/use-mobile";
+import MobileMarketDetails from "@/common/components/template/details/mobile-market-action";
+import { Card, CardContent } from "@/common/components/atoms/ui/card";
 
 const DetailsScreen = () => {
   const form = useForm();
+  const isMobile = useIsMobile();
 
   return (
     <section className="w-full min-h-full relative">
       <Topbar />
-      <div className="mt-24">
-        <div className="p-4 ">
+      <div className="mt-24 grid grid-cols-[auto_32%]">
+        <div className="p-4 w-full ">
           <BarChart />
+        </div>
 
-          {/* Action Form */}
-          <div className="py-4">
-            <FormProvider {...form}>
-              <div className="space-y-4">
-                <SelectField
-                  label="Selection"
-                  name="selection"
-                  placeholder="Select your preference"
-                  options={[{ value: "Option A", label: "Option A" }]}
-                />
-
-                <Separator />
-
-                <div className="grid grid-cols-[auto_25%] gap-4 items-center">
-                  <InputField
-                    type="number"
-                    name="deposit"
-                    placeholder="Deposit"
-                  />
-                  <SelectField
-                    name="token"
-                    placeholder="AR"
-                    options={[
-                      { label: "AR", value: "ar" },
-                      { label: "Eth", value: "eth" },
-                    ]}
-                  />
-                </div>
-              </div>
-              <div className="absolute left-0 bottom-0 w-full p-4 space-y-4">
-                <Button className="w-full">Place Bet</Button>
-              </div>
-            </FormProvider>
+        <FormProvider {...form}>
+          {isMobile && <MobileMarketDetails />}
+          <div className="p-4">
+            <Card className="h-full">
+              <CardContent></CardContent>
+            </Card>
           </div>
-        </div>
-
-        {/* Details Section */}
-        <div>
-          <XStack>
-            <span className="text-sm ">Created by</span>
-            <span className="text-purple-400  text-sm">Criztian</span>
-          </XStack>
-        </div>
+        </FormProvider>
       </div>
     </section>
   );
