@@ -20,10 +20,6 @@ import {
 const chartData = [
   { month: "January", desktop: 186 },
   { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
 ];
 const chartConfig = {
   desktop: {
@@ -34,7 +30,7 @@ const chartConfig = {
 
 const BarChart = () => {
   return (
-    <Card>
+    <Card className="w-full h-full flex justify-center  flex-col">
       <CardHeader>
         <CardTitle>Bar Chart</CardTitle>
         <CardDescription>January - June 2024</CardDescription>

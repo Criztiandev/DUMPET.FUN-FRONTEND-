@@ -17,6 +17,7 @@ import { ThemeProvider } from "./common/components/template/provider/theme-provi
 import { ArweaveWalletKit } from "arweave-wallet-kit";
 import { Toaster } from "./common/components/atoms/ui/toaster.tsx";
 import { Toaster as SoonerToaster } from "./common/components/atoms/ui/sonner.tsx";
+import { TooltipProvider } from "./common/components/atoms/ui/tooltip.tsx";
 
 const queryClient = new QueryClient();
 
@@ -43,11 +44,13 @@ createRoot(document.getElementById("root")!).render(
                     ensurePermissions: true,
                   }}
                 >
-                  <SidebarProvider>
-                    <App />
-                    <Toaster />
-                    <SoonerToaster />
-                  </SidebarProvider>
+                  <TooltipProvider>
+                    <SidebarProvider>
+                      <App />
+                      <Toaster />
+                      <SoonerToaster />
+                    </SidebarProvider>
+                  </TooltipProvider>
                 </ArweaveWalletKit>
               </ErrorBoundary>
             )}
