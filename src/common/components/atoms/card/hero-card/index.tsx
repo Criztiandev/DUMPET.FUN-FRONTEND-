@@ -3,7 +3,7 @@ import {
   CardBody,
   CardItem,
 } from "@/common/components/atoms/ui/3d-card";
-import { Market } from "@/feature/market/interface/market.interface";
+import { MarketInfo } from "@/feature/market/interface/market.interface";
 import { Clock, Flame } from "lucide-react";
 import { Separator } from "../../ui/separator";
 import { XStack } from "../../ui/stack";
@@ -13,21 +13,22 @@ import {
   formatDuration,
 } from "@/common/utils/time.utilts";
 
-interface Props extends Market {}
+interface Props extends MarketInfo {}
 
 const HeroCard = ({
   Title,
   Timestamp,
-  TokenTxId,
   Creator,
   Duration,
   OptionA,
   OptionB,
+  ProcessId,
+  Concluded,
 }: Props) => {
   const navigate = useNavigate();
   return (
     <div className=" flex justify-center items-center">
-      <div onClick={() => navigate(`/market/details/${TokenTxId}`)}>
+      <div onClick={() => navigate(`/market/details/${ProcessId}`)}>
         <CardContainer className="inter-var cursor-pointer">
           <CardBody className="bg-card border- dark:bg-transparent relative group/card  dark:hover:shadow-2xl dark:hover:shadow-purple-500/[0.1]  w-auto sm:w-[30rem] h-auto rounded-xl p-6 border border-primary/30 dark:border-primary/30  ">
             <CardItem
@@ -75,7 +76,9 @@ const HeroCard = ({
 
                 <span className="flex gap-2 text-sm items-center">
                   <Clock />
-                  {formatDuration(Number(Duration))}
+                  {Concluded
+                    ? "Concluded"
+                    : `${formatDuration(Number(Duration))}`}
                 </span>
               </CardItem>
               <div className="flex justify-between items-center ">

@@ -1,11 +1,4 @@
-import {
-  Facebook,
-  User,
-  TwitterIcon,
-  InstagramIcon,
-  Plane,
-  Wallet,
-} from "lucide-react";
+import { User, Wallet } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -24,6 +17,10 @@ import {
 } from "@/common/components/atoms/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import useDisconnectWallet from "@/common/hooks/wallet/useDisconnectWallet";
+import { BalanceDialog } from "../../dialog/balance-dialog";
+import { Suspense } from "react";
+import { Skeleton } from "@/common/components/atoms/ui/skeleton";
+import { buttonVariants } from "@/common/components/atoms/ui/button";
 
 function ProfileDropdownMenu() {
   const { mutate } = useDisconnectWallet();
@@ -55,26 +52,21 @@ function ProfileDropdownMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="space-x-2">
-          <Facebook size={22} />
-          <span>Facebook</span>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem className="space-x-2">
-          <TwitterIcon size={22} />
-          <span>X</span>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem className="space-x-2">
-          <InstagramIcon size={22} />
-          <span>Instagram</span>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem className="space-x-2">
-          <Plane size={22} />
-          <span>Telegram</span>
-        </DropdownMenuItem>
+        <Suspense
+          fallback={
+            <Skeleton
+              className={buttonVariants({
+                variant: "ghost",
+                className: "w-full justify-start px-2 space-x-2",
+              })}
+            >
+              <Wallet />
+              <span>Loading</span>
+            </Skeleton>
+          }
+        >
+          <BalanceDialog />
+        </Suspense>
 
         <DropdownMenuSeparator />
         <DropdownMenuItem className="space-x-2" onClick={() => mutate()}>

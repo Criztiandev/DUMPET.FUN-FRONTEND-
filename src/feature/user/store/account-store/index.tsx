@@ -12,6 +12,7 @@ interface AccountState {
 const INITIAL_STATE = {
   isOnline: false,
   address: "",
+  balance: 0,
 };
 
 export const useAccountStore = create<AccountState>()(

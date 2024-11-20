@@ -1,20 +1,17 @@
-import { useAccountStore } from "@/feature/user/store/account-store";
 import { dryrun } from "@permaweb/aoconnect";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-const useFetchMarketStatus = () => {
-  const { address } = useAccountStore();
-
+const useFetchAccountBalance = (id: string) => {
   return useSuspenseQuery({
-    queryKey: [`/GET /${address}/market/list`],
+    queryKey: [`/GET /account/balance/${id}`],
     queryFn: async () => {
       const walletAddress = await window.arweaveWallet.getActiveAddress();
       const result = await dryrun({
-        process: import.meta.env.VITE_DEV_MAIN_PROCESS_ID,
+        process: id,
         tags: [
-          { name: "Action", value: "HasWaitFor" },
+          { name: "Action", value: "UserBalancesAllVotes" },
           {
-            name: "ProfileId",
+            name: "Recipient",
             value: walletAddress,
           },
         ],
@@ -26,4 +23,4 @@ const useFetchMarketStatus = () => {
   });
 };
 
-export default useFetchMarketStatus;
+export default useFetchAccountBalance;

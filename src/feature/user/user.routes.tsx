@@ -4,7 +4,6 @@ import NotFoundScreen from "@/common/components/page/helper/no-found";
 import DetailsScreen from "./pages/details-screen";
 import ProfileScreen from "./pages/profile-screen";
 import CreateBetScreen from "./pages/create-market-screen";
-import ProtectedRoutes from "@/common/components/template/hoc/ProtectedRoutes";
 
 const routes = [
   { path: "*", element: <NotFoundScreen /> },
@@ -14,27 +13,15 @@ const routes = [
   },
   {
     path: "/market/details/:id",
-    element: (
-      <ProtectedRoutes>
-        <DetailsScreen />
-      </ProtectedRoutes>
-    ),
+    element: <DetailsScreen />,
   },
   {
     path: "/profile",
-    element: (
-      <ProtectedRoutes>
-        <ProfileScreen />
-      </ProtectedRoutes>
-    ),
+    element: <ProfileScreen />,
   },
   {
     path: "/create/market",
-    element: (
-      <ProtectedRoutes>
-        <CreateBetScreen />
-      </ProtectedRoutes>
-    ),
+    element: <CreateBetScreen />,
   },
 ];
 

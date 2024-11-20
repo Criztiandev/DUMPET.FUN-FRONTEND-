@@ -45,12 +45,14 @@ const useMarketStore = create<MarketStore>()(
 
         const filteredMarket = markets.filter(
           (market) =>
-            market.Title.toLowerCase().includes(searchTerm) ||
-            market.Creator.toLowerCase().includes(searchTerm) ||
-            market.TokenTxId.toLowerCase().includes(searchTerm) ||
-            market.ProcessId.toString().toLowerCase().includes(searchTerm) ||
-            market.OptionA.toLowerCase().includes(searchTerm) ||
-            market.OptionB.toLowerCase().includes(searchTerm)
+            market.MarketInfo.Title.toLowerCase().includes(searchTerm) ||
+            market.MarketInfo.Creator.toLowerCase().includes(searchTerm) ||
+            market.MarketInfo.TokenTxId.toLowerCase().includes(searchTerm) ||
+            market.MarketInfo.ProcessId.toString()
+              .toLowerCase()
+              .includes(searchTerm) ||
+            market.MarketInfo.OptionA.toLowerCase().includes(searchTerm) ||
+            market.MarketInfo.OptionB.toLowerCase().includes(searchTerm)
         );
 
         set({ searchTerm: term, filteredMarket: filteredMarket });
@@ -60,9 +62,9 @@ const useMarketStore = create<MarketStore>()(
         set(({ markets, ...state }) => {
           const existingMarket = markets.filter(
             (field) =>
-              field.Title === newMarket.Title ||
-              field.ProcessId === newMarket.ProcessId ||
-              field.TokenTxId === newMarket.TokenTxId
+              field.MarketInfo.Title === newMarket.MarketInfo.Title ||
+              field.MarketInfo.ProcessId === newMarket.MarketInfo.ProcessId ||
+              field.MarketInfo.TokenTxId === newMarket.MarketInfo.TokenTxId
           );
 
           if (existingMarket) {
@@ -80,9 +82,9 @@ const useMarketStore = create<MarketStore>()(
           // check existing market
           const existingMarket = markets.filter(
             (field) =>
-              field.Title === newMarket.Title ||
-              field.ProcessId === newMarket.ProcessId ||
-              field.TokenTxId === newMarket.TokenTxId
+              field.MarketInfo.Title === newMarket.MarketInfo.Title ||
+              field.MarketInfo.ProcessId === newMarket.MarketInfo.ProcessId ||
+              field.MarketInfo.TokenTxId === newMarket.MarketInfo.TokenTxId
           );
 
           // check if the market doesnt exist
@@ -93,15 +95,18 @@ const useMarketStore = create<MarketStore>()(
           // filter the market to remove the items
           const filteredMarkets = markets.filter(
             (market) =>
-              market.Title !== newMarket.Title &&
-              market.ProcessId !== newMarket.ProcessId &&
-              market.TokenTxId !== newMarket.TokenTxId
+              market.MarketInfo.Title !== newMarket.MarketInfo.Title &&
+              market.MarketInfo.ProcessId !== newMarket.MarketInfo.ProcessId &&
+              market.MarketInfo.TokenTxId !== newMarket.MarketInfo.TokenTxId
           );
 
           const selectedMarket =
-            state.selectedMarket?.Title === newMarket.Title ||
-            state.selectedMarket?.ProcessId === newMarket.ProcessId ||
-            state.selectedMarket?.TokenTxId === newMarket.TokenTxId
+            state.selectedMarket?.MarketInfo.Title ===
+              newMarket.MarketInfo.Title ||
+            state.selectedMarket?.MarketInfo.ProcessId ===
+              newMarket.MarketInfo.ProcessId ||
+            state.selectedMarket?.MarketInfo.TokenTxId ===
+              newMarket.MarketInfo.TokenTxId
               ? null
               : state.selectedMarket;
 

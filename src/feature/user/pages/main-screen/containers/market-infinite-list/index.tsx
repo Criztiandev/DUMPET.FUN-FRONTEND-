@@ -7,6 +7,8 @@ import useMarketStore from "@/feature/market/store/market.store";
 const MarketInfiniteList = () => {
   const { fetchNextPage, hasNextPage, isFetchingNextPage } = UseFetchMarket();
   const { filteredMarket } = useMarketStore();
+
+  console.log(filteredMarket);
   return (
     <section className="space-y-8">
       {filteredMarket.length <= 0 ? (

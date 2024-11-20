@@ -15,16 +15,17 @@ export interface Props extends Market {}
 const MarketCard = ({
   Title,
   Timestamp,
-  TokenTxId,
   Creator,
   Duration,
   OptionA,
   OptionB,
+  ProcessId,
+  ...props
 }: Props) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate(`/market/details/${TokenTxId}`);
+    navigate(`/market/details/${ProcessId}`);
   };
   return (
     <Card
@@ -64,7 +65,9 @@ const MarketCard = ({
 
             <span className="flex gap-2 text-sm items-center">
               <Clock />
-              {formatDuration(Number(Duration))}
+              {props.Concluded
+                ? "Concluded"
+                : `${formatDuration(Number(Duration))}`}
             </span>
           </span>
           <div className="flex justify-start items-start my-4 flex-col space-y-2">

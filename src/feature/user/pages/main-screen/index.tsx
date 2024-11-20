@@ -1,6 +1,4 @@
 import Topbar from "@/common/components/template/layout/topbar";
-import FilterMenu from "@/common/components/molecules/menu/filter-menu";
-import SearchInput from "@/common/components/molecules/input/search-input";
 import { useActiveAddress } from "arweave-wallet-kit";
 import { Suspense, useEffect } from "react";
 import { useAccountStore } from "../../store/account-store";
@@ -25,11 +23,6 @@ const MainScreen = () => {
       <main className="p-4 my-24">
         {/* Search and Filter Section */}
         <section>
-          <div className="max-w-[700px] flex items-center gap-2 mx-auto">
-            <SearchInput />
-            <FilterMenu />
-          </div>
-
           <Suspense fallback={<HeroCardLoadingScreen />}>
             <MarketHero />
           </Suspense>

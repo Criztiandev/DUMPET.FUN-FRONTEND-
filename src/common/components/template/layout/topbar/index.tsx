@@ -36,7 +36,7 @@ const Topbar = () => {
         <MobileMenu />
       ) : (
         <div className="flex gap-4 items-center">
-          {!connected && <Socials />}
+          <Socials />
           {connected && !location.pathname.includes("/create/market") && (
             <CreateButton />
           )}
