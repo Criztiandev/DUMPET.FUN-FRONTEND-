@@ -1,15 +1,26 @@
+import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
+import { MarketInfo } from "@/feature/market/interface/market.interface";
+import useMarketStore from "@/feature/market/store/market.store";
 import useBalanceStore from "@/feature/user/store/balance-store";
 import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-const useDepositBalance = (tokeID: string) => {
+const useDepositBalance = (tokenID: string) => {
   const { addBalanceToField } = useBalanceStore();
+  const { selectedMarket } = useMarketStore();
+
+  const selectedMarketInfo = selectedMarket?.MarketInfo as MarketInfo;
 
   return useMutation({
     mutationKey: ["POST /deposit/balance"],
     mutationFn: async (balance: string) => {
-      const currentAddress = await window.arweaveWallet.getActiveAddress();
+      console.log(formatArweaveTokenAmount(balance));
+      const formattedBalance = formatArweaveTokenAmount(Number(balance));
+
+      if (formattedBalance >= 250 || Number.isNaN(formattedBalance)) {
+        throw new Error("Invalid Balance, Reach Maximum Output");
+      }
 
       const currentTags = [
         {
@@ -22,19 +33,19 @@ const useDepositBalance = (tokeID: string) => {
         },
         {
           name: "Recipient",
-          value: currentAddress,
+          value: selectedMarketInfo?.ProcessId.toString(),
         },
       ];
 
       const response = await message({
-        process: tokeID,
+        process: tokenID,
         tags: currentTags,
         signer: createDataItemSigner(window.arweaveWallet),
       });
 
       await result({
         message: response,
-        process: tokeID,
+        process: tokenID,
       });
 
       return balance;

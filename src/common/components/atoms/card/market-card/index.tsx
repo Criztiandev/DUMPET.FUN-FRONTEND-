@@ -4,14 +4,18 @@ import { Badge } from "../../ui/badge";
 import { useNavigate } from "react-router-dom";
 import { Clock, Flame } from "lucide-react";
 import { Separator } from "../../ui/separator";
-import { Market } from "@/feature/market/interface/market.interface";
+import {
+  Market,
+  MarketInfo,
+} from "@/feature/market/interface/market.interface";
 import {
   getDaysFromTimestamp,
   formatDuration,
 } from "@/common/utils/time.utilts";
+import HeroCover from "@/assets/image/cover-img.jpg";
 
-export interface Props extends Market {}
-
+export interface Props extends MarketInfo {}
+// market-action-controls
 const MarketCard = ({
   Title,
   Timestamp,
@@ -20,7 +24,7 @@ const MarketCard = ({
   OptionA,
   OptionB,
   ProcessId,
-  ...props
+  Concluded,
 }: Props) => {
   const navigate = useNavigate();
 
@@ -33,7 +37,11 @@ const MarketCard = ({
       onClick={handleNavigate}
     >
       <CardHeader className="p-4 ">
-        <div className="w-full h-[200px] lg:h-full rounded-md bg-[#F0F0F0] "></div>
+        <img
+          src={HeroCover}
+          className=" w-full h-[200px] lg:h-full rounded-md object-cover"
+        />
+        {/* <div className="w-full h-[200px] lg:h-full rounded-md bg-[#F0F0F0] "></div> */}
       </CardHeader>
       <CardContent className="p-4">
         <div className="mb-4">
@@ -54,20 +62,18 @@ const MarketCard = ({
           <span className="flex flex-col gap-2  ">
             <span className="flex gap-2 text-sm items-center">
               <Flame />
-              {OptionA}
+              {OptionA || "Option A"}
             </span>
             <span className="flex gap-2 text-sm items-center">
               <Flame />
-              {OptionB}
+              {OptionB || "Option B"}
             </span>
 
             <Separator />
 
             <span className="flex gap-2 text-sm items-center">
               <Clock />
-              {props.Concluded
-                ? "Concluded"
-                : `${formatDuration(Number(Duration))}`}
+              {Concluded ? "Concluded" : `${formatDuration(Number(Duration))}`}
             </span>
           </span>
           <div className="flex justify-start items-start my-4 flex-col space-y-2">

@@ -1,29 +1,17 @@
-import { MarketActionValue } from "@/common/components/organism/market-action-controls";
 import useBalanceStore from "@/feature/user/store/balance-store";
 import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-const useBetOption = (marketId: string) => {
+const useCancelBet = (marketId: string) => {
   const queryClient = useQueryClient();
 
   const { subtractBalanceFromField } = useBalanceStore();
 
   return useMutation({
     mutationKey: ["/POST /market/bet"],
-    mutationFn: async (value: any) => {
-      const { selection, amount } = value as MarketActionValue;
-
-      const currentTag = [
-        {
-          name: "Action",
-          value: selection,
-        },
-        {
-          name: "Quantity",
-          value: String(amount),
-        },
-      ];
+    mutationFn: async () => {
+      const currentTag = [{ name: "Action", value: "CancelVote" }];
 
       const mutate = await message({
         process: marketId,
@@ -44,17 +32,24 @@ const useBetOption = (marketId: string) => {
         throw new Error(response.Messages[0]?.Data);
       }
 
-      return { amount };
+      const payload = JSON.parse(response.Messages[0]?.Data);
+      return payload;
     },
 
-    onSuccess: ({ amount }: any) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [`/GET /market/details/${marketId}`],
+        predicate: (query) => {
+          const queryKey = query.queryKey as string[];
+          return (
+            queryKey.includes(`/GET /market/details/${marketId}`) ||
+            queryKey.includes(`/GET /account/balance/${marketId}`)
+          );
+        },
       });
 
-      subtractBalanceFromField("UserDepositBalance", amount);
-
-      toast(`Successfully Voted`, {
+      subtractBalanceFromField("BalanceVoteA", "0");
+      subtractBalanceFromField("BalanceVoteB", "0");
+      toast(`Successfully Cancelled Vote`, {
         position: "top-center",
         style: {
           background: "#38A068",
@@ -75,4 +70,4 @@ const useBetOption = (marketId: string) => {
   });
 };
 
-export default useBetOption;
+export default useCancelBet;

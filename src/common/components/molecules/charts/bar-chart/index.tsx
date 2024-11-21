@@ -36,26 +36,25 @@ const BarChart: React.FC = () => {
   const { selectedMarket } = useMarketStore();
   const currentAddress = useActiveAddress();
 
-  const { BalancesVoteA, BalancesVoteB } = selectedMarket as Market;
+  const currentMarket = selectedMarket as Market;
 
-  const { Title, OptionA, OptionB, Creator } =
-    selectedMarket?.MarketInfo as MarketInfo;
+  const curretnMarketInfo = selectedMarket?.MarketInfo as MarketInfo;
 
   const VoteATally = formatArweaveTokenAmount(
-    BalancesVoteA[currentAddress || 0]
+    currentMarket?.BalancesVoteA[currentAddress || 0]
   );
   const VoteBTally = formatArweaveTokenAmount(
-    BalancesVoteB[currentAddress || 0]
+    currentMarket?.BalancesVoteB[currentAddress || 0]
   );
 
   const chartData: ChartData[] = [
     {
-      option: OptionA,
+      option: curretnMarketInfo?.OptionA,
       amount: VoteATally || 0,
       fill: "#dc2626",
     },
     {
-      option: OptionB,
+      option: curretnMarketInfo?.OptionB,
       amount: VoteBTally || 0,
       fill: "#2563eb",
     },
@@ -72,8 +71,10 @@ const BarChart: React.FC = () => {
   return (
     <Card className="w-full h-full flex justify-center flex-col">
       <CardHeader>
-        <CardTitle>{Title}</CardTitle>
-        <CardDescription>Created By {Creator} </CardDescription>
+        <CardTitle>{curretnMarketInfo?.Title}</CardTitle>
+        <CardDescription>
+          Created By {curretnMarketInfo?.Creator}{" "}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -91,7 +92,12 @@ const BarChart: React.FC = () => {
               }
             />
             <Tooltip content={<CustomTooltip />} cursor={false} />
-            <Bar dataKey="amount" fill="var(--color-amount)" radius={8} />
+            <Bar
+              dataKey="amount"
+              fill="var(--color-amount)"
+              radius={8}
+              barSize={200}
+            />
           </BarChartParent>
         </ChartContainer>
       </CardContent>

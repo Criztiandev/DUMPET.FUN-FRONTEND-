@@ -1,14 +1,12 @@
 import DateField from "@/common/components/atoms/form/DateField";
-import FileInputField from "@/common/components/atoms/form/FileInputField";
 import InputField from "@/common/components/atoms/form/InputField";
-import ImagePreview from "@/common/components/atoms/images/image-preview";
 import { Button, buttonVariants } from "@/common/components/atoms/ui/button";
 import CreateMarketTopbar from "@/common/components/template/layout/create-market-topbar";
 import { cn } from "@/common/lib/utils";
 import useCreateMarket from "@/feature/market/hooks/market/use-create-market";
 import { MarketFormValue } from "@/feature/market/interface/market.interface";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { FormProvider, useFormContext } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import { toast } from "sonner";
 
 const CreateMarketCreen = () => {
@@ -16,7 +14,6 @@ const CreateMarketCreen = () => {
   const isMobile = useIsMobile();
 
   const onSubmit = (data: MarketFormValue) => {
-    // Convert date and time to Unix timestamp
     const date = new Date(data.date);
     const [hours, minutes] = data.time.split(":").map(Number);
 
@@ -32,11 +29,10 @@ const CreateMarketCreen = () => {
 
     console.log(formData);
 
-    // Add Duration field and submit
-    // mutation.mutate({
-    //   ...formData,
-    //   Duration: unixDuration.toString(),
-    // });
+    mutation.mutate({
+      ...formData,
+      Duration: unixDuration.toString(),
+    } as any);
     toast("Sorry, File upload is on going, wait for next update");
   };
   return (
@@ -51,15 +47,6 @@ const CreateMarketCreen = () => {
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-4">
-                <ImageCreatePreview />
-
-                <FileInputField
-                  label="Thumbnai"
-                  name="thumbnail"
-                  placeholder="Select Images"
-                  accept="image/*"
-                />
-
                 <InputField
                   label="TokenTxId"
                   name="TokenTxId"
@@ -120,10 +107,3 @@ const CreateMarketCreen = () => {
 };
 
 export default CreateMarketCreen;
-
-const ImageCreatePreview = () => {
-  const { watch } = useFormContext<MarketFormValue>();
-  const thumbnailFile = watch("thumbnail");
-
-  return <ImagePreview thumbnailFile={thumbnailFile} />;
-};

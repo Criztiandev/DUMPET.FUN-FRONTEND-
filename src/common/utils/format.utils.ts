@@ -1,10 +1,11 @@
-export function formatArweaveTokenAmount(amount: Number | string) {
-  if (!amount) return;
+export function formatArweaveTokenAmount(amount: number | string) {
+  // Handle null, undefined, or zero amounts
+  if (amount == null || Number(amount) === 0) return 0;
 
-  // Convert the amount to a string to handle very large numbers
-  const amountStr = amount.toString();
+  // Convert to string and handle scientific notation
+  const amountStr = String(Number(amount));
 
-  // Ensure the string has at least 12 characters (12 decimal places)
+  // Ensure the string has at least 12 decimal places
   const paddedAmount = amountStr.padStart(12, "0");
 
   // Split into whole and decimal parts

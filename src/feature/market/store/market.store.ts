@@ -152,7 +152,6 @@ const useMarketStore = create<MarketStore>()(
     {
       name: "market-store",
       partialize: (state) => ({
-        markets: state.markets,
         selectedMarket: state.selectedMarket,
       }),
     }

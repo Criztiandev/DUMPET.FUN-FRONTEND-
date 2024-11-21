@@ -5,7 +5,7 @@ import { Market } from "@/feature/market/interface/market.interface";
 const ConcludeButton = () => {
   const { selectedMarket } = useMarketStore();
 
-  const { Concluded } = selectedMarket as Market;
+  const currentMarket = selectedMarket as Market;
 
   const handleConclude = () => {
     toast("Invalid Action", {
@@ -20,11 +20,11 @@ const ConcludeButton = () => {
 
   return (
     <>
-      {!Concluded && (
+      {!currentMarket?.Concluded && (
         <Button
           onClick={handleConclude}
           className="relative"
-          disabled={!Concluded}
+          disabled={!currentMarket?.Concluded}
         >
           <span>Conclude</span>
         </Button>

@@ -1,14 +1,12 @@
 import MarketCard from "@/common/components/atoms/card/market-card";
 import UseFetchMarket from "@/feature/market/hooks/market/use-fetch-market";
 import { Button } from "@/common/components/atoms/ui/button";
-import { Market } from "@/feature/market/interface/market.interface";
 import useMarketStore from "@/feature/market/store/market.store";
 
 const MarketInfiniteList = () => {
   const { fetchNextPage, hasNextPage, isFetchingNextPage } = UseFetchMarket();
   const { filteredMarket } = useMarketStore();
 
-  console.log(filteredMarket);
   return (
     <section className="space-y-8">
       {filteredMarket.length <= 0 ? (
@@ -18,7 +16,7 @@ const MarketInfiniteList = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {filteredMarket.map((market: Market) => (
+          {filteredMarket.map((market: any) => (
             <MarketCard {...market} />
           ))}
         </div>

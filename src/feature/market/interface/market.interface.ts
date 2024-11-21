@@ -39,4 +39,4 @@ export interface MarketFormValue
   time: string;
 }
 
-export interface MarketRequestValue extends Pick<Market, "MarketInfo"> {}
+export interface MarketRequestValue extends MarketInfo {}

@@ -13,19 +13,30 @@ import MarketActionLoadingScreen from "@/common/components/page/helper/market-ac
 import useMarketStore from "@/feature/market/store/market.store";
 import ConcludeButton from "@/common/components/atoms/button/conclude-button";
 import CountdownMarket from "@/common/components/molecules/timer/countdown-market";
+import useFetchAccountBalance from "@/feature/balance/hooks/use-fetch-account-balance";
+import useBalanceStore from "../../store/balance-store";
 
 const DetailsScreen = () => {
   const { id: marketID } = useParams();
   const form = useForm();
   const isMobile = useIsMobile();
   const { setSelectedMarket } = useMarketStore();
-  const { data: result } = useFetchMarketById(marketID || "");
+  const { setBalance } = useBalanceStore();
+
+  const { data: marketResult } = useFetchMarketById(marketID || "");
+  const { data: balanceResult } = useFetchAccountBalance(marketID || "");
 
   useEffect(() => {
-    if (result) {
-      setSelectedMarket(result);
+    if (marketResult) {
+      setSelectedMarket(marketResult);
     }
-  }, [result]);
+  }, [marketResult]);
+
+  useEffect(() => {
+    if (balanceResult) {
+      setBalance(balanceResult);
+    }
+  }, [balanceResult]);
 
   return (
     <section className="w-full min-h-full relative">

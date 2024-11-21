@@ -36,11 +36,11 @@ export const createMarketValidation = z.object({
     .max(64, { message: "TokenTxId is too long" }),
   OptionA: z
     .string()
-    .min(8, { message: "Option A is too short" })
+    .min(3, { message: "Option A is too short" })
     .max(64, { message: "Option A is too long" }),
   OptionB: z
     .string()
-    .min(8, { message: "Option B is too short" })
+    .min(3, { message: "Option B is too short" })
     .max(64, { message: "Option B is too long" }),
 });
 

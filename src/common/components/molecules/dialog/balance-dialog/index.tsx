@@ -1,6 +1,7 @@
-import { Button } from "@/common/components/atoms/ui/button";
+import { Button, buttonVariants } from "@/common/components/atoms/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -20,12 +21,18 @@ import { useConnection } from "arweave-wallet-kit";
 import { useAccountStore } from "@/feature/user/store/account-store";
 import { toast } from "sonner";
 import useBalanceStore from "@/feature/user/store/balance-store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useFetchAccountBalance from "@/feature/balance/hooks/use-fetch-account-balance";
 import BigNumber from "bignumber.js";
+import { VariantProps } from "class-variance-authority";
+import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
+import { Badge } from "@/common/components/atoms/ui/badge";
 
-export function BalanceDialog() {
+interface Props extends VariantProps<typeof buttonVariants> {}
+
+export function BalanceDialog(props: Props) {
+  const [onDialogClose, setOnDialogClose] = useState(false);
   const { id } = useParams();
   const form = useForm();
   const { connected } = useConnection();
@@ -41,13 +48,15 @@ export function BalanceDialog() {
   const { mutate: withdrawMutate, isPending: withdrawtStatus } =
     useWithDrawBalance(import.meta.env.VITE_DEV_DUMPET_TOKEN_TXID);
 
-  console.log(balanceData);
-
   useEffect(() => {
     if (balanceData) {
       setBalance(balanceData);
     }
   }, [balanceData]);
+
+  const toggleDialog = () => {
+    setOnDialogClose(false);
+  };
 
   const onSubmit = () => {
     if (!connected || !isOnline) {
@@ -72,10 +81,12 @@ export function BalanceDialog() {
     switch (transactionType) {
       case "deposit":
         depositMutate(balanceBN.toString());
+        toggleDialog();
         break;
 
       case "withdraw":
         withdrawMutate(balanceBN.toString());
+        toggleDialog();
         break;
 
       default:
@@ -91,9 +102,13 @@ export function BalanceDialog() {
   };
 
   return (
-    <Dialog>
+    <Dialog open={onDialogClose} onOpenChange={setOnDialogClose}>
       <DialogTrigger asChild>
-        <Button className="w-full justify-start space-x-2 px-2" variant="ghost">
+        <Button
+          className="w-full justify-start space-x-2 px-2"
+          variant="ghost"
+          {...props}
+        >
           <Wallet size={22} />
           <span>Balance</span>
         </Button>
@@ -101,8 +116,13 @@ export function BalanceDialog() {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Account Balance</DialogTitle>
-          <DialogDescription>
-            Current Balance: {balance?.UserDepositBalance}
+          <DialogDescription className="flex gap-2">
+            <span>Current Balance:</span>
+            <Badge>
+              <span>
+                {formatArweaveTokenAmount(balance?.UserDepositBalance)}
+              </span>
+            </Badge>
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...form}>

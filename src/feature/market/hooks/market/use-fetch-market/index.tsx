@@ -13,7 +13,7 @@ const UseFetchMarket = () => {
   const { setMarkets, markets } = useMarketStore();
 
   const query = useSuspenseInfiniteQuery({
-    queryKey: ["/GET /market/list"],
+    queryKey: ["/GET /market/lists"],
     queryFn: async ({ pageParam = 1 }) => {
       const { Messages } = await dryrun({
         process: import.meta.env.VITE_DEV_MAIN_PROCESS_ID,
@@ -32,6 +32,7 @@ const UseFetchMarket = () => {
         totalRecords: payload.TotalRecords,
       };
     },
+
     getNextPageParam: (lastPage) => {
       return lastPage.hasMore ? lastPage.currentPage + 1 : undefined;
     },
@@ -49,7 +50,7 @@ const UseFetchMarket = () => {
         setMarkets(allMarket);
       }
     }
-  }, [query.data, setMarkets, markets]);
+  }, [query.data]);
 
   return query;
 };
