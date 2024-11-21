@@ -52,22 +52,6 @@ function ProfileDropdownMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
-        <Suspense
-          fallback={
-            <Skeleton
-              className={buttonVariants({
-                variant: "ghost",
-                className: "w-full justify-start px-2 space-x-2",
-              })}
-            >
-              <Wallet />
-              <span>Loading</span>
-            </Skeleton>
-          }
-        >
-          <BalanceDialog />
-        </Suspense>
-
         <DropdownMenuSeparator />
         <DropdownMenuItem className="space-x-2" onClick={() => mutate()}>
           <Wallet />

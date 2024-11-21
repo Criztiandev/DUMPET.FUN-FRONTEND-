@@ -46,7 +46,7 @@ export function BalanceDialog(props: Props) {
     import.meta.env.VITE_DEV_DUMPET_TOKEN_TXID
   );
   const { mutate: withdrawMutate, isPending: withdrawtStatus } =
-    useWithDrawBalance(import.meta.env.VITE_DEV_DUMPET_TOKEN_TXID);
+    useWithDrawBalance();
 
   useEffect(() => {
     if (balanceData) {
@@ -85,7 +85,7 @@ export function BalanceDialog(props: Props) {
         break;
 
       case "withdraw":
-        withdrawMutate(balanceBN.toString());
+        withdrawMutate(balancePow.toString());
         toggleDialog();
         break;
 

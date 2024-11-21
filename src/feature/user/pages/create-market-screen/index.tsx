@@ -7,7 +7,6 @@ import useCreateMarket from "@/feature/market/hooks/market/use-create-market";
 import { MarketFormValue } from "@/feature/market/interface/market.interface";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FormProvider } from "react-hook-form";
-import { toast } from "sonner";
 
 const CreateMarketCreen = () => {
   const { form, mutation } = useCreateMarket();
@@ -33,13 +32,12 @@ const CreateMarketCreen = () => {
       ...formData,
       Duration: unixDuration.toString(),
     } as any);
-    toast("Sorry, File upload is on going, wait for next update");
   };
   return (
     <div className="w-full min-h-screen">
       <CreateMarketTopbar />
 
-      <div className="">
+      <div className="flex justify-center items-center flex-col pt-24">
         <div className="flex justify-center items-center">
           <h1 className="text-4xl font-bold my-4">Create Market</h1>
         </div>

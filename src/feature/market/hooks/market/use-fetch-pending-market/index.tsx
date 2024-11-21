@@ -1,15 +1,17 @@
 import { dryrun } from "@permaweb/aoconnect";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useActiveAddress } from "arweave-wallet-kit";
 
-const useFetchAllCreatedMarket = () => {
+const useFetchPendingMarket = () => {
+  const activeAddress = useActiveAddress();
   return useSuspenseQuery({
-    queryKey: [`/GET /created/market/list`],
+    queryKey: [`/GET /market/${activeAddress}/pending`],
     queryFn: async () => {
       const walletAddress = await window.arweaveWallet.getActiveAddress();
       const result = await dryrun({
         process: import.meta.env.VITE_DEV_MAIN_PROCESS_ID,
         tags: [
-          { name: "Action", value: "Creator" },
+          { name: "Action", value: "HasWaitFor" },
           {
             name: "ProfileId",
             value: walletAddress,
@@ -23,4 +25,4 @@ const useFetchAllCreatedMarket = () => {
   });
 };
 
-export default useFetchAllCreatedMarket;
+export default useFetchPendingMarket;

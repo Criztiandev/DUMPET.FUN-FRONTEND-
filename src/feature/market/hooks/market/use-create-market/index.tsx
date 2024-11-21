@@ -3,7 +3,7 @@ import {
   MarketRequestValue,
 } from "@/feature/market/interface/market.interface";
 import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { createMarketValidation } from "@/feature/user/validation/market-validation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +14,8 @@ const useCreateMarket = () => {
   const form = useForm<MarketFormValue>({
     resolver: zodResolver(createMarketValidation),
   });
+
+  const queryClient = new QueryClient();
 
   const mutation = useMutation({
     mutationKey: ["/POST /create/market"],
@@ -68,6 +70,15 @@ const useCreateMarket = () => {
         throw new Error(data.Messages[0].Data);
       }
 
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const queryKey = query.queryKey as string[];
+          return (
+            queryKey.includes(`/GET /created/market/list`) ||
+            queryKey.includes(`/GET /market/lists`)
+          );
+        },
+      });
       toast({
         className: "bg-green-500/50",
         title: "Created Market Successfully",

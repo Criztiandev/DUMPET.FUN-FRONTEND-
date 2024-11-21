@@ -18,8 +18,10 @@ export function formatArweaveTokenAmount(amount: number | string) {
   // Trim trailing zeros from decimal part
   const trimmedDecimalPart = decimalPart.replace(/0+$/, "");
 
-  // Combine whole and decimal parts
-  return trimmedDecimalPart
+  const result = trimmedDecimalPart
     ? Number(`${formattedWholePart}.${trimmedDecimalPart}`)
     : Number(formattedWholePart);
+
+  // Combine whole and decimal parts
+  return isNaN(result) ? 0 : result;
 }
