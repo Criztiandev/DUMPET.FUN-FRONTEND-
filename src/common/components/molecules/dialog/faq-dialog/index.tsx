@@ -11,7 +11,6 @@ import {
   DialogClose,
 } from "@/common/components/atoms/ui/dialog";
 import { YStack } from "@/common/components/atoms/ui/stack";
-import { useTheme } from "@/common/components/template/provider/theme-provider";
 import { CircleHelp, ArrowLeft, ArrowRight } from "lucide-react";
 
 const steps = [
@@ -66,7 +65,6 @@ const steps = [
 ];
 
 const FaqDialog = () => {
-  const { theme } = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleNext = () => {
@@ -84,7 +82,7 @@ const FaqDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="icon" variant={theme === "light" ? "outline" : "default"}>
+        <Button size="icon" variant="ghost">
           <CircleHelp size={18} />
         </Button>
       </DialogTrigger>

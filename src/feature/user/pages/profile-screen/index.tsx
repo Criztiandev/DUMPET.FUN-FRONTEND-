@@ -1,17 +1,26 @@
 import { Badge } from "@/common/components/atoms/ui/badge";
 import { Button } from "@/common/components/atoms/ui/button";
 import Topbar from "@/common/components/template/layout/topbar";
-import { Coins } from "lucide-react";
+import { Share2 } from "lucide-react";
 import useFetchAllCreatedMarket from "@/feature/market/hooks/market/use-fetch-all-created-market";
-import { useNavigate } from "react-router-dom";
 import { useActiveAddress } from "arweave-wallet-kit";
+import ProfileMarketCard from "@/common/components/molecules/card/profile-market-card";
+import { XStack } from "@/common/components/atoms/ui/stack";
 
 const ProfileScreen = () => {
   // const { address } = useAccountStore();
   const { data: result } = useFetchAllCreatedMarket();
-  const navigate = useNavigate();
   const { Markets } = result;
   const address = useActiveAddress();
+
+  const handleShareProfile = () => {
+    const text = `Check out this profile on dumpet.fun - `;
+    const url = window.location.href;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      text
+    )}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl, "_blank");
+  };
 
   return (
     <div className="w-full ">
@@ -90,10 +99,23 @@ const ProfileScreen = () => {
                     src={`https://ui-avatars.com/api/?name=${address}&background=8058D5&color=fff`}
                     alt="Helene avatar"
                   />
-                  <div>
-                    <span className="mb-2 inline-block rounded bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800 dark:bg-primary-900 dark:text-primary-300">
-                      Member
-                    </span>
+                  <div className="space-y-2">
+                    <XStack className="gap-4">
+                      <Badge
+                        variant="secondary"
+                        className="items-center justify-center"
+                      >
+                        <span>Member</span>
+                      </Badge>
+
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={handleShareProfile}
+                      >
+                        <Share2 />
+                      </Button>
+                    </XStack>
                     <h2 className="flex items-center text-xl font-bold leading-none text-gray-900 dark:text-white sm:text-2xl">
                       Dumpet #{getFirstAndLastThree(address || "")}
                     </h2>
@@ -120,44 +142,7 @@ const ProfileScreen = () => {
             </h3>
 
             {Markets ? (
-              Markets.map((market: any) => (
-                <div className="flex flex-col gap-4 md:flex-wrap md:items-be md:flex-row gap-y-4 border-b mb-4 border-gray-200 pb-4 dark:border-gray-700 md:pb-5">
-                  <dl className="w-1/2 sm:w-48">
-                    <dt className="text-base font-medium text-gray-500 dark:text-gray-400">
-                      Bet ID:
-                    </dt>
-                    <dd className="mt-1.5 text-base font-semibold text-gray-900 dark:text-white">
-                      <span className="break-words md:break-normal">
-                        #{market.Title}
-                      </span>
-                    </dd>
-                  </dl>
-
-                  <dl className="w-1/2 sm:w-1/4 md:flex-1 lg:w-auto"></dl>
-
-                  <dl className="w-1/2 sm:w-1/5 md:flex-1 lg:w-auto"></dl>
-
-                  <dl className="w-1/2 sm:w-1/4 sm:flex-1 lg:w-auto">
-                    <dt className="text-base font-medium text-gray-500 dark:text-gray-400">
-                      Status:
-                    </dt>
-                    <dd>
-                      <Badge className="space-x-2 bg-green-900 text-white py-1">
-                        <Coins size={18} />
-                        <span>Done</span>
-                      </Badge>
-                    </dd>
-                  </dl>
-
-                  <Button
-                    onClick={() =>
-                      navigate(`/market/details/${market.MarketProcessId}`)
-                    }
-                  >
-                    View Result
-                  </Button>
-                </div>
-              ))
+              Markets.map((market: any) => <ProfileMarketCard {...market} />)
             ) : (
               <div>No Market Found</div>
             )}

@@ -11,7 +11,6 @@ const MarketInfiniteList = () => {
     <section className="space-y-8">
       {filteredMarket.length <= 0 ? (
         <div className="flex w-full justify-center items-center flex-col gap-4">
-          <div className="w-[200px] h-[200px] border rounded-md"></div>
           <span className="text-2xl font-bold">No Market Found</span>
         </div>
       ) : (

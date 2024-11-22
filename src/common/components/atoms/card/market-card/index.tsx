@@ -10,6 +10,7 @@ import {
   formatDuration,
 } from "@/common/utils/time.utilts";
 import HeroCover from "@/assets/image/cover-img.jpg";
+import ShareTwitterButton from "../../button/share-twitter-button";
 
 export interface Props extends MarketInfo {}
 // market-action-controls
@@ -80,6 +81,10 @@ const MarketCard = ({
             </Badge>
           </div>
         </div>
+
+        <XStack className="justify-end">
+          <ShareTwitterButton processID={ProcessId.toString() || ""} />
+        </XStack>
       </CardContent>
     </Card>
   );

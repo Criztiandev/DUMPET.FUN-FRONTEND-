@@ -1,13 +1,23 @@
+import { useAccountStore } from "@/feature/user/store/account-store";
 import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useConnection } from "arweave-wallet-kit";
 import { toast } from "sonner";
 
 const useWithDrawReward = (marketId: string) => {
   const queryClient = useQueryClient();
+  const { isOnline } = useAccountStore();
+  const { connect } = useConnection();
 
   return useMutation({
     mutationKey: ["/POST /market/bet"],
+
     mutationFn: async () => {
+      if (!isOnline) {
+        connect();
+        throw new Error("Please Connect your wallet");
+      }
+
       const currentTag = [{ name: "Action", value: "WithdrawRewards" }];
 
       const mutate = await message({

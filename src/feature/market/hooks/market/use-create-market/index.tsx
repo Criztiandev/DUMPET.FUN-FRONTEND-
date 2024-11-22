@@ -8,10 +8,14 @@ import { useForm } from "react-hook-form";
 import { createMarketValidation } from "@/feature/user/validation/market-validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/common/hooks/utils/use-toast";
-import { useActiveAddress } from "arweave-wallet-kit";
+import { useActiveAddress, useConnection } from "arweave-wallet-kit";
+import { useAccountStore } from "@/feature/user/store/account-store";
 
 const useCreateMarket = () => {
   const { toast } = useToast();
+  const { isOnline } = useAccountStore();
+  const { connect } = useConnection();
+
   const activeAddress = useActiveAddress();
   const form = useForm<MarketFormValue>({
     resolver: zodResolver(createMarketValidation),
@@ -23,6 +27,11 @@ const useCreateMarket = () => {
     mutationKey: ["/POST /create/market"],
     mutationFn: async (payload: MarketRequestValue) => {
       const { Title, Duration, TokenTxId, OptionA, OptionB } = payload;
+
+      if (!isOnline) {
+        connect();
+        throw new Error("Please Connect your wallet");
+      }
 
       const createTags = [
         {

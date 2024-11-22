@@ -2,14 +2,18 @@ import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
 import { isMarketDeadlineValid } from "@/common/utils/time.utilts";
 import { MarketInfo } from "@/feature/market/interface/market.interface";
 import useMarketStore from "@/feature/market/store/market.store";
+import { useAccountStore } from "@/feature/user/store/account-store";
 import useBalanceStore from "@/feature/user/store/balance-store";
 import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
 import { useMutation } from "@tanstack/react-query";
+import { useConnection } from "arweave-wallet-kit";
 import { toast } from "sonner";
 
 const useDepositBalance = (tokenID: string) => {
   const { addBalanceToField } = useBalanceStore();
   const { selectedMarket } = useMarketStore();
+  const { isOnline } = useAccountStore();
+  const { connect } = useConnection();
 
   const selectedMarketInfo = selectedMarket?.MarketInfo as MarketInfo;
 
@@ -18,6 +22,11 @@ const useDepositBalance = (tokenID: string) => {
       `POST /deposit/balance/${selectedMarketInfo?.ProcessId}/${tokenID}`,
     ],
     mutationFn: async (balance: string) => {
+      if (!isOnline) {
+        connect();
+        throw new Error("Please Connect your wallet");
+      }
+
       const formattedBalance = formatArweaveTokenAmount(Number(balance));
 
       if (formattedBalance >= 250 || Number.isNaN(formattedBalance)) {

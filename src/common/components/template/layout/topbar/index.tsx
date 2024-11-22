@@ -1,12 +1,7 @@
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/common/components/atoms/ui/avatar";
 import { Button } from "@/common/components/atoms/ui/button";
 import { XStack } from "@/common/components/atoms/ui/stack";
 
-import { Send } from "lucide-react";
+import { Github, Send } from "lucide-react";
 import { useConnection } from "arweave-wallet-kit";
 import { ConnectWalletButton } from "@/common/components/atoms/button/wallet-connect-button";
 import ProfileDropdownMenu from "@/common/components/molecules/menu/profile-menu";
@@ -28,22 +23,21 @@ const Topbar = () => {
     <header className=" absolute top-0 z-50 p-4 flex justify-between items-center  border-stone-50 w-full">
       <Link to="/">
         <XStack className="items-center gap-4">
-          <Avatar className="w-14 h-14">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div className="font-bold items-center text-xl">DUMPET.FUN</div>
+          <div className="font-bold items-center text-3xl">DUMPET.FUN</div>
         </XStack>
       </Link>
       {isMobile ? (
         <MobileMenu />
       ) : (
-        <div className="flex gap-4 items-center">
-          <Socials />
-          {connected && !location.pathname.includes("/create/market") && (
-            <CreateButton />
+        <div className="space-y-4">
+          <div className="flex gap-4 items-center">
+            {!location.pathname.includes("/create/market") && <CreateButton />}
+            {connected ? <ProfileDropdownMenu /> : <ConnectWalletButton />}
+          </div>
+
+          {!location.pathname.includes("/create/market") && !connected && (
+            <Socials />
           )}
-          {connected ? <ProfileDropdownMenu /> : <ConnectWalletButton />}
         </div>
       )}
     </header>
@@ -53,7 +47,10 @@ const Topbar = () => {
 export default Topbar;
 
 // <!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-const Socials = () => {
+export const Socials = () => {
+  const handleNavigate = (uri: string) => {
+    window.open(uri, "_blank", "noopener,noreferrer");
+  };
   return (
     <div className="flex gap-2">
       <FaqDialog />
@@ -61,26 +58,22 @@ const Socials = () => {
 
       <Tooltip>
         <TooltipTrigger>
-          <Button size="icon" variant={"outline"}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 320 512"
-              width={18}
-              height={18}
-              fill="white"
-            >
-              <path d="M80 299.3V512H196V299.3h86.5l18-97.8H196V166.9c0-51.7 20.3-71.5 72.7-71.5c16.3 0 29.4 .4 37 1.2V7.9C291.4 4 256.4 0 236.2 0C129.3 0 80 50.5 80 159.4v42.1H14v97.8H80z" />
-            </svg>
+          <Button
+            size="icon"
+            variant={"ghost"}
+            onClick={() => handleNavigate("https://github.com/drumfeet/dumpet")}
+          >
+            <Github />
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <span className="text-[12px]">Faceook</span>
+          <span className="text-[12px]">Github</span>
         </TooltipContent>
       </Tooltip>
 
       <Tooltip>
         <TooltipTrigger>
-          <Button size="icon" variant={"outline"}>
+          <Button size="icon" variant={"ghost"}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 448 512"
@@ -99,7 +92,11 @@ const Socials = () => {
 
       <Tooltip>
         <TooltipTrigger>
-          <Button size="icon" variant={"outline"}>
+          <Button
+            size="icon"
+            variant={"ghost"}
+            onClick={() => handleNavigate("https://t.me/dumpetdotfun")}
+          >
             <Send size={18} />
           </Button>
         </TooltipTrigger>
@@ -110,7 +107,11 @@ const Socials = () => {
 
       <Tooltip>
         <TooltipTrigger>
-          <Button size="icon" variant={"outline"}>
+          <Button
+            size="icon"
+            variant={"ghost"}
+            onClick={() => handleNavigate("https://x.com/dumpetdotfun")}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"

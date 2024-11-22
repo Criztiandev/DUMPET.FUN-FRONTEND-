@@ -2,13 +2,16 @@ import { XStack, YStack } from "@/common/components/atoms/ui/stack";
 import { Wallet } from "lucide-react";
 import { Suspense } from "react";
 import { BalanceDialog } from "../../molecules/dialog/balance-dialog";
-import { Skeleton } from "../../atoms/ui/skeleton";
-import { buttonVariants } from "../../atoms/ui/button";
+
 import useBalanceStore from "@/feature/user/store/balance-store";
 import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
+import ButtonLoading from "../../page/helper/button-loading";
+import ShareTwitterButton from "../../atoms/button/share-twitter-button";
+import useMarketStore from "@/feature/market/store/market.store";
 
 const MarketActionDetails = () => {
   const { balance } = useBalanceStore();
+  const { selectedMarket } = useMarketStore();
   return (
     <div className="w-full">
       <YStack className="space-y-4 p-4">
@@ -27,24 +30,17 @@ const MarketActionDetails = () => {
           </div>
         </div>
 
-        <XStack className="justify-end ">
-          <div>
-            <Suspense
-              fallback={
-                <Skeleton
-                  className={buttonVariants({
-                    variant: "ghost",
-                    className: "w-full justify-start px-2 space-x-2",
-                  })}
-                >
-                  <Wallet />
-                  <span>Loading</span>
-                </Skeleton>
-              }
-            >
+        <XStack className="flex justify-end items-center">
+          <XStack className="flex justify-end items-center gap-4">
+            <div>
+              <ShareTwitterButton
+                processID={String(selectedMarket?.MarketInfo.ProcessId) || ""}
+              />
+            </div>
+            <Suspense fallback={<ButtonLoading />}>
               <BalanceDialog variant="default" />
             </Suspense>
-          </div>
+          </XStack>
         </XStack>
       </YStack>
     </div>

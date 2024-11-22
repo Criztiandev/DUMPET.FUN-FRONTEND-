@@ -6,37 +6,24 @@ import { XStack } from "@/common/components/atoms/ui/stack";
 import DesktopMarketAction from "@/common/components/template/details/desktop-market-action";
 import { useParams } from "react-router-dom";
 import useFetchMarketById from "@/feature/market/hooks/market/use-fetch-market-by-id";
-import { Suspense, useEffect } from "react";
-import MarketActionLoadingScreen from "@/common/components/page/helper/market-action-loading-screen";
+import { useEffect } from "react";
 import useMarketStore from "@/feature/market/store/market.store";
 import ConcludeButton from "@/common/components/atoms/button/conclude-button";
 import CountdownMarket from "@/common/components/molecules/timer/countdown-market";
-import useFetchAccountBalance from "@/feature/balance/hooks/use-fetch-account-balance";
-import useBalanceStore from "../../store/balance-store";
-import { useAccountStore } from "../../store/account-store";
 
 const DetailsScreen = () => {
-  const { isOnline } = useAccountStore();
   const { id: marketID } = useParams();
   const form = useForm();
   const isMobile = useIsMobile();
   const { setSelectedMarket } = useMarketStore();
-  const { setBalance } = useBalanceStore();
 
   const { data: marketResult } = useFetchMarketById(marketID || "");
-  const { data: balanceResult } = useFetchAccountBalance(marketID || "");
 
   useEffect(() => {
     if (marketResult) {
       setSelectedMarket(marketResult);
     }
   }, [marketResult]);
-
-  useEffect(() => {
-    if (balanceResult) {
-      setBalance(balanceResult);
-    }
-  }, [balanceResult]);
 
   return (
     <section className="w-full min-h-full relative">
@@ -62,13 +49,9 @@ const DetailsScreen = () => {
           )}
         </div>
 
-        {isOnline && (
-          <FormProvider {...form}>
-            <Suspense fallback={<MarketActionLoadingScreen />}>
-              <DesktopMarketAction />
-            </Suspense>
-          </FormProvider>
-        )}
+        <FormProvider {...form}>
+          <DesktopMarketAction />
+        </FormProvider>
       </div>
     </section>
   );

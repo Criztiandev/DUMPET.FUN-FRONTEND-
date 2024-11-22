@@ -1,16 +1,25 @@
+import { useAccountStore } from "@/feature/user/store/account-store";
 import useBalanceStore from "@/feature/user/store/balance-store";
 import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useConnection } from "arweave-wallet-kit";
 import { toast } from "sonner";
 
 const useCancelBet = (marketId: string) => {
   const queryClient = useQueryClient();
+  const { isOnline } = useAccountStore();
+  const { connect } = useConnection();
 
   const { subtractBalanceFromField } = useBalanceStore();
 
   return useMutation({
     mutationKey: ["/POST /market/bet"],
     mutationFn: async () => {
+      if (!isOnline) {
+        connect();
+        throw new Error("Please Connect your wallet");
+      }
+
       const currentTag = [{ name: "Action", value: "CancelVote" }];
 
       const mutate = await message({
