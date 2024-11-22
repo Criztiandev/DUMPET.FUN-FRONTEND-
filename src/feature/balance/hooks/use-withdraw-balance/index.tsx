@@ -15,8 +15,6 @@ const useWithdrawBalance = () => {
   return useMutation({
     mutationKey: ["POST /withdraw/balance"],
     mutationFn: async (balance: string) => {
-      console.log(balance);
-
       const currentTags = [
         {
           name: "Action",
@@ -28,16 +26,25 @@ const useWithdrawBalance = () => {
         },
       ];
 
-      const response = await message({
+      const mutate = await message({
         process: selectedMarketInfo?.ProcessId.toString() || "",
         tags: currentTags,
         signer: createDataItemSigner(window.arweaveWallet),
       });
 
-      await result({
-        message: response,
+      const payload = await result({
+        message: mutate,
         process: selectedMarketInfo?.ProcessId.toString() || "",
       });
+
+      // No Error Message for handling this
+      const response = payload.Messages[0];
+      const hasError = response?.Tags?.find((tag: any) => tag.name === "Error");
+
+      if (hasError) {
+        console.log(response);
+        throw new Error(response.Data);
+      }
 
       return balance;
     },

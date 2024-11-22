@@ -18,12 +18,10 @@ import {
   ChartContainer,
 } from "@/common/components/atoms/ui/chart";
 import useMarketStore from "@/feature/market/store/market.store";
-import {
-  Market,
-  MarketInfo,
-} from "@/feature/market/interface/market.interface";
-import { useActiveAddress } from "arweave-wallet-kit";
+import { MarketInfo } from "@/feature/market/interface/market.interface";
 import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
+import { useParams } from "react-router-dom";
+import useFetchAccountBalance from "@/feature/balance/hooks/use-fetch-account-balance";
 
 // Define the structure of the chart data with color
 interface ChartData {
@@ -33,19 +31,16 @@ interface ChartData {
 }
 
 const BarChart: React.FC = () => {
+  const { id: marketId } = useParams();
   const { selectedMarket } = useMarketStore();
-  const currentAddress = useActiveAddress();
-
-  const currentMarket = selectedMarket as Market;
+  const { data: result } = useFetchAccountBalance(marketId || "");
 
   const curretnMarketInfo = selectedMarket?.MarketInfo as MarketInfo;
 
-  const VoteATally = formatArweaveTokenAmount(
-    currentMarket?.BalancesVoteA[currentAddress || 0]
-  );
-  const VoteBTally = formatArweaveTokenAmount(
-    currentMarket?.BalancesVoteB[currentAddress || 0]
-  );
+  const VoteATally = formatArweaveTokenAmount(result?.BalanceVoteA || 0);
+  const VoteBTally = formatArweaveTokenAmount(result?.BalanceVoteB || 0);
+
+  console.log(selectedMarket);
 
   const chartData: ChartData[] = [
     {

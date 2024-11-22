@@ -1,4 +1,5 @@
 import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
+import { validateMarketTime } from "@/common/utils/time.utilts";
 import { MarketInfo } from "@/feature/market/interface/market.interface";
 import useMarketStore from "@/feature/market/store/market.store";
 import useBalanceStore from "@/feature/user/store/balance-store";
@@ -13,13 +14,21 @@ const useDepositBalance = (tokenID: string) => {
   const selectedMarketInfo = selectedMarket?.MarketInfo as MarketInfo;
 
   return useMutation({
-    mutationKey: ["POST /deposit/balance"],
+    mutationKey: [
+      `POST /deposit/balance/${selectedMarketInfo.ProcessId}/${tokenID}`,
+    ],
     mutationFn: async (balance: string) => {
-      console.log(formatArweaveTokenAmount(balance));
       const formattedBalance = formatArweaveTokenAmount(Number(balance));
 
       if (formattedBalance >= 250 || Number.isNaN(formattedBalance)) {
         throw new Error("Invalid Balance, Reach Maximum Output");
+      }
+
+      const currentDate = new Date();
+      const marketTimeUnix = selectedMarketInfo.Duration;
+
+      if (validateMarketTime(currentDate, Number(marketTimeUnix))) {
+        throw new Error("Invalid Action: Market is already concluded");
       }
 
       const currentTags = [
@@ -37,21 +46,33 @@ const useDepositBalance = (tokenID: string) => {
         },
       ];
 
-      const response = await message({
+      const mutate = await message({
         process: tokenID,
         tags: currentTags,
         signer: createDataItemSigner(window.arweaveWallet),
       });
 
-      await result({
-        message: response,
+      const payload = await result({
+        message: mutate,
         process: tokenID,
       });
 
-      return balance;
+      // No Error Message for handling this
+      const response = payload.Messages[0];
+      const hasError = response?.Tags?.find((tag: any) => tag.name === "Error");
+
+      if (hasError) {
+        console.log(response);
+        throw new Error(response.Data);
+      }
+
+      return {
+        message: response.Data,
+        amount: balance,
+      };
     },
 
-    onSuccess: (data) => {
+    onSuccess: ({ amount }) => {
       toast("Balance has Deposit Successfully", {
         style: {
           textAlign: "center",
@@ -61,10 +82,12 @@ const useDepositBalance = (tokenID: string) => {
         position: "top-center",
       });
 
-      addBalanceToField("UserDepositBalance", String(data));
+      addBalanceToField("UserDepositBalance", String(amount));
     },
 
     onError: (data) => {
+      console.log(data);
+
       toast(data?.message || "Something went wrong", {
         style: {
           textAlign: "center",

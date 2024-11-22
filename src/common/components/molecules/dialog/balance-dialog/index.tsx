@@ -1,7 +1,6 @@
 import { Button, buttonVariants } from "@/common/components/atoms/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -28,22 +27,25 @@ import BigNumber from "bignumber.js";
 import { VariantProps } from "class-variance-authority";
 import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
 import { Badge } from "@/common/components/atoms/ui/badge";
+import useMarketStore from "@/feature/market/store/market.store";
 
 interface Props extends VariantProps<typeof buttonVariants> {}
 
 export function BalanceDialog(props: Props) {
-  const [onDialogClose, setOnDialogClose] = useState(false);
   const { id } = useParams();
   const form = useForm();
   const { connected } = useConnection();
   const { isOnline } = useAccountStore();
+  const { selectedMarket } = useMarketStore();
+
+  const [onDialogClose, setOnDialogClose] = useState(false);
 
   const { data: balanceData } = useFetchAccountBalance(id || "0");
   const { setBalance } = useBalanceStore();
 
   const { balance } = useBalanceStore();
   const { mutate: depositMutate, isPending: depositStatus } = useDepositBalance(
-    import.meta.env.VITE_DEV_DUMPET_TOKEN_TXID
+    selectedMarket?.MarketInfo.TokenTxId || ""
   );
   const { mutate: withdrawMutate, isPending: withdrawtStatus } =
     useWithDrawBalance();

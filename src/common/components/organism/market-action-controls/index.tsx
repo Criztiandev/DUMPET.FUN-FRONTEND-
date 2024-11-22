@@ -8,6 +8,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import useBetOption from "@/feature/bet/hooks/user-bet-option";
 import { useParams } from "react-router-dom";
 import CancelVoteDialog from "../../molecules/dialog/cancel-vote-dialog";
+import useWithDrawReward from "@/feature/bet/hooks/use-withdraw-reward";
 
 export interface MarketActionValue {
   selection: string;
@@ -16,11 +17,15 @@ export interface MarketActionValue {
 
 const MarketActionControlls = () => {
   const { id: marketID } = useParams();
-  const { selectedMarket } = useMarketStore();
   const form = useForm();
-  const { mutate, isPending } = useBetOption(marketID || "");
 
+  const { selectedMarket } = useMarketStore();
   const currentMarket = selectedMarket?.MarketInfo as MarketInfo;
+
+  const { mutate, isPending } = useBetOption(marketID || "");
+  const { mutate: rewardMutate } = useWithDrawReward(
+    String(selectedMarket?.MarketInfo.ProcessId) || ""
+  );
 
   const onSubmit: SubmitHandler<MarketActionValue> = (values) => {
     const { selection, amount } = values;
@@ -58,6 +63,7 @@ const MarketActionControlls = () => {
             <SelectField
               label="Selection"
               name="selection"
+              disabled={selectedMarket?.MarketInfo.Concluded}
               placeholder="Select your side"
               options={[
                 {
@@ -72,19 +78,34 @@ const MarketActionControlls = () => {
             />
 
             <div className="items-center">
-              <InputField type="number" name="amount" placeholder="Amount" />
+              <InputField
+                type="number"
+                name="amount"
+                placeholder="Amount"
+                disabled={selectedMarket?.MarketInfo.Concluded}
+              />
             </div>
 
             <div className="grid grid-cols-[auto_20%] gap-2">
               <Button
                 type="submit"
                 className="w-full bg-primary"
-                disabled={isPending}
+                disabled={isPending || selectedMarket?.MarketInfo.Concluded}
               >
                 Place Bet
               </Button>
-              <CancelVoteDialog />
+              <CancelVoteDialog
+                disabled={selectedMarket?.MarketInfo.Concluded}
+              />
             </div>
+
+            {String(selectedMarket?.Creator) === String(currentMarket) && (
+              <div className="w-full">
+                <Button className="w-full" onClick={() => rewardMutate()}>
+                  Withdraw AO
+                </Button>
+              </div>
+            )}
           </form>
         </FormProvider>
       </div>

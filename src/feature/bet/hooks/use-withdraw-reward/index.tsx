@@ -1,29 +1,14 @@
-import { MarketActionValue } from "@/common/components/organism/market-action-controls";
-import useBalanceStore from "@/feature/user/store/balance-store";
 import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-const useBetOption = (marketId: string) => {
+const useWithDrawReward = (marketId: string) => {
   const queryClient = useQueryClient();
-
-  const { subtractBalanceFromField } = useBalanceStore();
 
   return useMutation({
     mutationKey: ["/POST /market/bet"],
-    mutationFn: async (value: any) => {
-      const { selection, amount } = value as MarketActionValue;
-
-      const currentTag = [
-        {
-          name: "Action",
-          value: selection,
-        },
-        {
-          name: "Quantity",
-          value: String(amount),
-        },
-      ];
+    mutationFn: async () => {
+      const currentTag = [{ name: "Action", value: "WithdrawRewards" }];
 
       const mutate = await message({
         process: marketId,
@@ -44,10 +29,10 @@ const useBetOption = (marketId: string) => {
         throw new Error(response.Messages[0]?.Data);
       }
 
-      return { amount };
+      return true;
     },
 
-    onSuccess: ({ amount }: any) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey as string[];
@@ -58,9 +43,7 @@ const useBetOption = (marketId: string) => {
         },
       });
 
-      subtractBalanceFromField("UserDepositBalance", amount);
-
-      toast(`Successfully Voted`, {
+      toast(`Withdraw Successfully`, {
         position: "top-center",
         style: {
           background: "#38A068",
@@ -70,7 +53,7 @@ const useBetOption = (marketId: string) => {
     },
 
     onError: (error) => {
-      toast(error.message, {
+      toast(error.message || "Something went wrong", {
         position: "top-center",
         style: {
           background: "#dc2626",
@@ -81,4 +64,4 @@ const useBetOption = (marketId: string) => {
   });
 };
 
-export default useBetOption;
+export default useWithDrawReward;

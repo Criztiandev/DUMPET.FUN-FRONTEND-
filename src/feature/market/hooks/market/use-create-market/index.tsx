@@ -8,9 +8,11 @@ import { useForm } from "react-hook-form";
 import { createMarketValidation } from "@/feature/user/validation/market-validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/common/hooks/utils/use-toast";
+import { useActiveAddress } from "arweave-wallet-kit";
 
 const useCreateMarket = () => {
   const { toast } = useToast();
+  const activeAddress = useActiveAddress();
   const form = useForm<MarketFormValue>({
     resolver: zodResolver(createMarketValidation),
   });
@@ -49,33 +51,34 @@ const useCreateMarket = () => {
         },
       ];
 
-      const response = await message({
+      const mutate = await message({
         process: import.meta.env.VITE_DEV_MAIN_PROCESS_ID,
         tags: createTags,
         signer: createDataItemSigner(window.arweaveWallet),
       });
 
-      return await result({
-        message: response,
+      const _result = await result({
+        message: mutate,
         process: import.meta.env.VITE_DEV_MAIN_PROCESS_ID,
       });
-    },
 
-    onSuccess: async (data) => {
-      const error = data.Messages[0]?.Tags?.find(
-        (tag: any) => tag.name === "Error"
-      );
+      const response = _result?.Messages[0];
+      const hasError = response?.Tags?.find((tag: any) => tag.name === "Error");
 
-      if (error) {
-        throw new Error(data.Messages[0].Data);
+      if (hasError) {
+        throw new Error(response.Data);
       }
 
+      return response.Data;
+    },
+
+    onSuccess: async () => {
       queryClient.invalidateQueries({
         predicate: (query) => {
           const queryKey = query.queryKey as string[];
           return (
             queryKey.includes(`/GET /created/market/list`) ||
-            queryKey.includes(`/GET /market/lists`)
+            queryKey.includes(`/GET /market/${activeAddress}/pending`)
           );
         },
       });
@@ -91,8 +94,9 @@ const useCreateMarket = () => {
     },
 
     onError: (error) => {
+      form.reset();
       toast({
-        title: "Something went wrong, Please try again later",
+        title: "Something went wrong",
         variant: "destructive",
         description: error.message,
       });

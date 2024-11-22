@@ -1,9 +1,7 @@
 import BarChart from "@/common/components/molecules/charts/bar-chart";
 import Topbar from "@/common/components/template/layout/topbar";
-
 import { FormProvider, useForm } from "react-hook-form";
 import { useIsMobile } from "@/hooks/use-mobile";
-import MobileMarketDetails from "@/common/components/template/details/mobile-market-action";
 import { XStack } from "@/common/components/atoms/ui/stack";
 import DesktopMarketAction from "@/common/components/template/details/desktop-market-action";
 import { useParams } from "react-router-dom";
@@ -15,8 +13,10 @@ import ConcludeButton from "@/common/components/atoms/button/conclude-button";
 import CountdownMarket from "@/common/components/molecules/timer/countdown-market";
 import useFetchAccountBalance from "@/feature/balance/hooks/use-fetch-account-balance";
 import useBalanceStore from "../../store/balance-store";
+import { useAccountStore } from "../../store/account-store";
 
 const DetailsScreen = () => {
+  const { isOnline } = useAccountStore();
   const { id: marketID } = useParams();
   const form = useForm();
   const isMobile = useIsMobile();
@@ -62,15 +62,13 @@ const DetailsScreen = () => {
           )}
         </div>
 
-        <FormProvider {...form}>
-          {isMobile ? (
-            <MobileMarketDetails />
-          ) : (
+        {isOnline && (
+          <FormProvider {...form}>
             <Suspense fallback={<MarketActionLoadingScreen />}>
               <DesktopMarketAction />
             </Suspense>
-          )}
-        </FormProvider>
+          </FormProvider>
+        )}
       </div>
     </section>
   );

@@ -1,3 +1,4 @@
+import React from "react";
 import DateField from "@/common/components/atoms/form/DateField";
 import InputField from "@/common/components/atoms/form/InputField";
 import { Button, buttonVariants } from "@/common/components/atoms/ui/button";
@@ -7,32 +8,59 @@ import useCreateMarket from "@/feature/market/hooks/market/use-create-market";
 import { MarketFormValue } from "@/feature/market/interface/market.interface";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FormProvider } from "react-hook-form";
+import { Alert, AlertDescription } from "@/common/components/atoms/ui/alert";
 
-const CreateMarketCreen = () => {
+const CreateMarketScreen = () => {
   const { form, mutation } = useCreateMarket();
   const isMobile = useIsMobile();
+  const [dateError, setDateError] = React.useState<string>("");
+
+  const validateDateTime = (date: Date, time: string): boolean => {
+    const now = new Date();
+    now.setSeconds(0);
+    now.setMilliseconds(0);
+
+    const selectedDate = new Date(date);
+    const [hours, minutes] = time.split(":").map(Number);
+    selectedDate.setHours(hours);
+    selectedDate.setMinutes(minutes);
+    selectedDate.setSeconds(0);
+    selectedDate.setMilliseconds(0);
+
+    // Check if the selected date/time is in the past
+    if (selectedDate.getTime() <= now.getTime()) {
+      setDateError("Please select a future date and time");
+      return false;
+    }
+
+    setDateError("");
+    return true;
+  };
 
   const onSubmit = (data: MarketFormValue) => {
-    const date = new Date(data.date);
+    const selectedDate = new Date(data.date);
     const [hours, minutes] = data.time.split(":").map(Number);
 
-    date.setHours(hours);
-    date.setMinutes(minutes);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
+    if (!validateDateTime(selectedDate, data.time)) {
+      return;
+    }
 
-    const unixDuration = Math.floor(date.getTime() / 1000) * 1000;
-    console.log(unixDuration);
+    selectedDate.setHours(hours);
+    selectedDate.setMinutes(minutes);
+    selectedDate.setSeconds(0);
+    selectedDate.setMilliseconds(0);
+
+    // Convert to milliseconds
+    const unixTimestamp = selectedDate.getTime();
 
     const { date: _, time: __, ...formData } = data;
 
-    console.log(formData);
-
     mutation.mutate({
       ...formData,
-      Duration: unixDuration.toString(),
+      Duration: unixTimestamp.toString(),
     } as any);
   };
+
   return (
     <div className="w-full min-h-screen">
       <CreateMarketTopbar />
@@ -41,7 +69,12 @@ const CreateMarketCreen = () => {
         <div className="flex justify-center items-center">
           <h1 className="text-4xl font-bold my-4">Create Market</h1>
         </div>
-        <div className="max-w-lg mx-auto   p-4 rounded-md ">
+        <div className="max-w-lg mx-auto p-4 rounded-md">
+          {dateError && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription>{dateError}</AlertDescription>
+            </Alert>
+          )}
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-4">
@@ -57,7 +90,7 @@ const CreateMarketCreen = () => {
                 />
 
                 <div className="flex flex-col gap-4 md:grid md:grid-cols-[auto_35%] md:items-end">
-                  <DateField label="Date" />
+                  <DateField label="Date" name="date" />
 
                   <InputField
                     label="Time"
@@ -84,7 +117,7 @@ const CreateMarketCreen = () => {
                   <InputField
                     label="Option B"
                     name="OptionB"
-                    placeholder="Enter Option B`"
+                    placeholder="Enter Option B"
                   />
                 </div>
               </div>
@@ -104,4 +137,4 @@ const CreateMarketCreen = () => {
   );
 };
 
-export default CreateMarketCreen;
+export default CreateMarketScreen;

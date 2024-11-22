@@ -106,3 +106,57 @@ export const formatDuration = (timestamp: number): string => {
 
   return "Now";
 };
+
+/**
+ * Validates if a market time is in the future
+ * @param currentDate - Current date as JavaScript Date object
+ * @param marketTimeUnix - Market time as Unix timestamp (in seconds)
+ * @throws Error if market time is in the past
+ * @returns true if validation passes
+ */
+export function validateMarketTime(
+  currentDate: Date,
+  marketTimeUnix: number
+): boolean {
+  // Convert Unix timestamp (seconds) to milliseconds
+  const marketDate = new Date(marketTimeUnix * 1000);
+
+  // Reset milliseconds for both dates to ensure precise comparison
+  const normalizedCurrentDate = new Date(currentDate.setMilliseconds(0));
+  const normalizedMarketDate = new Date(marketDate.setMilliseconds(0));
+
+  // Convert both to seconds for comparison
+  const currentSeconds = Math.floor(normalizedCurrentDate.getTime() / 1000);
+  const marketSeconds = Math.floor(normalizedMarketDate.getTime() / 1000);
+
+  // Ensure market time is in the future and not the same second
+  return marketSeconds > currentSeconds;
+}
+
+interface MarketValidationResult {
+  isValid: boolean;
+  currentDate: Date;
+  marketDate: Date;
+  error: string | null;
+}
+
+/**
+ * Validates if a market time is in the future and returns detailed validation info
+ * @param currentDate - Current date as JavaScript Date object
+ * @param marketTimeUnix - Market time as Unix timestamp (in seconds)
+ * @returns MarketValidationResult object with validation details
+ */
+export function validateMarketTimeWithDetails(
+  currentDate: Date,
+  marketTimeUnix: number
+): MarketValidationResult {
+  const marketDate = new Date(marketTimeUnix * 1000);
+
+  return {
+    isValid: marketDate >= currentDate,
+    currentDate: currentDate,
+    marketDate: marketDate,
+    error:
+      marketDate < currentDate ? "Market time cannot be in the past" : null,
+  };
+}

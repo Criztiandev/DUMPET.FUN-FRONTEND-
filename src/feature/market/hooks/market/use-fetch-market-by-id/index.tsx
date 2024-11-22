@@ -11,8 +11,6 @@ const useFetchMarketById = (id: string) => {
       });
 
       const payload = JSON.parse(result.Messages[0]?.Data);
-
-      console.log(payload);
       return payload;
     },
   });

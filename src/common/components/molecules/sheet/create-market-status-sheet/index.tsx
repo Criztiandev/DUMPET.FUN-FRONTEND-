@@ -22,8 +22,6 @@ const CreateMarketStatusSheet = () => {
   const { data: pendingMarket } = useFetchPendingMarket();
   const navigate = useNavigate();
 
-  console.log(pendingMarket);
-
   return (
     <Sheet>
       <SheetTrigger asChild>

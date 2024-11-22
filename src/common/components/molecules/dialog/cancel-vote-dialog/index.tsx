@@ -13,7 +13,11 @@ import { Button } from "@/common/components/atoms/ui/button";
 import useCancelBet from "@/feature/bet/hooks/use-cancel-bet";
 import { useParams } from "react-router-dom";
 
-const CancelVoteDialog = () => {
+interface Props {
+  disabled?: boolean;
+}
+
+const CancelVoteDialog = ({ disabled }: Props) => {
   const { id: marketID } = useParams();
   const { mutate } = useCancelBet(marketID || "");
 
@@ -24,7 +28,9 @@ const CancelVoteDialog = () => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">Cancel</Button>
+        <Button variant="destructive" disabled={disabled}>
+          Cancel
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
