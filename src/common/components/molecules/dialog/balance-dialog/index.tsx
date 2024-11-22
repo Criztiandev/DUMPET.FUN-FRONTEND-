@@ -21,7 +21,6 @@ import { useAccountStore } from "@/feature/user/store/account-store";
 import { toast } from "sonner";
 import useBalanceStore from "@/feature/user/store/balance-store";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import useFetchAccountBalance from "@/feature/balance/hooks/use-fetch-account-balance";
 import BigNumber from "bignumber.js";
 import { VariantProps } from "class-variance-authority";
@@ -32,7 +31,6 @@ import useMarketStore from "@/feature/market/store/market.store";
 interface Props extends VariantProps<typeof buttonVariants> {}
 
 export function BalanceDialog(props: Props) {
-  const { id } = useParams();
   const form = useForm();
   const { connected } = useConnection();
   const { isOnline } = useAccountStore();
@@ -40,7 +38,7 @@ export function BalanceDialog(props: Props) {
 
   const [onDialogClose, setOnDialogClose] = useState(false);
 
-  const { data: balanceData } = useFetchAccountBalance(id || "0");
+  const { data: balanceData } = useFetchAccountBalance();
   const { setBalance } = useBalanceStore();
 
   const { balance } = useBalanceStore();

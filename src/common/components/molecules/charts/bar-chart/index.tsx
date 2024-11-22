@@ -20,7 +20,6 @@ import {
 import useMarketStore from "@/feature/market/store/market.store";
 import { MarketInfo } from "@/feature/market/interface/market.interface";
 import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
-import { useParams } from "react-router-dom";
 import useFetchAccountBalance from "@/feature/balance/hooks/use-fetch-account-balance";
 
 interface ChartData {
@@ -55,9 +54,8 @@ const chartConfig: ChartConfig = {
 };
 
 const BarChart: React.FC = () => {
-  const { id: marketId } = useParams();
   const { selectedMarket } = useMarketStore();
-  const { data: result } = useFetchAccountBalance(marketId || "");
+  const { data: result } = useFetchAccountBalance();
 
   const marketInfo = selectedMarket?.MarketInfo as MarketInfo;
 
