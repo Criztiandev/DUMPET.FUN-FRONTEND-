@@ -48,7 +48,7 @@ const MobileMarketDetails = () => {
 
       {/* Details Section */}
       <div className="p-4 mb-36">
-        <ImagePreview thumbnailFile="" />
+        <ImagePreview />
 
         <div className="space-y-4 mt-4">
           <div className="mb-4">
