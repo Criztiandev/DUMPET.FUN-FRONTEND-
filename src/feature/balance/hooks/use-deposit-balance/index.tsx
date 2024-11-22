@@ -15,7 +15,7 @@ const useDepositBalance = (tokenID: string) => {
 
   return useMutation({
     mutationKey: [
-      `POST /deposit/balance/${selectedMarketInfo.ProcessId}/${tokenID}`,
+      `POST /deposit/balance/${selectedMarketInfo?.ProcessId}/${tokenID}`,
     ],
     mutationFn: async (balance: string) => {
       const formattedBalance = formatArweaveTokenAmount(Number(balance));
@@ -25,7 +25,7 @@ const useDepositBalance = (tokenID: string) => {
       }
 
       const currentDate = new Date();
-      const marketTimeUnix = selectedMarketInfo.Duration;
+      const marketTimeUnix = selectedMarketInfo?.Duration;
 
       if (!isMarketDeadlineValid(currentDate, Number(marketTimeUnix))) {
         throw new Error("Invalid Action: Market is already concluded");

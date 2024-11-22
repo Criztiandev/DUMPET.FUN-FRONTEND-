@@ -69,14 +69,17 @@ const CreateMarketScreen = () => {
         <div className="flex justify-center items-center">
           <h1 className="text-4xl font-bold my-4">Create Market</h1>
         </div>
-        <div className="max-w-lg mx-auto p-4 rounded-md">
+        <div className="max-w-lg mx-auto p-4 rounded-md w-full">
           {dateError && (
             <Alert variant="destructive" className="mb-4">
               <AlertDescription>{dateError}</AlertDescription>
             </Alert>
           )}
           <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 w-full "
+            >
               <div className="space-y-4">
                 <InputField
                   label="TokenTxId"

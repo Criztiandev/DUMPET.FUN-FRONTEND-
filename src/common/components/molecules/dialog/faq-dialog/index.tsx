@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/common/components/atoms/ui/button";
 import {
   Dialog,
