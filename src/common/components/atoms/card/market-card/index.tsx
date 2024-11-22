@@ -4,10 +4,7 @@ import { Badge } from "../../ui/badge";
 import { useNavigate } from "react-router-dom";
 import { Clock, Flame } from "lucide-react";
 import { Separator } from "../../ui/separator";
-import {
-  Market,
-  MarketInfo,
-} from "@/feature/market/interface/market.interface";
+import { MarketInfo } from "@/feature/market/interface/market.interface";
 import {
   getDaysFromTimestamp,
   formatDuration,
@@ -31,6 +28,8 @@ const MarketCard = ({
   const handleNavigate = () => {
     navigate(`/market/details/${ProcessId}`);
   };
+
+  console.log(Timestamp);
   return (
     <Card
       className=" flex flex-col lg:grid lg:grid-cols-[44%_auto] cursor-pointer border-primary/50   dark:bg-transparent "

@@ -2,105 +2,101 @@ export function getDaysFromTimestamp(timestamp: number): string {
   const date = new Date(timestamp);
   const now = new Date();
 
+  // Reset hours to start of day for accurate day comparison
+  date.setHours(0, 0, 0, 0);
+  now.setHours(0, 0, 0, 0);
+
   // Get difference in milliseconds
   const diffTime = date.getTime() - now.getTime();
-  // Convert to days and round
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  // Convert to days
+  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
+  // Check if it's today
+  if (diffDays === 0) {
+    return "New";
+  }
+
+  // Check if it's ended
   if (diffDays < 0) {
+    // If it's exactly -1, show "Yesterday"
+    if (diffDays === -1) {
+      return "New";
+    }
+    // If it's more than 30 days ago, show "Ended"
+    if (Math.abs(diffDays) > 30) {
+      return "Ended";
+    }
     return `${Math.abs(diffDays)} days ago`;
+  }
+
+  // Future dates
+  if (diffDays === 1) {
+    return "Advance";
   }
   return `${diffDays} days left`;
 }
 
-export const formatEventTime = (timestamp: number): string => {
+export const formatDuration = (duration: number): string => {
   const now = Date.now();
 
-  // If timestamp is a small number, assume it's a duration in milliseconds
-  // rather than a full Unix timestamp
-  const targetTime = timestamp < 1000000000000 ? now + timestamp : timestamp;
+  // Handle duration vs timestamp
+  const targetTime = duration < 1000000000000 ? now + duration : duration;
+  const diffInMs = targetTime - now;
+  const diffInSeconds = Math.floor(diffInMs / 1000);
 
-  const diffInSeconds = Math.floor((targetTime - now) / 1000);
-
-  // Check for invalid timestamp
-  if (isNaN(diffInSeconds) || !isFinite(diffInSeconds)) {
-    return "Invalid time";
-  }
-
-  // Event is in the past
-  if (diffInSeconds < -30) {
-    return "Event has ended";
-  }
-
-  // Just ended or about to end
-  if (diffInSeconds >= -30 && diffInSeconds < 0) {
-    return "Ending now";
-  }
-
-  // Just starting
-  if (diffInSeconds >= 0 && diffInSeconds < 30) {
-    return "Starting now";
-  }
-
-  // Convert to larger units
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  const diffInDays = Math.floor(diffInHours / 24);
-  const diffInMonths = Math.floor(diffInDays / 30);
-  const diffInYears = Math.floor(diffInDays / 365);
-
-  // Future event formatting
-  if (diffInYears > 0) {
-    return `Starts in ${diffInYears} year${diffInYears === 1 ? "" : "s"}`;
-  } else if (diffInMonths > 0) {
-    return `Starts in ${diffInMonths} month${diffInMonths === 1 ? "" : "s"}`;
-  } else if (diffInDays > 0) {
-    return `Starts in ${diffInDays} day${diffInDays === 1 ? "" : "s"}`;
-  } else if (diffInHours > 0) {
-    return `Starts in ${diffInHours} hour${diffInHours === 1 ? "" : "s"}`;
-  } else if (diffInMinutes > 0) {
-    return `Starts in ${diffInMinutes} minute${diffInMinutes === 1 ? "" : "s"}`;
-  } else {
-    return `Starts in ${diffInSeconds} second${diffInSeconds === 1 ? "" : "s"}`;
-  }
-};
-
-export const formatDuration = (timestamp: number): string => {
-  const now = Date.now();
-
-  // If timestamp is a small number, assume it's a duration in milliseconds
-  // rather than a full Unix timestamp
-  const targetTime = timestamp < 1000000000000 ? now + timestamp : timestamp;
-  const diffInSeconds = Math.floor((targetTime - now) / 1000);
-
-  // Check for invalid timestamp
+  // Check for invalid input
   if (isNaN(diffInSeconds) || !isFinite(diffInSeconds)) {
     return "Invalid";
   }
 
-  // Event has ended
-  if (diffInSeconds < 0) {
+  // Handle past events
+  if (diffInSeconds < -60) {
     return "Ended";
+  }
+
+  // Handle current/just ended events
+  if (diffInSeconds >= -60 && diffInSeconds <= 0) {
+    return "Now";
   }
 
   // Convert to larger units
   const minutes = Math.floor(diffInSeconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(days / 365);
 
   // Format based on duration length
+  if (years > 0) {
+    const remainingMonths = Math.floor((days % 365) / 30);
+    return remainingMonths > 0 ? `${years}y ${remainingMonths}m` : `${years}y`;
+  }
+
+  if (months > 0) {
+    const remainingDays = days % 30;
+    return remainingDays > 0 ? `${months}mo ${remainingDays}d` : `${months}mo`;
+  }
+
   if (days > 0) {
-    return `${days}d`;
-  } else if (hours > 0) {
+    const remainingHours = hours % 24;
+    return remainingHours > 0 ? `${days}d ${remainingHours}h` : `${days}d`;
+  }
+
+  if (hours > 0) {
     const remainingMinutes = minutes % 60;
-    // Only show minutes if less than 10 hours
-    if (hours < 10 && remainingMinutes > 0) {
-      return `${hours}h ${remainingMinutes}m`;
-    }
-    return `${hours}h`;
-  } else if (minutes > 0) {
-    return `${minutes}m`;
-  } else if (diffInSeconds >= 0) {
+    return remainingMinutes > 0 && hours < 10
+      ? `${hours}h ${remainingMinutes}m`
+      : `${hours}h`;
+  }
+
+  if (minutes > 0) {
+    const remainingSeconds = diffInSeconds % 60;
+    return remainingSeconds > 0 && minutes < 10
+      ? `${minutes}m ${remainingSeconds}s`
+      : `${minutes}m`;
+  }
+
+  if (diffInSeconds > 0) {
     return `${diffInSeconds}s`;
   }
 
