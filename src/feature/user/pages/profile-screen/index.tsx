@@ -2,17 +2,16 @@ import { Badge } from "@/common/components/atoms/ui/badge";
 import { Button } from "@/common/components/atoms/ui/button";
 import Topbar from "@/common/components/template/layout/topbar";
 import { Coins } from "lucide-react";
-import { useAccountStore } from "../../store/account-store";
 import useFetchAllCreatedMarket from "@/feature/market/hooks/market/use-fetch-all-created-market";
 import { useNavigate } from "react-router-dom";
+import { useActiveAddress } from "arweave-wallet-kit";
 
 const ProfileScreen = () => {
-  const { address } = useAccountStore();
+  // const { address } = useAccountStore();
   const { data: result } = useFetchAllCreatedMarket();
-
   const navigate = useNavigate();
-
   const { Markets } = result;
+  const address = useActiveAddress();
 
   return (
     <div className="w-full ">
@@ -88,7 +87,7 @@ const ProfileScreen = () => {
                 <div className="flex space-x-4">
                   <img
                     className="h-16 w-16 rounded-lg"
-                    src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/helene-engels.png"
+                    src={`https://ui-avatars.com/api/?name=${address}&background=8058D5&color=fff`}
                     alt="Helene avatar"
                   />
                   <div>
@@ -96,7 +95,7 @@ const ProfileScreen = () => {
                       Member
                     </span>
                     <h2 className="flex items-center text-xl font-bold leading-none text-gray-900 dark:text-white sm:text-2xl">
-                      Dumpet #{getFirstAndLastThree(address)}
+                      Dumpet #{getFirstAndLastThree(address || "")}
                     </h2>
                   </div>
                 </div>
@@ -105,7 +104,7 @@ const ProfileScreen = () => {
                     Wallet Address
                   </dt>
                   <dd className="text-gray-500 dark:text-gray-400">
-                    {address}
+                    {address || ""}
                   </dd>
                 </dl>
               </div>
@@ -121,7 +120,7 @@ const ProfileScreen = () => {
             </h3>
 
             {Markets ? (
-              Markets.map((market: string) => (
+              Markets.map((market: any) => (
                 <div className="flex flex-col gap-4 md:flex-wrap md:items-be md:flex-row gap-y-4 border-b mb-4 border-gray-200 pb-4 dark:border-gray-700 md:pb-5">
                   <dl className="w-1/2 sm:w-48">
                     <dt className="text-base font-medium text-gray-500 dark:text-gray-400">
@@ -129,7 +128,7 @@ const ProfileScreen = () => {
                     </dt>
                     <dd className="mt-1.5 text-base font-semibold text-gray-900 dark:text-white">
                       <span className="break-words md:break-normal">
-                        #{market}
+                        #{market.Title}
                       </span>
                     </dd>
                   </dl>
@@ -150,7 +149,11 @@ const ProfileScreen = () => {
                     </dd>
                   </dl>
 
-                  <Button onClick={() => navigate(`/market/details/${market}`)}>
+                  <Button
+                    onClick={() =>
+                      navigate(`/market/details/${market.MarketProcessId}`)
+                    }
+                  >
                     View Result
                   </Button>
                 </div>

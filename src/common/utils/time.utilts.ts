@@ -108,29 +108,48 @@ export const formatDuration = (timestamp: number): string => {
 };
 
 /**
- * Validates if a market time is in the future
- * @param currentDate - Current date as JavaScript Date object
- * @param marketTimeUnix - Market time as Unix timestamp (in seconds)
- * @throws Error if market time is in the past
- * @returns true if validation passes
+ * Checks if the provided market deadline is in the future
+ * @param currentTime - Current time as JavaScript Date object
+ * @param marketDeadlineUnix - Market deadline as Unix timestamp (in seconds)
+ * @returns true if market deadline is in the future, false otherwise
+ * @throws {ValidationError} if inputs are invalid
  */
-export function validateMarketTime(
-  currentDate: Date,
-  marketTimeUnix: number
+export function isMarketDeadlineValid(
+  currentTime: Date,
+  marketDeadlineUnix: number
 ): boolean {
-  // Convert Unix timestamp (seconds) to milliseconds
-  const marketDate = new Date(marketTimeUnix * 1000);
+  if (!(currentTime instanceof Date) || isNaN(currentTime.getTime())) {
+    throw new Error("Invalid current time provided");
+  }
 
-  // Reset milliseconds for both dates to ensure precise comparison
-  const normalizedCurrentDate = new Date(currentDate.setMilliseconds(0));
-  const normalizedMarketDate = new Date(marketDate.setMilliseconds(0));
+  if (typeof marketDeadlineUnix !== "number" || marketDeadlineUnix <= 0) {
+    throw new Error("Invalid market deadline timestamp");
+  }
 
-  // Convert both to seconds for comparison
-  const currentSeconds = Math.floor(normalizedCurrentDate.getTime() / 1000);
-  const marketSeconds = Math.floor(normalizedMarketDate.getTime() / 1000);
+  // Convert Unix timestamp (seconds) to Date object
+  const marketDeadline = new Date(marketDeadlineUnix * 1000);
 
-  // Ensure market time is in the future and not the same second
-  return marketSeconds > currentSeconds;
+  // Reset milliseconds for precise comparison
+  const normalizedCurrentTime = new Date(currentTime);
+  normalizedCurrentTime.setMilliseconds(0);
+
+  const normalizedDeadline = new Date(marketDeadline);
+  normalizedDeadline.setMilliseconds(0);
+
+  // Convert to Unix timestamp (seconds) for comparison
+  const currentUnix = Math.floor(normalizedCurrentTime.getTime() / 1000);
+  const deadlineUnix = Math.floor(normalizedDeadline.getTime() / 1000);
+
+  // Market deadline must be at least 1 second in the future
+  return deadlineUnix > currentUnix;
+}
+
+// Optional: Custom error class for validation errors
+export class ValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ValidationError";
+  }
 }
 
 interface MarketValidationResult {

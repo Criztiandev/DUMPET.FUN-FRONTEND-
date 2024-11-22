@@ -16,6 +16,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormControl,
 } from "@/common/components/atoms/ui/form";
 
 interface DateFieldProps {
@@ -52,8 +53,6 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
       defaultValue,
       onChange,
       error,
-      validateTime = false,
-      timeFieldName = "time",
     },
     ref
   ) => {
@@ -75,49 +74,6 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
         return format(date, "MMMM d, yyyy");
       },
       [placeholder]
-    );
-
-    const validateDate = React.useCallback(
-      (date: Date | undefined) => {
-        if (!date) return required ? "Date is required" : true;
-
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-
-        if (minDate && date < minDate) {
-          return `Please select a date after ${format(
-            minDate,
-            "MMMM d, yyyy"
-          )}`;
-        }
-
-        if (maxDate && date > maxDate) {
-          return `Please select a date before ${format(
-            maxDate,
-            "MMMM d, yyyy"
-          )}`;
-        }
-
-        if (date < now) {
-          return "Please select a future date";
-        }
-
-        if (validateTime && hasForm) {
-          const timeValue = form.getValues(timeFieldName);
-          if (timeValue) {
-            const [hours, minutes] = timeValue.split(":").map(Number);
-            const selectedDateTime = new Date(date);
-            selectedDateTime.setHours(hours, minutes, 0, 0);
-
-            if (selectedDateTime <= new Date()) {
-              return "Selected date and time must be in the future";
-            }
-          }
-        }
-
-        return true;
-      },
-      [minDate, maxDate, required, validateTime, hasForm, form, timeFieldName]
     );
 
     const isDateDisabled = React.useCallback(
@@ -203,26 +159,39 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
       <FormField
         control={form.control}
         name={name}
-        rules={{
-          required: required ? "Date is required" : false,
-          validate: validateDate,
-        }}
-        render={({ field, fieldState }: any) => (
-          <FormItem className="flex flex-col">
-            {label && (
-              <FormLabel
-                className={cn(
-                  required &&
-                    "after:content-['*'] after:ml-0.5 after:text-destructive"
-                )}
-              >
-                {label}
-              </FormLabel>
-            )}
-            {datePickerContent(field.value, field.onChange, !!fieldState.error)}
-            {description && (
-              <p className="text-sm text-muted-foreground">{description}</p>
-            )}
+        render={({ field }) => (
+          <FormItem>
+            {label && <FormLabel>{label}</FormLabel>}
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full pl-3 text-left font-normal",
+                      !field.value && "text-muted-foreground"
+                    )}
+                    ref={ref}
+                  >
+                    {field.value ? (
+                      format(field.value, "PPP")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={field.value}
+                  onSelect={field.onChange}
+                  disabled={(date) => date < new Date() || false}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
             <FormMessage />
           </FormItem>
         )}

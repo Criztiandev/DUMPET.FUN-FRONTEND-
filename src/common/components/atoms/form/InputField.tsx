@@ -5,7 +5,6 @@ import {
   FormItem,
   FormLabel,
   FormControl,
-  FormDescription,
   FormMessage,
 } from "@/common/components/atoms/ui/form";
 import { cn } from "@/common/lib/utils";
@@ -104,13 +103,17 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       <FormField
         control={form.control}
         name={name}
-        render={() => (
+        render={({ field }) => (
           <FormItem>
             {label && <FormLabel>{label}</FormLabel>}
             <FormControl>
-              <div className={className}>{inputWrapper}</div>
+              <Input
+                {...field}
+                value={field.value || ""} // Handle undefined/null values
+                ref={ref}
+                {...props}
+              />
             </FormControl>
-            {description && <FormDescription>{description}</FormDescription>}
             <FormMessage />
           </FormItem>
         )}

@@ -15,12 +15,20 @@ import useFetchAllCreatedMarket from "@/feature/market/hooks/market/use-fetch-al
 import { useNavigate } from "react-router-dom";
 import useFetchPendingMarket from "@/feature/market/hooks/market/use-fetch-pending-market";
 import { Badge } from "@/common/components/atoms/ui/badge";
+import { useEffect } from "react";
+import { QueryClient } from "@tanstack/react-query";
 
 const CreateMarketStatusSheet = () => {
   // const { data: marketStatus } = useFetchMarketStatus();
   const { data: createdMarket } = useFetchAllCreatedMarket();
   const { data: pendingMarket } = useFetchPendingMarket();
+
+  const queryClient = new QueryClient();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["/GET /market/pending"] });
+  }, []);
 
   return (
     <Sheet>

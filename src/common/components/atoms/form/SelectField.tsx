@@ -6,7 +6,6 @@ import {
   SelectValue,
 } from "@/common/components/atoms/ui/select";
 import {
-  FormField,
   FormItem,
   FormLabel,
   FormControl,
@@ -14,7 +13,7 @@ import {
   FormMessage,
 } from "@/common/components/atoms/ui/form";
 import { forwardRef } from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { cn } from "@/common/lib/utils";
 
 interface SelectOption {
@@ -35,6 +34,7 @@ interface SelectFieldProps {
   defaultValue?: string;
   onChange?: (value: string) => void;
   error?: string;
+  rules?: Record<string, any>;
 }
 
 const SelectField = forwardRef<HTMLButtonElement, SelectFieldProps>(
@@ -52,6 +52,7 @@ const SelectField = forwardRef<HTMLButtonElement, SelectFieldProps>(
       defaultValue,
       onChange,
       error,
+      rules,
     },
     ref
   ) => {
@@ -59,11 +60,13 @@ const SelectField = forwardRef<HTMLButtonElement, SelectFieldProps>(
     const hasForm = !!form && !standalone;
 
     const selectContent = (
-      value?: string,
-      onChangeValue?: (value: string) => void
+      value: string | undefined,
+      onChangeValue: (value: string) => void,
+      hasError?: boolean
     ) => (
       <Select
         defaultValue={value}
+        value={value}
         onValueChange={onChangeValue}
         disabled={disabled}
       >
@@ -73,15 +76,16 @@ const SelectField = forwardRef<HTMLButtonElement, SelectFieldProps>(
             className={cn(
               "w-full",
               disabled && "opacity-50 cursor-not-allowed",
+              hasError && "border-destructive",
               className
             )}
           >
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
         </FormControl>
-        {options?.length > 0 && (
-          <SelectContent>
-            {options.map((option) => (
+        <SelectContent>
+          {options?.length > 0 ? (
+            options.map((option) => (
               <SelectItem
                 key={option.value}
                 value={option.value}
@@ -92,9 +96,13 @@ const SelectField = forwardRef<HTMLButtonElement, SelectFieldProps>(
               >
                 {option.label}
               </SelectItem>
-            ))}
-          </SelectContent>
-        )}
+            ))
+          ) : (
+            <SelectItem value="no-options" disabled>
+              No options available
+            </SelectItem>
+          )}
+        </SelectContent>
       </Select>
     );
 
@@ -106,13 +114,13 @@ const SelectField = forwardRef<HTMLButtonElement, SelectFieldProps>(
               className={cn(
                 "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
                 required &&
-                  "after:content-['*'] after:ml-0.5 after:text-red-500"
+                  "after:content-['*'] after:ml-0.5 after:text-destructive"
               )}
             >
               {label}
             </label>
           )}
-          {selectContent(defaultValue, onChange)}
+          {selectContent(defaultValue, onChange || (() => {}), !!error)}
           {description && (
             <p className="text-sm text-muted-foreground">{description}</p>
           )}
@@ -124,22 +132,34 @@ const SelectField = forwardRef<HTMLButtonElement, SelectFieldProps>(
     }
 
     return (
-      <FormField
-        control={form.control}
+      <Controller
         name={name}
-        render={({ field }: any) => (
+        control={form.control}
+        rules={{
+          required: required ? "This field is required" : false,
+          ...rules,
+        }}
+        defaultValue={defaultValue || ""}
+        render={({ field, fieldState }) => (
           <FormItem>
             {label && (
               <FormLabel
                 className={cn(
                   required &&
-                    "after:content-['*'] after:ml-0.5 after:text-red-500"
+                    "after:content-['*'] after:ml-0.5 after:text-destructive"
                 )}
               >
                 {label}
               </FormLabel>
             )}
-            {selectContent(field.value, field.onChange)}
+            {selectContent(
+              field.value,
+              (value) => {
+                field.onChange(value);
+                onChange?.(value);
+              },
+              !!fieldState.error
+            )}
             {description && <FormDescription>{description}</FormDescription>}
             <FormMessage />
           </FormItem>

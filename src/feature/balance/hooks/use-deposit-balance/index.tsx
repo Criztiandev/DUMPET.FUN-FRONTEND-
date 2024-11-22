@@ -1,5 +1,5 @@
 import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
-import { validateMarketTime } from "@/common/utils/time.utilts";
+import { isMarketDeadlineValid } from "@/common/utils/time.utilts";
 import { MarketInfo } from "@/feature/market/interface/market.interface";
 import useMarketStore from "@/feature/market/store/market.store";
 import useBalanceStore from "@/feature/user/store/balance-store";
@@ -27,7 +27,7 @@ const useDepositBalance = (tokenID: string) => {
       const currentDate = new Date();
       const marketTimeUnix = selectedMarketInfo.Duration;
 
-      if (validateMarketTime(currentDate, Number(marketTimeUnix))) {
+      if (!isMarketDeadlineValid(currentDate, Number(marketTimeUnix))) {
         throw new Error("Invalid Action: Market is already concluded");
       }
 

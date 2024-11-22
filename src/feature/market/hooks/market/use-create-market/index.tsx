@@ -57,31 +57,32 @@ const useCreateMarket = () => {
         signer: createDataItemSigner(window.arweaveWallet),
       });
 
-      const _result = await result({
+      return await result({
         message: mutate,
         process: import.meta.env.VITE_DEV_MAIN_PROCESS_ID,
       });
+    },
 
-      const response = _result?.Messages[0];
+    // There is a bug on create page
+    onSuccess: async (data) => {
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const queryKey = query.queryKey as string[];
+          return (
+            queryKey.includes(`/GET /created/market/list`) ||
+            queryKey.includes(`/GET /market/pending`)
+          );
+        },
+      });
+
+      const response = data?.Messages[0];
+
       const hasError = response?.Tags?.find((tag: any) => tag.name === "Error");
 
       if (hasError) {
         throw new Error(response.Data);
       }
 
-      return response.Data;
-    },
-
-    onSuccess: async () => {
-      queryClient.invalidateQueries({
-        predicate: (query) => {
-          const queryKey = query.queryKey as string[];
-          return (
-            queryKey.includes(`/GET /created/market/list`) ||
-            queryKey.includes(`/GET /market/${activeAddress}/pending`)
-          );
-        },
-      });
       toast({
         className: "bg-green-500/50",
         title: "Created Market Successfully",
@@ -94,11 +95,21 @@ const useCreateMarket = () => {
     },
 
     onError: (error) => {
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const queryKey = query.queryKey as string[];
+          return (
+            queryKey.includes(`/GET /created/market/list`) ||
+            queryKey.includes(`/GET /market/${activeAddress}/pending`)
+          );
+        },
+      });
+
       form.reset();
       toast({
-        title: "Something went wrong",
+        title: error.message || "Something went wrong",
         variant: "destructive",
-        description: error.message,
+        description: "Please take it time, Kalma ",
       });
     },
   });

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import {
   Bar,
   BarChart as BarChartParent,
@@ -23,53 +23,90 @@ import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
 import { useParams } from "react-router-dom";
 import useFetchAccountBalance from "@/feature/balance/hooks/use-fetch-account-balance";
 
-// Define the structure of the chart data with color
 interface ChartData {
   option: string;
   amount: number;
   fill: string;
 }
 
+// Memoized CustomTooltip component
+const CustomTooltip = React.memo<{ active?: boolean; payload?: any[] }>(
+  ({ active, payload }) => {
+    if (active && payload?.[0]) {
+      return (
+        <div className="tooltip bg-background p-4 rounded-md border-2 border-primary">
+          <p>{`Option: ${payload[0].payload.option}`}</p>
+          <p>{`Amount: ${payload[0].payload.amount}`}</p>
+        </div>
+      );
+    }
+    return null;
+  }
+);
+
+CustomTooltip.displayName = "CustomTooltip";
+
+// Chart configuration moved outside component to prevent recreating on each render
+const chartConfig: ChartConfig = {
+  amount: {
+    label: "Amount",
+    color: "hsl(var(--chart-1))",
+  },
+};
+
 const BarChart: React.FC = () => {
   const { id: marketId } = useParams();
   const { selectedMarket } = useMarketStore();
   const { data: result } = useFetchAccountBalance(marketId || "");
 
-  const curretnMarketInfo = selectedMarket?.MarketInfo as MarketInfo;
+  const marketInfo = selectedMarket?.MarketInfo as MarketInfo;
 
-  const VoteATally = formatArweaveTokenAmount(result?.BalanceVoteA || 0);
-  const VoteBTally = formatArweaveTokenAmount(result?.BalanceVoteB || 0);
+  // Memoize formatted values
+  const voteATally = useMemo(
+    () => formatArweaveTokenAmount(result?.BalanceVoteA || 0),
+    [result?.BalanceVoteA]
+  );
 
-  console.log(selectedMarket);
+  const voteBTally = useMemo(
+    () => formatArweaveTokenAmount(result?.BalanceVoteB || 0),
+    [result?.BalanceVoteB]
+  );
 
-  const chartData: ChartData[] = [
-    {
-      option: curretnMarketInfo?.OptionA,
-      amount: VoteATally || 0,
-      fill: "#dc2626",
+  // Memoize chart data
+  const chartData: ChartData[] = useMemo(
+    () => [
+      {
+        option: marketInfo?.OptionA || "",
+        amount: voteATally || 0,
+        fill: "#dc2626",
+      },
+      {
+        option: marketInfo?.OptionB || "",
+        amount: voteBTally || 0,
+        fill: "#2563eb",
+      },
+    ],
+    [marketInfo?.OptionA, marketInfo?.OptionB, voteATally, voteBTally]
+  );
+
+  // Memoize tick formatter function
+  const tickFormatter = useCallback(
+    (value: string) => {
+      const item = chartData.find((item) => item.option === value);
+      return `${value} (${item?.amount})`;
     },
-    {
-      option: curretnMarketInfo?.OptionB,
-      amount: VoteBTally || 0,
-      fill: "#2563eb",
-    },
-  ];
+    [chartData]
+  );
 
-  // Define chart configuration
-  const chartConfig: ChartConfig = {
-    amount: {
-      label: "Amount",
-      color: "hsl(var(--chart-1))",
-    },
-  };
+  if (!marketInfo) {
+    return null;
+  }
 
   return (
     <Card className="w-full h-full flex justify-center flex-col">
       <CardHeader>
-        <CardTitle>{curretnMarketInfo?.Title}</CardTitle>
-        <CardDescription>
-          Created By {curretnMarketInfo?.Creator}{" "}
-        </CardDescription>
+        <CardTitle>{marketInfo.Title}</CardTitle>
+        <CardDescription>Created By {marketInfo.Creator}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -80,11 +117,7 @@ const BarChart: React.FC = () => {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) =>
-                `${value} (${
-                  chartData.find((item) => item.option === value)?.amount
-                })`
-              }
+              tickFormatter={tickFormatter}
             />
             <Tooltip content={<CustomTooltip />} cursor={false} />
             <Bar
@@ -100,21 +133,4 @@ const BarChart: React.FC = () => {
   );
 };
 
-// Custom Tooltip Component
-const CustomTooltip: React.FC<{ active?: boolean; payload?: any[] }> = ({
-  active,
-  payload,
-}) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="tooltip bg-background p-4 rounded-md border-2 border-primary">
-        <p>{`Option: ${payload[0].payload.option}`}</p>
-        <p>{`Amount: ${payload[0].payload.amount}`}</p>
-      </div>
-    );
-  }
-
-  return null;
-};
-
-export default BarChart;
+export default React.memo(BarChart);

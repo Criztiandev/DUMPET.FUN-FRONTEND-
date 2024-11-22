@@ -17,12 +17,10 @@ import {
 } from "@/common/components/atoms/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import useDisconnectWallet from "@/common/hooks/wallet/useDisconnectWallet";
-import { BalanceDialog } from "../../dialog/balance-dialog";
-import { Suspense } from "react";
-import { Skeleton } from "@/common/components/atoms/ui/skeleton";
-import { buttonVariants } from "@/common/components/atoms/ui/button";
+import { useActiveAddress } from "arweave-wallet-kit";
 
 function ProfileDropdownMenu() {
+  const address = useActiveAddress();
   const { mutate } = useDisconnectWallet();
   const navigate = useNavigate();
 
@@ -34,8 +32,11 @@ function ProfileDropdownMenu() {
     <DropdownMenu dir="ltr">
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer hover:border hover:dark:border-stone-200">
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage
+            src={`https://ui-avatars.com/api/?name=${address}&background=8058D5&color=fff`}
+            alt="@shadcn"
+          />
+          <AvatarFallback>{address?.toString()[0]}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" sideOffset={12}>
