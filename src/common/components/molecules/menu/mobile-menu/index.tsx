@@ -1,7 +1,7 @@
 import { SocialsLinks } from "@/common/data/static/topbar-link";
 import MenuDrawer from "../../drawer/menu-drawer";
 import MobileMenuItems from "@/common/components/atoms/menu/mobile-menu-items";
-import { useActiveAddress, useProfileModal } from "arweave-wallet-kit";
+import { useActiveAddress } from "arweave-wallet-kit";
 import { ConnectWalletButton } from "@/common/components/atoms/button/wallet-connect-button";
 import ProfileButton from "@/common/components/atoms/button/profile-button";
 import CreateButton from "@/common/components/atoms/button/create-button";
@@ -16,7 +16,6 @@ import useDisconnectWallet from "@/common/hooks/wallet/useDisconnectWallet";
 
 const MobileMenu = () => {
   const drawerRef = useRef<HTMLDivElement | null>(null);
-  const profileModal = useProfileModal();
   const { mutate } = useDisconnectWallet();
 
   const url = useLocation();
