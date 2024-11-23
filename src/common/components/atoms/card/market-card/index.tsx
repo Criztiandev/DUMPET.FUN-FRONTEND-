@@ -58,7 +58,7 @@ const MarketCard = ({
         </div>
         <div className="flex flex-col">
           <span className="flex flex-col gap-2  ">
-            <XStack className="justify-between px-2">
+            <div className="grid grid-cols-[auto_15%_auto] gap-4 justify-center items-center">
               <span className="flex gap-2 text-sm items-center">
                 <Flame fill="#dc2626" color="#dc2626" />
                 {OptionA || "Option A"}
@@ -74,7 +74,7 @@ const MarketCard = ({
                 <Flame color="#2563eb" fill="#2563eb" />
                 {OptionB || "Option B"}
               </span>
-            </XStack>
+            </div>
 
             <div className="flex justify-start items-start my-4 flex-col space-y-2"></div>
           </span>
