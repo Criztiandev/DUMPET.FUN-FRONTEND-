@@ -13,6 +13,7 @@ import {
   formatDuration,
 } from "@/common/utils/time.utilts";
 import HeroImage from "@/assets/image/cover-img.jpg";
+import { Button } from "../../ui/button";
 
 interface Props extends MarketInfo {}
 
@@ -64,14 +65,23 @@ const HeroCard = ({
                 translateZ="60"
                 className="flex flex-col gap-2 w-full "
               >
-                <span className="flex gap-2 text-sm items-center">
-                  <Flame />
-                  {OptionA}
-                </span>
-                <span className="flex gap-2 text-sm items-center">
-                  <Flame />
-                  {OptionB}
-                </span>
+                <XStack className="justify-between px-2">
+                  <span className="flex gap-2 text-sm items-center">
+                    <Flame fill="#dc2626" color="#dc2626" />
+                    {OptionA || "Option A"}
+                  </span>
+                  <Button
+                    className="hover:bg-transparent border"
+                    size="icon"
+                    variant="ghost"
+                  >
+                    VS
+                  </Button>
+                  <span className="flex gap-2 text-sm items-center">
+                    <Flame color="#2563eb" fill="#2563eb" />
+                    {OptionB || "Option B"}
+                  </span>
+                </XStack>
 
                 <Separator />
 

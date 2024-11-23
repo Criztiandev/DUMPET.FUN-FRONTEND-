@@ -9,10 +9,13 @@ import { MarketFormValue } from "@/feature/market/interface/market.interface";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FormProvider } from "react-hook-form";
 import { Alert, AlertDescription } from "@/common/components/atoms/ui/alert";
+import Topbar from "@/common/components/template/layout/topbar";
+import { useAccountStore } from "../../store/account-store";
 
 const CreateMarketScreen = () => {
   const { form, mutation } = useCreateMarket();
   const isMobile = useIsMobile();
+  const { isOnline } = useAccountStore();
   const [dateError, setDateError] = React.useState<string>("");
 
   const validateDateTime = (date: Date, time: string): boolean => {
@@ -63,13 +66,13 @@ const CreateMarketScreen = () => {
 
   return (
     <div className="w-full min-h-screen">
-      <CreateMarketTopbar />
+      {isOnline ? <CreateMarketTopbar /> : <Topbar />}
 
-      <div className="flex justify-center items-center flex-col pt-24">
+      <div className="flex justify-center items-center flex-col pt-24 h-full">
         <div className="flex justify-center items-center">
           <h1 className="text-4xl font-bold my-4">Create Market</h1>
         </div>
-        <div className="max-w-lg mx-auto p-4 rounded-md w-full">
+        <div className="max-w-lg mx-auto p-4 rounded-md w-full ">
           {dateError && (
             <Alert variant="destructive" className="mb-4">
               <AlertDescription>{dateError}</AlertDescription>
@@ -78,7 +81,7 @@ const CreateMarketScreen = () => {
           <FormProvider {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 w-full "
+              className="space-y-4 w-full"
             >
               <div className="space-y-4">
                 <InputField
@@ -111,7 +114,12 @@ const CreateMarketScreen = () => {
 
                   {!isMobile && (
                     <span
-                      className={cn(buttonVariants({ variant: "outline" }))}
+                      className={cn(
+                        buttonVariants({
+                          variant: "outline",
+                          className: "hover:bg-transparent cursor-default",
+                        })
+                      )}
                     >
                       VS
                     </span>

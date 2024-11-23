@@ -1,5 +1,5 @@
 import { Button } from "../../ui/button";
-import { Coins } from "lucide-react";
+import { Star } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/common/lib/utils";
 import { useNavigate } from "react-router-dom";
@@ -14,10 +14,11 @@ const CreateButton = () => {
 
   return (
     <Button
-      className={cn(`${isSmallScreen && "w-full"} space-x-2 bg-primary`)}
+      className={cn(`${isSmallScreen && "w-full"} space-x-2`)}
       onClick={handleNavigate}
+      variant={"outline"}
     >
-      <Coins size={18} />
+      <Star size={18} />
       <span>Create</span>
     </Button>
   );

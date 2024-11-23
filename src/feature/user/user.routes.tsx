@@ -4,6 +4,8 @@ import NotFoundScreen from "@/common/components/page/helper/no-found";
 import DetailsScreen from "./pages/details-screen";
 import ProfileScreen from "./pages/profile-screen";
 import CreateBetScreen from "./pages/create-market-screen";
+import ProtectedRoutes from "@/common/components/template/hoc/ProtectedRoutes";
+import PublicProfileScreen from "./pages/public-profile-screen";
 
 const routes = [
   { path: "*", element: <NotFoundScreen /> },
@@ -22,7 +24,16 @@ const routes = [
   },
   {
     path: "/profile",
-    element: <ProfileScreen />,
+    element: (
+      <ProtectedRoutes>
+        <ProfileScreen />
+      </ProtectedRoutes>
+    ),
+  },
+
+  {
+    path: "/profile/:id",
+    element: <PublicProfileScreen />,
   },
   {
     path: "/create/market",

@@ -14,11 +14,22 @@ import {
   TabsTrigger,
 } from "@/common/components/atoms/ui/tabs";
 import { MarketTransactedTable } from "@/common/components/molecules/card/profile-transact-table";
+import { useParams } from "react-router-dom";
+import useFetchTransactedMarket from "../../hooks/fetch-transacted-market";
 
-const ProfileScreen = () => {
-  const address = useActiveAddress();
-  const { data: result } = useFetchAllCreatedMarket(address || "");
-  const { Markets } = result;
+const PublicProfileScreen = () => {
+  const { id: walletAddress } = useParams();
+
+  const { data: createdMarketResult } = useFetchAllCreatedMarket(
+    walletAddress || ""
+  );
+  const { data: transactedMarketResult } = useFetchTransactedMarket(
+    "566F7MCrrBhr87n7Hs5JKyEQeRlAT9A14G4OWxfS4kQ",
+    walletAddress || ""
+  );
+
+  const { Markets: createdMarkets } = createdMarketResult;
+  const { Markets: transactedMarkets } = transactedMarketResult;
 
   const handleShareProfile = () => {
     const text = `Check out this profile on dumpet.fun - `;
@@ -44,7 +55,7 @@ const ProfileScreen = () => {
                 <div className="flex space-x-4">
                   <img
                     className="h-16 w-16 rounded-lg"
-                    src={`https://ui-avatars.com/api/?name=${address}&background=8058D5&color=fff`}
+                    src={`https://ui-avatars.com/api/?name=${walletAddress}&background=8058D5&color=fff`}
                     alt="Helene avatar"
                   />
                   <div className="space-y-2">
@@ -65,7 +76,7 @@ const ProfileScreen = () => {
                       </Button>
                     </XStack>
                     <h2 className="flex items-center text-xl font-bold leading-none text-gray-900 dark:text-white sm:text-2xl">
-                      Dumpet #{getFirstAndLastThree(address || "")}
+                      Dumpet #{getFirstAndLastThree(walletAddress || "")}
                     </h2>
                   </div>
                 </div>
@@ -74,7 +85,7 @@ const ProfileScreen = () => {
                     Wallet Address
                   </dt>
                   <dd className="text-gray-500 dark:text-gray-400">
-                    {address || ""}
+                    {walletAddress || ""}
                   </dd>
                 </dl>
               </div>
@@ -87,10 +98,10 @@ const ProfileScreen = () => {
               <TabsTrigger value="transaced">Transaced</TabsTrigger>
             </TabsList>
             <TabsContent value="market-held">
-              <MarketCreatedTable payload={Markets} />
+              <MarketCreatedTable payload={createdMarkets} />
             </TabsContent>
             <TabsContent value="transaced">
-              <MarketTransactedTable payload={Markets} />
+              <MarketTransactedTable payload={transactedMarkets} />
             </TabsContent>
           </Tabs>
         </div>
@@ -99,7 +110,7 @@ const ProfileScreen = () => {
   );
 };
 
-export default ProfileScreen;
+export default PublicProfileScreen;
 
 function getFirstAndLastThree(str: string) {
   // Check if string is less than 6 characters

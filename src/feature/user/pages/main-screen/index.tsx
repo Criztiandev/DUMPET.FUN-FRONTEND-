@@ -1,22 +1,11 @@
 import Topbar from "@/common/components/template/layout/topbar";
-import { useActiveAddress } from "arweave-wallet-kit";
-import { Suspense, useEffect } from "react";
-import { useAccountStore } from "../../store/account-store";
+import { Suspense } from "react";
 import MarketInfiniteList from "./containers/market-infinite-list";
 import CardLoadingScreen from "@/common/components/page/helper/card-loading-screen";
 import HeroCardLoadingScreen from "@/common/components/page/helper/hero-card-loading-screen";
 import MarketHero from "./containers/market-hero";
 
 const MainScreen = () => {
-  const address = useActiveAddress();
-  const { setAddres } = useAccountStore();
-
-  useEffect(() => {
-    if (address) {
-      setAddres(address);
-    }
-  }, [address]);
-
   return (
     <div className="min-h-screen w-full">
       <Topbar />

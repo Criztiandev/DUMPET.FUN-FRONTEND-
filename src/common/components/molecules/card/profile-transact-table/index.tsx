@@ -128,7 +128,7 @@ interface Props {
   payload: MarketProfile[];
 }
 
-export function MarketCreatedTable({ payload }: Props) {
+export function MarketTransactedTable({ payload }: Props) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

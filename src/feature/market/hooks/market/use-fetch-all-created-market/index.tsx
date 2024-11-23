@@ -1,11 +1,14 @@
 import { dryrun } from "@permaweb/aoconnect";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-const useFetchAllCreatedMarket = () => {
+const useFetchAllCreatedMarket = (walletAddress: string) => {
   return useSuspenseQuery({
-    queryKey: [`/GET /created/market/list`],
+    queryKey: [`/GET /created/market/list/${walletAddress}`],
     queryFn: async () => {
-      const walletAddress = await window.arweaveWallet.getActiveAddress();
+      if (!walletAddress) {
+        throw new Error("Wallet address doesnt exist");
+      }
+
       const result = await dryrun({
         process: import.meta.env.VITE_DEV_MAIN_PROCESS_ID,
         tags: [

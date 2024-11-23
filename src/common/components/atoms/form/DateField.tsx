@@ -166,9 +166,9 @@ const DateField = React.forwardRef<HTMLButtonElement, DateFieldProps>(
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     className={cn(
-                      "w-full pl-3 text-left font-normal",
+                      "w-full pl-3 text-left font-normal border",
                       !field.value && "text-muted-foreground"
                     )}
                     ref={ref}

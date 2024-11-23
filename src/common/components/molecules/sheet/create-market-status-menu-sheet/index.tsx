@@ -6,20 +6,19 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/common/components/atoms/ui/sheet";
-import { Button } from "@/common/components/atoms/ui/button";
 import { YStack } from "@/common/components/atoms/ui/stack";
 import { Separator } from "@/common/components/atoms/ui/separator";
 import { Card, CardHeader } from "@/common/components/atoms/ui/card";
 import useFetchAllCreatedMarket from "@/feature/market/hooks/market/use-fetch-all-created-market";
 import { useNavigate } from "react-router-dom";
 import useFetchPendingMarket from "@/feature/market/hooks/market/use-fetch-pending-market";
-import { Badge } from "@/common/components/atoms/ui/badge";
 import { useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { Store } from "lucide-react";
 import { ScrollArea } from "@/common/components/atoms/ui/scroll-area";
 import { useAccountStore } from "@/feature/user/store/account-store";
 
-const CreateMarketStatusSheet = () => {
+const CreateMarketStatusMenuSheet = () => {
   const { address } = useAccountStore();
   const { data: createdMarket } = useFetchAllCreatedMarket(address);
   const { data: pendingMarket } = useFetchPendingMarket();
@@ -36,29 +35,22 @@ const CreateMarketStatusSheet = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" className="relative">
-          {pendingMarket?.HasWaitFor && (
-            <Badge
-              variant="destructive"
-              className="absolute -top-2 -right-2 w-4 h-4 rounded-full p-0 flex justify-center items-center"
-            >
-              1
-            </Badge>
-          )}
-          <span>My Market</span>
-        </Button>
+        <div className="flex space-x-3 px-2 py-2 cursor-pointer hover:bg-secondary rounded-[5px]">
+          <Store size={22} />
+          <span>My Markets</span>
+        </div>
       </SheetTrigger>
       <SheetContent>
         <div className="flex flex-col h-full">
-          <SheetHeader>
+          <SheetHeader className="flex-none">
             <SheetTitle>Markets Status</SheetTitle>
             <SheetDescription>
               View all created market that is pending
             </SheetDescription>
           </SheetHeader>
 
-          <div className="flex-1 flex flex-col min-h-0">
-            <YStack className="flex-none my-4">
+          <ScrollArea className="flex-1 -mx-6 px-6">
+            <YStack className="my-4">
               <h2 className="text-xl font-bold mb-2">Pending</h2>
               <Separator />
               {pendingMarket?.HasWaitFor ? (
@@ -76,35 +68,32 @@ const CreateMarketStatusSheet = () => {
               )}
             </YStack>
 
-            <YStack className="flex-1 min-h-0">
+            <YStack className="mt-8">
               <h2 className="text-xl font-bold mb-2">Done</h2>
-              <Separator className="mb-3" />
-
-              <ScrollArea className="h-full">
-                <div className="space-y-2 pr-4">
-                  {createdMarket?.Markets?.map(
-                    ({ MarketProcessId, Title }: any) => (
-                      <Card
-                        key={MarketProcessId}
-                        className="bg-transparent border border-green-500 cursor-pointer"
-                        onClick={() =>
-                          navigate(`/market/details/${MarketProcessId}`)
-                        }
-                      >
-                        <CardHeader>
-                          <h2 className="break-words">{Title}</h2>
-                        </CardHeader>
-                      </Card>
-                    )
-                  )}
-                </div>
-              </ScrollArea>
+              <Separator />
+              <div className="space-y-2 py-3">
+                {createdMarket?.Markets?.map(
+                  ({ MarketProcessId, Title }: any) => (
+                    <Card
+                      key={MarketProcessId}
+                      className="bg-transparent border border-green-500 cursor-pointer"
+                      onClick={() =>
+                        navigate(`/market/details/${MarketProcessId}`)
+                      }
+                    >
+                      <CardHeader>
+                        <h2 className="break-words">{Title}</h2>
+                      </CardHeader>
+                    </Card>
+                  )
+                )}
+              </div>
             </YStack>
-          </div>
+          </ScrollArea>
         </div>
       </SheetContent>
     </Sheet>
   );
 };
 
-export default CreateMarketStatusSheet;
+export default CreateMarketStatusMenuSheet;

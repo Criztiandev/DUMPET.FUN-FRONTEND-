@@ -35,7 +35,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/common/components/atoms/ui/table";
-import { useNavigate } from "react-router-dom";
 
 export type MarketProfile = {
   Title: string;
@@ -90,7 +89,6 @@ export const columns: ColumnDef<MarketProfile>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const profile = row.original;
-      const navigate = useNavigate();
 
       return (
         <DropdownMenu>
@@ -110,13 +108,8 @@ export const columns: ColumnDef<MarketProfile>[] = [
               Copy Market Process ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() =>
-                navigate(`/market/details/${profile.MarketProcessId}`)
-              }
-            >
-              View Details
-            </DropdownMenuItem>
+            <DropdownMenuItem>View Details</DropdownMenuItem>
+            <DropdownMenuItem>Edit Profile</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -128,7 +121,7 @@ interface Props {
   payload: MarketProfile[];
 }
 
-export function MarketCreatedTable({ payload }: Props) {
+export function MarketProfileTable({ payload }: Props) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

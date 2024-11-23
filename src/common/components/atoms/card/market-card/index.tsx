@@ -1,22 +1,17 @@
 import { Card, CardHeader, CardContent } from "../../ui/card";
 import { XStack } from "../../ui/stack";
-import { Badge } from "../../ui/badge";
 import { useNavigate } from "react-router-dom";
 import { Clock, Flame } from "lucide-react";
-import { Separator } from "../../ui/separator";
 import { MarketInfo } from "@/feature/market/interface/market.interface";
-import {
-  getDaysFromTimestamp,
-  formatDuration,
-} from "@/common/utils/time.utilts";
+import { formatDuration } from "@/common/utils/time.utilts";
 import HeroCover from "@/assets/image/cover-img.jpg";
 import ShareTwitterButton from "../../button/share-twitter-button";
+import { Button } from "../../ui/button";
 
 export interface Props extends MarketInfo {}
 // market-action-controls
 const MarketCard = ({
   Title,
-  Timestamp,
   Creator,
   Duration,
   OptionA,
@@ -28,6 +23,10 @@ const MarketCard = ({
 
   const handleNavigate = () => {
     navigate(`/market/details/${ProcessId}`);
+  };
+
+  const handleShareClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
   };
 
   return (
@@ -59,31 +58,37 @@ const MarketCard = ({
         </div>
         <div className="flex flex-col">
           <span className="flex flex-col gap-2  ">
-            <span className="flex gap-2 text-sm items-center">
-              <Flame />
-              {OptionA || "Option A"}
-            </span>
-            <span className="flex gap-2 text-sm items-center">
-              <Flame />
-              {OptionB || "Option B"}
-            </span>
+            <XStack className="justify-between px-2">
+              <span className="flex gap-2 text-sm items-center">
+                <Flame fill="#dc2626" color="#dc2626" />
+                {OptionA || "Option A"}
+              </span>
+              <Button
+                className="hover:bg-transparent border"
+                size="icon"
+                variant="ghost"
+              >
+                VS
+              </Button>
+              <span className="flex gap-2 text-sm items-center">
+                <Flame color="#2563eb" fill="#2563eb" />
+                {OptionB || "Option B"}
+              </span>
+            </XStack>
 
-            <Separator />
-
-            <span className="flex gap-2 text-sm items-center">
-              <Clock />
-              {Concluded ? "Concluded" : `${formatDuration(Number(Duration))}`}
-            </span>
+            <div className="flex justify-start items-start my-4 flex-col space-y-2"></div>
           </span>
-          <div className="flex justify-start items-start my-4 flex-col space-y-2">
-            <Badge className="space-x-2">
-              <span>{getDaysFromTimestamp(Number(Timestamp))}</span>
-            </Badge>
-          </div>
         </div>
 
-        <XStack className="justify-end">
-          <ShareTwitterButton processID={ProcessId.toString() || ""} />
+        <XStack className="justify-end space-x-4">
+          <span className="flex gap-2 text-sm items-center">
+            <Clock />
+            {Concluded ? "Concluded" : `${formatDuration(Number(Duration))}`}
+          </span>
+
+          <div onClick={handleShareClick}>
+            <ShareTwitterButton processID={ProcessId.toString() || ""} />
+          </div>
         </XStack>
       </CardContent>
     </Card>

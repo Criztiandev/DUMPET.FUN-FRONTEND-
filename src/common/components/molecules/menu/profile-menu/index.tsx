@@ -15,14 +15,18 @@ import {
   AvatarImage,
   AvatarFallback,
 } from "@/common/components/atoms/ui/avatar";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useDisconnectWallet from "@/common/hooks/wallet/useDisconnectWallet";
 import { useActiveAddress } from "arweave-wallet-kit";
+import ButtonLoading from "@/common/components/page/helper/button-loading";
+import { Suspense } from "react";
+import CreateMarketStatusMenuSheet from "../../sheet/create-market-status-menu-sheet";
 
 function ProfileDropdownMenu() {
   const address = useActiveAddress();
   const { mutate } = useDisconnectWallet();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleNavigateAddress = () => {
     navigate(`/profile`);
@@ -51,6 +55,12 @@ function ProfileDropdownMenu() {
             <span>Profile</span>
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
+
+          {!location.pathname.includes("/create") && (
+            <Suspense fallback={<ButtonLoading className="w-full" />}>
+              <CreateMarketStatusMenuSheet />
+            </Suspense>
+          )}
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />

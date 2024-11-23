@@ -3,10 +3,10 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/common/components/atoms/ui/dialog";
 import { Wallet } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -27,40 +27,121 @@ import { VariantProps } from "class-variance-authority";
 import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
 import { Badge } from "@/common/components/atoms/ui/badge";
 import useMarketStore from "@/feature/market/store/market.store";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { validateMarketTimeWithDetails } from "@/common/utils/time.utilts";
+
+// Form validation schema
+const balanceFormSchema = z.object({
+  balance: z
+    .string()
+    .min(1, "Balance is required")
+    .refine((val) => !isNaN(Number(val)), "Must be a valid number")
+    .refine((val) => Number(val) > 0, "Balance must be greater than 0")
+    .refine((val) => Number(val) <= 250, "Balance must not exceed 250"),
+  transactionType: z.enum(["deposit", "withdraw"], {
+    required_error: "Please select a transaction type",
+  }),
+});
+
+type BalanceFormValues = z.infer<typeof balanceFormSchema>;
 
 interface Props extends VariantProps<typeof buttonVariants> {}
 
 export function BalanceDialog(props: Props) {
-  const form = useForm();
+  const [isOpen, setIsOpen] = useState(false);
   const { connected } = useConnection();
   const { isOnline } = useAccountStore();
   const { selectedMarket } = useMarketStore();
-
-  const [onDialogClose, setOnDialogClose] = useState(false);
-
   const { data: balanceData } = useFetchAccountBalance();
-  const { setBalance } = useBalanceStore();
+  const { setBalance, balance } = useBalanceStore();
 
-  const { balance } = useBalanceStore();
+  // Initialize form with validation
+  const form = useForm<BalanceFormValues>({
+    resolver: zodResolver(balanceFormSchema),
+    defaultValues: {
+      balance: "",
+      transactionType: undefined,
+    },
+  });
+
   const { mutate: depositMutate, isPending: depositStatus } = useDepositBalance(
     selectedMarket?.MarketInfo.TokenTxId || ""
   );
-  const { mutate: withdrawMutate, isPending: withdrawtStatus } =
+  const { mutate: withdrawMutate, isPending: withdrawStatus } =
     useWithDrawBalance();
 
+  // Update balance when data changes
   useEffect(() => {
     if (balanceData) {
       setBalance(balanceData);
     }
-  }, [balanceData]);
+  }, [balanceData, setBalance]);
 
-  const toggleDialog = () => {
-    setOnDialogClose(false);
+  const handleClose = () => {
+    setIsOpen(false);
+    form.reset();
   };
 
-  const onSubmit = () => {
+  const convertToBaseUnits = (value: string): string => {
+    try {
+      const balancePow = Number(value) * Math.pow(10, 12);
+      return new BigNumber(balancePow).toFixed(12, BigNumber.ROUND_DOWN);
+    } catch (error) {
+      console.error("Error converting balance:", error);
+      throw new Error("Invalid balance conversion");
+    }
+  };
+
+  const onSubmit = async (values: BalanceFormValues) => {
     if (!connected || !isOnline) {
-      toast("Invalid Action", {
+      toast("Please connect your wallet", {
+        style: {
+          background: "#DD2627",
+          color: "white",
+        },
+        position: "top-center",
+      });
+      return;
+    }
+
+    try {
+      const balanceInBaseUnits = convertToBaseUnits(values.balance);
+
+      if (values.transactionType === "deposit") {
+        // check if the market is concluded to avoid deposit
+
+        const currentDate = new Date();
+        const marketTimeUnixMs = selectedMarket?.MarketInfo?.Duration;
+        const marketTimeUnixSeconds = Math.floor(
+          Number(marketTimeUnixMs) / 1000
+        );
+
+        const validationResult = validateMarketTimeWithDetails(
+          currentDate,
+          Number(marketTimeUnixSeconds) || 0
+        );
+
+        if (!validationResult.isValid) {
+          toast("Market is already Concluded", {
+            style: {
+              background: "#DD2627",
+              color: "white",
+            },
+            position: "top-center",
+          });
+          return;
+        }
+        await depositMutate(balanceInBaseUnits);
+      } else {
+        await withdrawMutate(balanceInBaseUnits);
+      }
+
+      handleClose();
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Transaction failed";
+      toast(errorMessage, {
         style: {
           background: "#DD2627",
           color: "white",
@@ -68,41 +149,11 @@ export function BalanceDialog(props: Props) {
         position: "top-center",
       });
     }
-
-    const value = form.getValues();
-    const { transactionType, balance } = value;
-
-    const balancePow = balance * Math.pow(10, 12);
-    const balanceBN = new BigNumber(balancePow).toFixed(
-      12,
-      BigNumber.ROUND_DOWN
-    );
-
-    switch (transactionType) {
-      case "deposit":
-        depositMutate(balanceBN.toString());
-        toggleDialog();
-        break;
-
-      case "withdraw":
-        withdrawMutate(balancePow.toString());
-        toggleDialog();
-        break;
-
-      default:
-        toast("Invalid Action", {
-          style: {
-            background: "#DD2627",
-            color: "white",
-          },
-          position: "top-center",
-        });
-        break;
-    }
   };
 
+  const isSubmitDisabled = depositStatus || withdrawStatus;
   return (
-    <Dialog open={onDialogClose} onOpenChange={setOnDialogClose}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
           className="w-full justify-start space-x-2 px-2"
@@ -113,6 +164,7 @@ export function BalanceDialog(props: Props) {
           <span>Balance</span>
         </Button>
       </DialogTrigger>
+
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Account Balance</DialogTitle>
@@ -120,11 +172,12 @@ export function BalanceDialog(props: Props) {
             <span>Current Balance:</span>
             <Badge>
               <span>
-                {formatArweaveTokenAmount(balance?.UserDepositBalance)}
+                {formatArweaveTokenAmount(balance?.UserDepositBalance || 0)}
               </span>
             </Badge>
           </DialogDescription>
         </DialogHeader>
+
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <InputField
@@ -132,6 +185,7 @@ export function BalanceDialog(props: Props) {
               label="Balance"
               name="balance"
               placeholder="Enter Balance"
+              step="0.000000000001"
             />
 
             <RadioGroupField name="transactionType">
@@ -140,7 +194,6 @@ export function BalanceDialog(props: Props) {
                 name="transactionType"
                 value="deposit"
               />
-
               <RadioGroupItemField
                 label="Withdraw"
                 name="transactionType"
@@ -149,8 +202,16 @@ export function BalanceDialog(props: Props) {
             </RadioGroupField>
 
             <DialogFooter>
-              <Button type="submit" disabled={depositStatus || withdrawtStatus}>
-                Save changes
+              <Button
+                type="submit"
+                disabled={isSubmitDisabled}
+                className="w-full"
+              >
+                {depositStatus || withdrawStatus
+                  ? "Processing..."
+                  : form.watch("transactionType") === "deposit"
+                  ? "Deposit"
+                  : "Withdraw"}
               </Button>
             </DialogFooter>
           </form>
