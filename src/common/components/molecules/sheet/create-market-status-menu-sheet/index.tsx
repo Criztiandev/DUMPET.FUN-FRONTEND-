@@ -13,7 +13,7 @@ import useFetchAllCreatedMarket from "@/feature/market/hooks/market/use-fetch-al
 import { useNavigate } from "react-router-dom";
 import useFetchPendingMarket from "@/feature/market/hooks/market/use-fetch-pending-market";
 import { useEffect } from "react";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Store } from "lucide-react";
 import { ScrollArea } from "@/common/components/atoms/ui/scroll-area";
 import { useAccountStore } from "@/feature/user/store/account-store";

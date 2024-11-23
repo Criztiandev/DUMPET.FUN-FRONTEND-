@@ -3,11 +3,7 @@ import {
   MarketRequestValue,
 } from "@/feature/market/interface/market.interface";
 import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { createMarketValidation } from "@/feature/user/validation/market-validation";
 import { zodResolver } from "@hookform/resolvers/zod";

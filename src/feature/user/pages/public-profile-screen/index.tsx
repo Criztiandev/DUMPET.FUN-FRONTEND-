@@ -3,7 +3,6 @@ import { Button } from "@/common/components/atoms/ui/button";
 import Topbar from "@/common/components/template/layout/topbar";
 import { Share2 } from "lucide-react";
 import useFetchAllCreatedMarket from "@/feature/market/hooks/market/use-fetch-all-created-market";
-import { useActiveAddress } from "arweave-wallet-kit";
 import { XStack } from "@/common/components/atoms/ui/stack";
 import { MarketCreatedTable } from "@/common/components/molecules/card/profile-market-card";
 

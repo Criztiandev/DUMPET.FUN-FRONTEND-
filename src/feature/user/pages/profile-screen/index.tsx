@@ -3,7 +3,6 @@ import { Button } from "@/common/components/atoms/ui/button";
 import Topbar from "@/common/components/template/layout/topbar";
 import { Share2 } from "lucide-react";
 import useFetchAllCreatedMarket from "@/feature/market/hooks/market/use-fetch-all-created-market";
-import { useActiveAddress } from "arweave-wallet-kit";
 import { XStack } from "@/common/components/atoms/ui/stack";
 import { MarketCreatedTable } from "@/common/components/molecules/card/profile-market-card";
 
@@ -14,11 +13,21 @@ import {
   TabsTrigger,
 } from "@/common/components/atoms/ui/tabs";
 import { MarketTransactedTable } from "@/common/components/molecules/card/profile-transact-table";
+import useFetchTransactedMarket from "../../hooks/fetch-transacted-market";
+import { useAccountStore } from "../../store/account-store";
 
 const ProfileScreen = () => {
-  const address = useActiveAddress();
-  const { data: result } = useFetchAllCreatedMarket(address || "");
-  const { Markets } = result;
+  const { address } = useAccountStore();
+
+  const { data: createdMarketResult } = useFetchAllCreatedMarket(address);
+
+  const { data: transactedMarketResult } = useFetchTransactedMarket(
+    "566F7MCrrBhr87n7Hs5JKyEQeRlAT9A14G4OWxfS4kQ",
+    address
+  );
+
+  const { Markets: createdMarkets } = createdMarketResult;
+  const { Markets: transactedMarkets } = transactedMarketResult;
 
   const handleShareProfile = () => {
     const text = `Check out this profile on dumpet.fun - `;
@@ -87,10 +96,10 @@ const ProfileScreen = () => {
               <TabsTrigger value="transaced">Transaced</TabsTrigger>
             </TabsList>
             <TabsContent value="market-held">
-              <MarketCreatedTable payload={Markets} />
+              <MarketCreatedTable payload={createdMarkets} />
             </TabsContent>
             <TabsContent value="transaced">
-              <MarketTransactedTable payload={Markets} />
+              <MarketTransactedTable payload={transactedMarkets} />
             </TabsContent>
           </Tabs>
         </div>
