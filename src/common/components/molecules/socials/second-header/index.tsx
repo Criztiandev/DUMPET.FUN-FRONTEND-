@@ -3,8 +3,10 @@ import { TooltipContent } from "@radix-ui/react-tooltip";
 import FaqDialog from "@/common/components/molecules/dialog/faq-dialog";
 import AirdropButton from "@/common/components/atoms/button/airdop-button";
 import SocialElipsis from "../socials-elipsis";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const SecondHeader = () => {
+  const isMobile = useIsMobile();
   return (
     <div className="flex justify-end">
       <Tooltip>
@@ -17,7 +19,7 @@ const SecondHeader = () => {
       </Tooltip>
       <AirdropButton />
 
-      <SocialElipsis />
+      {!isMobile && <SocialElipsis />}
     </div>
   );
 };
