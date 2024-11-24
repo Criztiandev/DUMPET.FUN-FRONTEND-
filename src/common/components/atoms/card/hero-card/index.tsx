@@ -16,7 +16,6 @@ interface Props extends MarketInfo {}
 
 const HeroCard = ({
   Title,
-  Timestamp,
   Creator,
   Duration,
   OptionA,
