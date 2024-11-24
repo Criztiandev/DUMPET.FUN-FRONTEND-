@@ -6,7 +6,6 @@ import { MarketInfo } from "@/feature/market/interface/market.interface";
 import { formatDuration } from "@/common/utils/time.utilts";
 import ShareTwitterButton from "../../button/share-twitter-button";
 import { Button } from "../../ui/button";
-import { Separator } from "../../ui/separator";
 
 export interface Props extends MarketInfo {}
 // market-action-controls
@@ -45,10 +44,6 @@ const MarketCard = ({
             </XStack>
           </div>
 
-          <div className="mx-16">
-            <Separator className="mb-4" />
-          </div>
-
           <div className="flex flex-col">
             <span className="flex flex-col gap-2  ">
               <div className="flex justify-between gap-4  items-center flex-col">
@@ -71,10 +66,6 @@ const MarketCard = ({
 
               <div className="flex justify-start items-start my-4 flex-col space-y-2"></div>
             </span>
-          </div>
-
-          <div className="mx-16">
-            <Separator className="mb-4" />
           </div>
 
           <XStack className="justify-end space-x-4">
