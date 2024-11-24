@@ -3,7 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 const useFetchHeroMarket = () => {
   return useSuspenseQuery({
-    queryKey: [`/GET /market/hero`],
+    queryKey: [`/GET /market/hero-market`],
     queryFn: async () => {
       const result = await dryrun({
         process: import.meta.env.VITE_DEV_MAIN_PROCESS_ID,

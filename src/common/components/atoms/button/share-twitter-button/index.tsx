@@ -10,7 +10,7 @@ const ShareTwitterButton = ({ processID }: Props) => {
   const shareMarket = useShareMarket(processID);
   return (
     <Button size="icon" variant="ghost" onClick={shareMarket}>
-      <Share2 />
+      <Share2 size={18} />
     </Button>
   );
 };

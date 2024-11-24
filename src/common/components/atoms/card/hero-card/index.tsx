@@ -5,12 +5,11 @@ import {
 } from "@/common/components/atoms/ui/3d-card";
 import { MarketInfo } from "@/feature/market/interface/market.interface";
 import { Clock, Flame } from "lucide-react";
-import { Separator } from "../../ui/separator";
 import { XStack } from "../../ui/stack";
 import { useNavigate } from "react-router-dom";
-import { formatDuration } from "@/common/utils/time.utilts";
+import { formatDuration, formatTimestamp } from "@/common/utils/time.utilts";
 import HeroImage from "@/assets/image/cover-img.jpg";
-import { Button } from "../../ui/button";
+import { Badge } from "../../ui/badge";
 
 interface Props extends MarketInfo {}
 
@@ -21,6 +20,7 @@ const HeroCard = ({
   OptionA,
   OptionB,
   ProcessId,
+  Timestamp,
   Concluded,
 }: Props) => {
   const navigate = useNavigate();
@@ -61,32 +61,47 @@ const HeroCard = ({
                 translateZ="60"
                 className="flex flex-col gap-2 w-full "
               >
-                <XStack className="justify-between px-2">
+                <XStack className="justify-between items-center px-2 border p-4 rounded-md bg-secondary py-6">
                   <span className="flex gap-2 text-sm items-center">
                     <Flame fill="#dc2626" color="#dc2626" />
-                    {OptionA || "Option A"}
+                    {OptionA.length > 15
+                      ? `${OptionA.substring(0, 15)}..`
+                      : OptionA || "Option A"}
                   </span>
-                  <Button
-                    className="hover:bg-transparent border"
-                    size="icon"
-                    variant="ghost"
-                  >
-                    VS
-                  </Button>
+
+                  <Badge>VS</Badge>
+
                   <span className="flex gap-2 text-sm items-center">
-                    <Flame color="#2563eb" fill="#2563eb" />
-                    {OptionB || "Option B"}
+                    <Flame fill="#2563eb" color="#2563eb" />
+                    {OptionB.length > 15
+                      ? `${OptionB.substring(0, 15)}..`
+                      : OptionB || "Option B"}
                   </span>
                 </XStack>
 
-                <Separator />
+                <div className="flex gap-2 items-center">
+                  <Clock size={18} />
+                  <div className="space-x-2">
+                    <span>Duration:</span>
+                    <span>{formatDuration(Number(Duration))}</span>
+                  </div>
+                </div>
 
-                <span className="flex gap-2 text-sm items-center">
-                  <Clock />
-                  {Concluded
-                    ? "Concluded"
-                    : `${formatDuration(Number(Duration))}`}
-                </span>
+                <div className="flex gap-2 items-center">
+                  <Clock size={18} />
+                  <div className="space-x-2">
+                    <span>Created At:</span>
+                    <span>{formatTimestamp(Number(Timestamp))}</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 items-center">
+                  <Clock size={18} />
+                  <div className="space-x-2">
+                    <span>Status:</span>
+                    <Badge>{Concluded ? "Ended" : "Active"}</Badge>
+                  </div>
+                </div>
               </CardItem>
             </div>
           </CardBody>
