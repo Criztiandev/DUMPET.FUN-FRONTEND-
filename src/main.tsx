@@ -39,6 +39,7 @@ createRoot(document.getElementById("root")!).render(
                     permissions: ["SIGN_TRANSACTION", "ACCESS_ADDRESS"],
                     appInfo: {
                       name: "DUMPET.FUN",
+                      logo: "https://pbs.twimg.com/media/GcMreW3asAAcrI9?format=jpg&name=4096x4096",
                     },
                     ensurePermissions: true,
                   }}
