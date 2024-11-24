@@ -10,6 +10,7 @@ const App = () => {
   useEffect(() => {
     setTheme("dark");
   }, []);
+
   return <RouterProvider router={routes} />;
 };
 

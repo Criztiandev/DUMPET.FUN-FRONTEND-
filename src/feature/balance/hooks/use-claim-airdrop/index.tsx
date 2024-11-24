@@ -14,14 +14,14 @@ const useClaimAirDrop = () => {
       ];
 
       const mutate = await message({
-        process: import.meta.env.VITE_DEV_DUMPET_TOKEN_TXID,
+        process: process.env.VITE_DEV_DUMPET_TOKEN_TXID || "",
         tags: currentTag,
         signer: createDataItemSigner(window.arweaveWallet),
       });
 
       const response = await result({
         message: mutate,
-        process: import.meta.env.VITE_DEV_DUMPET_TOKEN_TXID,
+        process: process.env.VITE_DEV_DUMPET_TOKEN_TXID || "",
       });
 
       const hasError = response.Messages[0]?.Tags.find(

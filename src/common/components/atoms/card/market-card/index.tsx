@@ -26,11 +26,7 @@ const MarketCard = ({
   const handleShareClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
-
   const token = TokenList.find((token) => token.value === TokenTxId);
-
-  console.log(Timestamp);
-
   return (
     <Card className="relative flex flex-col cursor-default border-primary/50 dark:bg-transparent min-h-[300px] h-full justify-between ">
       <CardContent className="p-4 flex flex-col justify-center space-y-4">

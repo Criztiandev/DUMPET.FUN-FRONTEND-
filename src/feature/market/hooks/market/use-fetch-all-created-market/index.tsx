@@ -10,7 +10,7 @@ const useFetchAllCreatedMarket = (walletAddress: string) => {
       }
 
       const result = await dryrun({
-        process: import.meta.env.VITE_DEV_MAIN_PROCESS_ID,
+        process: process.env.VITE_DEV_MAIN_PROCESS_ID || "",
         tags: [
           { name: "Action", value: "Creator" },
           {
