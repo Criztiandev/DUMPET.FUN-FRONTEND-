@@ -87,9 +87,7 @@ const CreateMarketStatusSheet = () => {
                       <Card
                         key={MarketProcessId}
                         className="bg-transparent border border-green-500 cursor-pointer"
-                        onClick={() =>
-                          navigate(`/market/details/${MarketProcessId}`)
-                        }
+                        onClick={() => navigate(`/market/${MarketProcessId}`)}
                       >
                         <CardHeader>
                           <h2 className="break-words">{Title}</h2>

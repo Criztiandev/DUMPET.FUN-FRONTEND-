@@ -3,7 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 const useFetchMarketById = (id: string) => {
   return useSuspenseQuery({
-    queryKey: [`/GET /market/details/${id}`],
+    queryKey: [`/GET /market/${id}`],
     queryFn: async () => {
       const result = await dryrun({
         process: id,

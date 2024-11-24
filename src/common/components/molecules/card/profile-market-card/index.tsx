@@ -87,9 +87,7 @@ export const columns: ColumnDef<MarketProfile>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() =>
-                navigate(`/market/details/${profile.MarketProcessId}`)
-              }
+              onClick={() => navigate(`/marke/${profile.MarketProcessId}`)}
             >
               View Details
             </DropdownMenuItem>

@@ -9,7 +9,7 @@ const MainScreen = () => {
   return (
     <div className="min-h-screen w-full">
       <Topbar />
-      <main className="p-4 my-24">
+      <main className="p-4 mt-24">
         {/* Search and Filter Section */}
         <section>
           <Suspense fallback={<HeroCardLoadingScreen />}>

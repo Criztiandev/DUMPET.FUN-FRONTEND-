@@ -23,11 +23,7 @@ const MarketInfiniteList = () => {
       {/* Load More Button */}
       {hasNextPage && (
         <div className="flex justify-center pt-4">
-          <Button
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
-          >
+          <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
             {isFetchingNextPage ? "Loading more..." : "Load More"}
           </Button>
         </div>

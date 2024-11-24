@@ -29,8 +29,6 @@ const MarketCard = ({
 
   const token = TokenList.find((token) => token.value === TokenTxId);
 
-  // /market/${ProcessId}
-
   console.log(Timestamp);
 
   return (

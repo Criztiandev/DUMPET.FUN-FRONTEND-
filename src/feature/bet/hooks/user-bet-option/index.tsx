@@ -41,7 +41,7 @@ class BetOptionError extends Error {
 }
 
 const QUERY_KEYS = {
-  MARKET_DETAILS: (id: string) => `/GET /market/details/${id}`,
+  MARKET_DETAILS: (id: string) => `/GET /market/${id}`,
   ACCOUNT_BALANCE: (id: string) => `/GET /account/balance/${id}`,
 } as const;
 

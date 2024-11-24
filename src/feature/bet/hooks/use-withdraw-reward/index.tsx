@@ -47,7 +47,7 @@ const useWithDrawReward = (marketId: string) => {
         predicate: (query) => {
           const queryKey = query.queryKey as string[];
           return (
-            queryKey.includes(`/GET /market/details/${marketId}`) ||
+            queryKey.includes(`/GET /market/${marketId}`) ||
             queryKey.includes(`/GET /account/balance/${marketId}`)
           );
         },

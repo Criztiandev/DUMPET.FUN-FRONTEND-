@@ -45,7 +45,7 @@ const UseFetchMarket = () => {
         return acc.concat(page.markets || []);
       }, []);
 
-      // Only update if the markets have changed
+      // Only update if the markets have changed, sort the market if concluded there fore
       if (JSON.stringify(allMarket) !== JSON.stringify(markets)) {
         setMarkets(allMarket);
       }

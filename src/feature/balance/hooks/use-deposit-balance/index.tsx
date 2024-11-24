@@ -1,5 +1,4 @@
 import useConnectWallet from "@/common/hooks/wallet/useConnectWallet";
-import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
 import { isMarketDeadlineValid } from "@/common/utils/time.utilts";
 import { MarketInfo } from "@/feature/market/interface/market.interface";
 import useMarketStore from "@/feature/market/store/market.store";
@@ -18,7 +17,7 @@ interface DepositResponse {
 interface MessageResponse {
   Messages: Array<{
     Tags: Array<{ name: string; value: string }>;
-    Data: string;
+    value: string;
   }>;
 }
 
@@ -29,8 +28,6 @@ enum DepositError {
   PROCESS_ERROR = "PROCESS_ERROR",
 }
 
-const MAX_DEPOSIT_AMOUNT = 250;
-
 const useDepositBalance = (tokenID: string) => {
   const { addBalanceToField } = useBalanceStore();
   const { selectedMarket } = useMarketStore();
@@ -40,25 +37,11 @@ const useDepositBalance = (tokenID: string) => {
 
   const selectedMarketInfo = selectedMarket?.MarketInfo as MarketInfo;
 
-  // Validation helpers
-  const validateAmount = (balance: string): void => {
-    const formattedBalance = formatArweaveTokenAmount(Number(balance));
-
-    if (
-      formattedBalance >= MAX_DEPOSIT_AMOUNT ||
-      Number.isNaN(formattedBalance)
-    ) {
-      errorCause = DepositError.INVALID_AMOUNT;
-      throw new Error("Invalid Balance: Maximum deposit limit reached");
-    }
-  };
-
   const validateMarketDeadline = (): void => {
     const currentDate = new Date();
     const marketTimeUnix = selectedMarketInfo?.Duration;
 
     if (!isMarketDeadlineValid(currentDate, Number(marketTimeUnix))) {
-      errorCause = DepositError.MARKET_CONCLUDED;
       throw new Error("Invalid Action: Market has already concluded");
     }
   };
@@ -85,8 +68,6 @@ const useDepositBalance = (tokenID: string) => {
         }
       }
 
-      // Validate deposit amount and market deadline
-      validateAmount(balance);
       validateMarketDeadline();
 
       try {
@@ -111,17 +92,15 @@ const useDepositBalance = (tokenID: string) => {
         );
 
         if (errorTag) {
-          errorCause = DepositError.PROCESS_ERROR;
-          throw new Error(messageResponse.Data);
+          throw new Error("Insufficient Balance");
         }
 
         return {
-          message: messageResponse.Data,
+          message: messageResponse.value,
           amount: balance,
         };
       } catch (error) {
         if (error instanceof Error) {
-          errorCause = DepositError.PROCESS_ERROR;
           throw new Error(error.message);
         }
         throw error;
@@ -144,25 +123,7 @@ const useDepositBalance = (tokenID: string) => {
     },
 
     onError: (error: Error) => {
-      console.error("Deposit error:", error);
-
-      // Show appropriate error message based on error type
-      const errorMessage = (() => {
-        switch (errorCause) {
-          case DepositError.NOT_CONNECTED:
-            return "Please connect your wallet to deposit";
-          case DepositError.INVALID_AMOUNT:
-            return `Maximum deposit amount is ${MAX_DEPOSIT_AMOUNT}`;
-          case DepositError.MARKET_CONCLUDED:
-            return "Market has already concluded";
-          case DepositError.PROCESS_ERROR:
-            return error.message || "Transaction failed";
-          default:
-            return "Something went wrong. Please try again";
-        }
-      })();
-
-      toast(errorMessage, {
+      toast(error.message, {
         style: {
           textAlign: "center",
           background: "#DD2627",
