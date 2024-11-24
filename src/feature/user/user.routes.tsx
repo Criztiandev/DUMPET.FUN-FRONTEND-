@@ -1,4 +1,4 @@
-import { createBrowserRouter, createHashRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 import MainScreen from "./pages/main-screen";
 import NotFoundScreen from "@/common/components/page/helper/no-found";
 import DetailsScreen from "./pages/details-screen";
