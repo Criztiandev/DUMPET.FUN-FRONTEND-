@@ -38,8 +38,7 @@ createRoot(document.getElementById("root")!).render(
                   config={{
                     permissions: ["SIGN_TRANSACTION", "ACCESS_ADDRESS"],
                     appInfo: {
-                      name: "Super Cool App",
-                      logo: "https://arweave.net/jAvd7Z1CBd8gVF2D6ESj7SMCCUYxDX_z3vpp5aHdaYk",
+                      name: "DUMPET.FUN",
                     },
                     ensurePermissions: true,
                   }}

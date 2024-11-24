@@ -1,4 +1,4 @@
-import { Card, CardContent, CardFooter } from "../../ui/card";
+import { Card, CardContent } from "../../ui/card";
 import { XStack, YStack } from "../../ui/stack";
 import { Link } from "react-router-dom";
 import { Clock, Flame } from "lucide-react";

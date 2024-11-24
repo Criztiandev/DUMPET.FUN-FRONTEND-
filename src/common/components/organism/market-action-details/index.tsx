@@ -18,20 +18,11 @@ const MarketActionDetails = () => {
   const { balance } = useBalanceStore();
   const { selectedMarket } = useMarketStore();
 
-  const {
-    ProcessId,
-    Title,
-    Creator,
-    Timestamp,
-    Concluded,
-    OptionA,
-    OptionB,
-    TokenTxId,
-  } = selectedMarket?.MarketInfo as MarketInfo;
+  const { Title, Creator, Concluded, OptionA, OptionB, TokenTxId } =
+    selectedMarket?.MarketInfo as MarketInfo;
 
   const token = TokenList.find((token) => token.value === TokenTxId);
 
-  const handleShareClick = () => {};
   return (
     <div className="w-full">
       <YStack className="space-y-4 p-4">
