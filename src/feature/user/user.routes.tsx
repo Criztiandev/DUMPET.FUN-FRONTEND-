@@ -18,12 +18,9 @@ const routes = [
     path: "/home",
     element: <MainScreen />,
   },
+
   {
-    path: "/market/details/:id",
-    element: <DetailsScreen />,
-  },
-  {
-    path: "/profile",
+    path: "/account",
     element: (
       <ProtectedRoutes>
         <ProfileScreen />
@@ -34,6 +31,10 @@ const routes = [
   {
     path: "/profile/:id",
     element: <PublicProfileScreen />,
+  },
+  {
+    path: "/market/:id",
+    element: <DetailsScreen />,
   },
   {
     path: "/create/market",

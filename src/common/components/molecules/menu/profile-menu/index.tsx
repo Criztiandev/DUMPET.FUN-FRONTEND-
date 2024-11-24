@@ -29,7 +29,7 @@ function ProfileDropdownMenu() {
   const location = useLocation();
 
   const handleNavigateAddress = () => {
-    navigate(`/profile`);
+    navigate(`/account`);
   };
 
   return (

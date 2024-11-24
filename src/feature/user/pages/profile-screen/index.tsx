@@ -31,10 +31,11 @@ const ProfileScreen = () => {
 
   const handleShareProfile = () => {
     const text = `Check out this profile on dumpet.fun - `;
-    const url = window.location.href;
+    const baseUrl = window.location.origin;
+    const profileUrl = `${baseUrl}/profile/${address}`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       text
-    )}&url=${encodeURIComponent(url)}`;
+    )}&url=${profileUrl}`;
     window.open(twitterUrl, "_blank");
   };
 
