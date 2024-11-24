@@ -123,7 +123,7 @@ export function BalanceDialog(props: Props) {
         );
 
         if (!validationResult.isValid) {
-          toast("Market is already Concluded", {
+          toast("Sorry! Market is already concluded", {
             style: {
               background: "#DD2627",
               color: "white",

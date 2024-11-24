@@ -8,6 +8,7 @@ import CreateMarketStatusSheet from "@/common/components/molecules/sheet/create-
 import { Suspense } from "react";
 import { useAccountStore } from "@/feature/user/store/account-store";
 import ButtonLoading from "@/common/components/page/helper/button-loading";
+import CreateMarketFAQ from "@/common/components/molecules/dialog/create-market-faq";
 
 const CreateMarketTopbar = () => {
   const isMobile = useIsMobile();
@@ -24,6 +25,7 @@ const CreateMarketTopbar = () => {
         <MobileMenu />
       ) : (
         <div className="flex gap-4 items-center">
+          <CreateMarketFAQ />
           <Suspense fallback={<ButtonLoading />}>
             <CreateMarketStatusSheet />
           </Suspense>

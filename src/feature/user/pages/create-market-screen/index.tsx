@@ -7,10 +7,12 @@ import { cn } from "@/common/lib/utils";
 import useCreateMarket from "@/feature/market/hooks/market/use-create-market";
 import { MarketFormValue } from "@/feature/market/interface/market.interface";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { FormProvider } from "react-hook-form";
+import { FormProvider, useFormContext, useWatch } from "react-hook-form";
 import { Alert, AlertDescription } from "@/common/components/atoms/ui/alert";
 import Topbar from "@/common/components/template/layout/topbar";
 import { useAccountStore } from "../../store/account-store";
+
+import SelectField from "@/common/components/atoms/form/SelectField";
 
 const CreateMarketScreen = () => {
   const { form, mutation } = useCreateMarket();
@@ -84,11 +86,7 @@ const CreateMarketScreen = () => {
               className="space-y-4 w-full"
             >
               <div className="space-y-4">
-                <InputField
-                  label="TokenTxId"
-                  name="TokenTxId"
-                  placeholder="Enter TokenTxId"
-                />
+                <SyncedFields />
                 <InputField
                   label="Title"
                   name="Title"
@@ -149,3 +147,52 @@ const CreateMarketScreen = () => {
 };
 
 export default CreateMarketScreen;
+
+const SyncedFields = () => {
+  const { control, setValue } = useFormContext();
+
+  // Watch both fields
+  const tokenTxId = useWatch({
+    control,
+    name: "TokenTxId",
+  });
+
+  const tokenTxId1 = useWatch({
+    control,
+    name: "selectToken",
+  });
+
+  // Update TokenTxId1 when TokenTxId changes
+  React.useEffect(() => {
+    if (tokenTxId && tokenTxId !== tokenTxId1) {
+      setValue("selectToken", tokenTxId);
+    }
+  }, [tokenTxId, setValue]);
+
+  // Update TokenTxId when TokenTxId1 changes
+  React.useEffect(() => {
+    if (tokenTxId1 && tokenTxId1 !== tokenTxId) {
+      setValue("TokenTxId", tokenTxId1);
+    }
+  }, [tokenTxId1, setValue]);
+
+  return (
+    <div className="grid grid-cols-[auto_20%] items-end gap-4">
+      <InputField
+        label="TokenTxId"
+        name="TokenTxId"
+        placeholder="Enter TokenTxId"
+      />
+      <SelectField
+        name="selectToken"
+        placeholder="Token"
+        options={[
+          {
+            label: "DUMPET",
+            value: "fzkhRptIvW3tJ7Dz7NFgt2DnZTJVKnwtzEOuURjfXrQ",
+          },
+        ]}
+      />
+    </div>
+  );
+};

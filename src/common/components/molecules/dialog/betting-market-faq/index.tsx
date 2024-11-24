@@ -13,69 +13,78 @@ import {
 import { YStack } from "@/common/components/atoms/ui/stack";
 import { CircleHelp, ArrowLeft, ArrowRight } from "lucide-react";
 import useLocalStorage from "@/common/hooks/utils/useLocalStorage";
+import { Badge } from "@/common/components/atoms/ui/badge";
 
 const steps = [
   {
-    title: "Welcome to DUMPET.FUN! 🎲",
-    description:
-      "Where silly debates meet serious bets. Create markets for life's most entertaining arguments or join existing ones!",
-    content:
-      "Get ready to turn trivial arguments into winning bets! Choose from existing debates like '🐱 Cats vs 🐕 Dogs' or create your own market for anything you can imagine.",
-  },
-  {
-    title: "Step 1: Join or Create",
-    description: "Select a market or start your own debate",
-    content:
-      "Browse active markets to participate in, or create your own debate. The possibilities are endless - from settling age-old arguments to predicting the most random outcomes!",
-  },
-  {
-    title: "Step 2: Place Your Bet",
-    description: "Deposit tokens to join the fun",
-    content:
-      "Deposit the specified token to become eligible for voting. Your deposit is your bet - back your opinion with real stakes!",
-  },
-  {
-    title: "Step 3: Cast Your Vote",
-    description: "Support your chosen side",
-    content:
-      "Vote for your preferred option or vote with your bias. Remember, there are NO RULES! It's all about what the community decides.",
-  },
-  {
-    title: "Step 4: Wait & Win",
-    description: "Let the community decide",
+    title: "Step 1: Access Balance",
+    description: "Click the Balance Button",
     content: (
       <div className="space-y-4">
         <p>
-          Once the market duration ends, anyone can conclude the market process.
-          Winners get rewarded!
+          First, locate and click the "Balance" button. You'll see two
+          checkboxes:
         </p>
-        <div className="text-sm text-muted-foreground">
-          <p>Additional Info:</p>
-          <ul className="list-disc pl-4 space-y-2">
-            <li>
-              Tokens from losing votes are distributed proportionally to winners
-            </li>
-            <li>1% fee applies for early vote cancellation</li>
-            <li>First-time users eligible for one-time airdrop</li>
-            <li>Market creators can earn AO rewards from user deposits</li>
-          </ul>
-        </div>
+        <ul className="list-disc pl-4 space-y-2">
+          <li>1. Deposit checkbox</li>
+          <li>2. Withdraw checkbox</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    title: "Step 2: Manage Your Balance",
+    description: "Choose Deposit or Withdraw",
+    content: (
+      <div className="space-y-4">
+        <p>Choose your balance management option:</p>
+        <ul className="list-disc pl-4 space-y-2">
+          <li className="flex gap-2">
+            <strong className="underline">
+              <Badge className="bg-green-800">Deposit:</Badge>
+            </strong>
+            <p className="text-sm">Enter the amount you want to add</p>
+          </li>
+          <li className="flex gap-2">
+            <strong className="underline">
+              <Badge className="bg-green-800">Withdraw:</Badge>
+            </strong>
+            <p className="text-sm">
+              All your balance will be automatically converted to{" "}
+              <Badge>AO</Badge> tokens and save to your wallet
+            </p>
+          </li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    title: "Step 3: Place Your Vote",
+    description: "Select Side and Amount",
+    content: (
+      <div className="space-y-4">
+        <p>After your deposit is confirmed:</p>
+        <ul className="list-disc pl-4 space-y-2">
+          <li>Select which side you want to vote for</li>
+          <li>Enter your voting amount</li>
+          <li>Confirm to start voting</li>
+        </ul>
       </div>
     ),
   },
 ];
 
-const FaqDialog = () => {
+const VotingMarketFaq = () => {
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const { setItem, getItem } = useLocalStorage("hasSeenFaq");
+  const { setItem, getItem } = useLocalStorage("hasSeenFaqVote");
 
   useEffect(() => {
     // Check if user has seen FAQ before
-    const hasSeenFaq = getItem();
+    const hasSeenFaqVote = getItem();
 
     // Only open dialog automatically if user hasn't seen it before
-    if (hasSeenFaq !== "true") {
+    if (hasSeenFaqVote !== "true") {
       setOpen(true);
       // Mark FAQ as seen immediately
       setItem("true");
@@ -149,4 +158,4 @@ const FaqDialog = () => {
   );
 };
 
-export default FaqDialog;
+export default VotingMarketFaq;

@@ -71,7 +71,7 @@ const useBetOption = (marketId: string) => {
     const currentBalance = balance?.UserDepositBalance || 0;
     if (amount > Number(currentBalance)) {
       throw new BetOptionError(
-        "Insufficient balance for bet",
+        "Insufficient balance for bet, Please click balance and deposit",
         BetError.INSUFFICIENT_BALANCE
       );
     }
@@ -185,7 +185,8 @@ const useBetOption = (marketId: string) => {
             errorMessage = "Invalid bet amount";
             break;
           case BetError.INSUFFICIENT_BALANCE:
-            errorMessage = "Insufficient balance for bet";
+            errorMessage =
+              "Insufficient balance. Please click the balance button and make a deposit.";
             break;
           case BetError.INVALID_SELECTION:
             errorMessage = "Please select a valid option";

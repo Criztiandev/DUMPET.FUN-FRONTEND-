@@ -8,6 +8,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import MobileMenu from "@/common/components/molecules/menu/mobile-menu";
 import CreateButton from "@/common/components/atoms/button/create-button";
 import SecondHeader from "@/common/components/molecules/socials/second-header";
+import VotingMarketFaq from "@/common/components/molecules/dialog/betting-market-faq";
 
 const Topbar = () => {
   const isMobile = useIsMobile();
@@ -27,7 +28,8 @@ const Topbar = () => {
         ) : (
           <div className="space-y-4">
             <div className="flex gap-4 items-cente justify-end">
-              <div>
+              <div className="space-x-4">
+                {location.pathname.includes("/market") && <VotingMarketFaq />}
                 {!location.pathname.includes("/create/market") && (
                   <CreateButton />
                 )}
@@ -40,7 +42,7 @@ const Topbar = () => {
         )}
       </header>
 
-      <SecondHeader />
+      {!location.pathname.includes("market") && <SecondHeader />}
     </div>
   );
 };

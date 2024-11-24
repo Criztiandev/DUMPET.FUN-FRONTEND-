@@ -16,48 +16,59 @@ import useLocalStorage from "@/common/hooks/utils/useLocalStorage";
 
 const steps = [
   {
-    title: "Welcome to DUMPET.FUN! 🎲",
-    description:
-      "Where silly debates meet serious bets. Create markets for life's most entertaining arguments or join existing ones!",
-    content:
-      "Get ready to turn trivial arguments into winning bets! Choose from existing debates like '🐱 Cats vs 🐕 Dogs' or create your own market for anything you can imagine.",
-  },
-  {
-    title: "Step 1: Join or Create",
-    description: "Select a market or start your own debate",
-    content:
-      "Browse active markets to participate in, or create your own debate. The possibilities are endless - from settling age-old arguments to predicting the most random outcomes!",
-  },
-  {
-    title: "Step 2: Place Your Bet",
-    description: "Deposit tokens to join the fun",
-    content:
-      "Deposit the specified token to become eligible for voting. Your deposit is your bet - back your opinion with real stakes!",
-  },
-  {
-    title: "Step 3: Cast Your Vote",
-    description: "Support your chosen side",
-    content:
-      "Vote for your preferred option or vote with your bias. Remember, there are NO RULES! It's all about what the community decides.",
-  },
-  {
-    title: "Step 4: Wait & Win",
-    description: "Let the community decide",
+    title: "Welcome to Create Market",
+    description: "Your Platform for Prediction Markets & Social Betting",
     content: (
       <div className="space-y-4">
         <p>
-          Once the market duration ends, anyone can conclude the market process.
-          Winners get rewarded!
+          Welcome to Create Market, where you can participate in or create
+          prediction markets on any topic! Whether you want to:
         </p>
-        <div className="text-sm text-muted-foreground">
-          <p>Additional Info:</p>
-          <ul className="list-disc pl-4 space-y-2">
+        <ul className="list-disc pl-4 space-y-2">
+          <li>Join existing markets like "🐱 Cats vs 🐕 Dogs"</li>
+          <li>Create your own market on any debatable topic</li>
+          <li>Turn friendly arguments into engaging bets</li>
+          <li>Earn rewards for accurate predictions</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    title: "Step 1: Token Selection",
+    description: "Choose Your Betting Token",
+    content: (
+      <div className="space-y-4">
+        <p>Before creating or joining a market:</p>
+        <ul className="list-disc pl-4 space-y-2">
+          <li>
+            Select a token by entering its Token ID in the TokenTxId field
+          </li>
+          <li>Or choose from the available token list in the dropdown</li>
+          <li>Create market is free, so feel free to create any</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    title: "Step 2: Market Creation & Management",
+    description: "Set Up and Monitor Your Markets",
+    content: (
+      <div className="space-y-4">
+        <p>Creating and managing your market is simple:</p>
+        <ul className="list-disc pl-4 space-y-2">
+          <li>Define your market question and options</li>
+          <li>Set the market duration and initial liquidity</li>
+          <li>Monitor your markets through the "My Markets" dashboard</li>
+          <li>Track both pending and successful markets</li>
+        </ul>
+        <div className="mt-6 bg-muted p-4 rounded-lg">
+          <p className="font-medium mb-2">Important Market Rules:</p>
+          <ul className="list-disc pl-4 space-y-2 text-sm text-muted-foreground">
+            <li>Winners receive proportional rewards from the losing votes</li>
+            <li>Market creators earn AO rewards based on user participation</li>
             <li>
-              Tokens from losing votes are distributed proportionally to winners
+              Markets can be concluded by any user after the duration ends
             </li>
-            <li>1% fee applies for early vote cancellation</li>
-            <li>First-time users eligible for one-time airdrop</li>
-            <li>Market creators can earn AO rewards from user deposits</li>
           </ul>
         </div>
       </div>
@@ -65,17 +76,17 @@ const steps = [
   },
 ];
 
-const FaqDialog = () => {
+const CreateMarketFAQ = () => {
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const { setItem, getItem } = useLocalStorage("hasSeenFaq");
+  const { setItem, getItem } = useLocalStorage("hasSeenFaqCreate");
 
   useEffect(() => {
     // Check if user has seen FAQ before
-    const hasSeenFaq = getItem();
+    const hasSeenFaqCreate = getItem();
 
     // Only open dialog automatically if user hasn't seen it before
-    if (hasSeenFaq !== "true") {
+    if (hasSeenFaqCreate !== "true") {
       setOpen(true);
       // Mark FAQ as seen immediately
       setItem("true");
@@ -149,4 +160,4 @@ const FaqDialog = () => {
   );
 };
 
-export default FaqDialog;
+export default CreateMarketFAQ;

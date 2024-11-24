@@ -26,7 +26,7 @@ const HeroCard = ({
   const navigate = useNavigate();
   return (
     <div className=" flex justify-center items-center">
-      <div onClick={() => navigate(`/market/details/${ProcessId}`)}>
+      <div onClick={() => navigate(`/market/${ProcessId}`)}>
         <CardContainer className="inter-var cursor-pointer">
           <CardBody className="bg-card dark:bg-transparent relative group/card  dark:hover:shadow-2xl dark:hover:shadow-purple-500/[0.1]  w-auto sm:w-[30rem] h-auto rounded-xl p-6 border border-primary/30 dark:border-primary/30  ">
             <CardItem
