@@ -51,12 +51,14 @@ const ProfileScreen = () => {
           <div className="py-4 md:py-8">
             <div className="mb-4 grid gap-4 sm:grid-cols-2 sm:gap-8 lg:gap-16">
               <div className="space-y-4">
-                <div className="flex space-x-4">
-                  <img
-                    className="h-16 w-16 rounded-lg"
-                    src={`https://ui-avatars.com/api/?name=${address}&background=8058D5&color=fff`}
-                    alt="Helene avatar"
-                  />
+                <div className="flex gap-4">
+                  <div className=" w-[74px] h-[74px]">
+                    <img
+                      className="w-full h-full rounded-lg"
+                      src={`https://ui-avatars.com/api/?name=${address}&background=8058D5&color=fff`}
+                      alt="Helene avatar"
+                    />
+                  </div>
                   <div className="space-y-2">
                     <XStack className="gap-4">
                       <Badge
@@ -79,14 +81,14 @@ const ProfileScreen = () => {
                     </h2>
                   </div>
                 </div>
-                <dl className="">
+                <div className="">
                   <dt className="font-semibold text-gray-900 dark:text-white">
                     Wallet Address
                   </dt>
                   <dd className="text-gray-500 dark:text-gray-400">
                     {address || ""}
                   </dd>
-                </dl>
+                </div>
               </div>
             </div>
           </div>

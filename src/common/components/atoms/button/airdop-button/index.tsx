@@ -21,7 +21,7 @@ const AirdropButton = () => {
           <Gift />
         </Button>
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent className="bg-transparent">
         <span className="text-[12px]">Claim Airdrop</span>
       </TooltipContent>
     </Tooltip>

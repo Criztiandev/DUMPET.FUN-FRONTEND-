@@ -15,7 +15,7 @@ const MarketActionDetails = () => {
   return (
     <div className="w-full">
       <YStack className="space-y-4 p-4">
-        <div className="h-[300px] w-full border rounded-md overflow-hidden p-4 flex flex-col">
+        <div className="w-full border rounded-md overflow-hidden p-4 flex flex-col">
           <div className="h-full">
             <XStack className="flex justify-between items-center">
               <span className="flex space-x-2">

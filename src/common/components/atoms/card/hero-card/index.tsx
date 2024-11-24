@@ -8,10 +8,7 @@ import { Clock, Flame } from "lucide-react";
 import { Separator } from "../../ui/separator";
 import { XStack } from "../../ui/stack";
 import { useNavigate } from "react-router-dom";
-import {
-  getDaysFromTimestamp,
-  formatDuration,
-} from "@/common/utils/time.utilts";
+import { formatDuration } from "@/common/utils/time.utilts";
 import HeroImage from "@/assets/image/cover-img.jpg";
 import { Button } from "../../ui/button";
 
@@ -92,15 +89,6 @@ const HeroCard = ({
                     : `${formatDuration(Number(Duration))}`}
                 </span>
               </CardItem>
-              <div className="flex justify-between items-center ">
-                <CardItem
-                  translateZ={70}
-                  as="div"
-                  className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
-                >
-                  {getDaysFromTimestamp(Number(Timestamp))}
-                </CardItem>
-              </div>
             </div>
           </CardBody>
         </CardContainer>
