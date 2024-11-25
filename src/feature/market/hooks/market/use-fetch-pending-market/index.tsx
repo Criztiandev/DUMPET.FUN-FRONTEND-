@@ -8,7 +8,7 @@ const useFetchPendingMarket = () => {
     queryKey: [`/GET /market/status/pending`],
     queryFn: async () => {
       const result = await dryrun({
-        process: process.env.VITE_DEV_MAIN_PROCESS_ID || "",
+        process: "jIRuxblllcBIDUmYbrbbEI90nJs40duNA6wR6NkYVvI",
         tags: [
           { name: "Action", value: "HasWaitFor" },
           {
