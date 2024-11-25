@@ -38,11 +38,7 @@ const balanceFormSchema = z.object({
     .min(1, "Balance is required")
     .refine((val) => !isNaN(Number(val)), "Must be a valid number")
     .refine((val) => Number(val) > 0, "Balance must be greater than 0")
-    .refine((val) => Number(val) <= 250, "Balance must not exceed 250")
-    .refine(
-      (val) => Number.isInteger(Number(val)) && !val.includes("."),
-      "Balance must be a whole number without decimals"
-    ),
+    .refine((val) => Number(val) <= 250, "Balance must not exceed 250"),
   transactionType: z.enum(["deposit", "withdraw"], {
     required_error: "Please select a transaction type",
   }),
@@ -89,8 +85,8 @@ export function BalanceDialog(props: Props) {
 
   const convertToBaseUnits = (value: string): string => {
     try {
-      const balancePow = Number(value) * Math.pow(10, 12);
-      return new BigNumber(balancePow).toFixed(12, BigNumber.ROUND_DOWN);
+      const result = Number(value) * Math.pow(10, 12);
+      return result.toString();
     } catch (error) {
       console.error("Error converting balance:", error);
       throw new Error("Invalid balance conversion");

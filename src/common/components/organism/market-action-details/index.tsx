@@ -19,7 +19,7 @@ const MarketActionDetails = () => {
   const { selectedMarket } = useMarketStore();
 
   const { Title, Creator, Concluded, OptionA, OptionB, TokenTxId } =
-    selectedMarket?.MarketInfo as MarketInfo;
+    (selectedMarket?.MarketInfo as MarketInfo) || {};
 
   const token = TokenList.find((token) => token.value === TokenTxId);
 
@@ -30,7 +30,7 @@ const MarketActionDetails = () => {
           <CardContent className="p-4 flex flex-col justify-center space-y-4">
             <YStack>
               <div className="text-3xl font-bold">
-                {Title.length > 25
+                {Title?.length > 25
                   ? `${Title.substring(0, 30)}...`
                   : Title || "Thonald Dump"}
               </div>
@@ -49,8 +49,8 @@ const MarketActionDetails = () => {
             <XStack className="justify-between items-center px-2 border p-4 rounded-md bg-secondary py-6">
               <span className="flex gap-2 text-sm items-center">
                 <Flame fill="#dc2626" color="#dc2626" />
-                {OptionA.length > 15
-                  ? `${OptionA.substring(0, 15)}..`
+                {OptionA?.length > 15
+                  ? `${OptionA?.substring(0, 15)}..`
                   : OptionA || "Option A"}
               </span>
 
@@ -58,8 +58,8 @@ const MarketActionDetails = () => {
 
               <span className="flex gap-2 text-sm items-center">
                 <Flame fill="#2563eb" color="#2563eb" />
-                {OptionB.length > 15
-                  ? `${OptionB.substring(0, 15)}..`
+                {OptionB?.length > 15
+                  ? `${OptionB?.substring(0, 15)}..`
                   : OptionB || "Option B"}
               </span>
             </XStack>

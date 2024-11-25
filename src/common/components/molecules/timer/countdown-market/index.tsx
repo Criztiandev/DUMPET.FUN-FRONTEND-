@@ -18,7 +18,7 @@ Timer.displayName = "Timer";
 const TimerFallback = () => <span className="text-gray-500 ml-1">(00s)</span>;
 
 const CountdownContent = memo(() => {
-  const { selectedMarket, concludeSelectedMarket } = useMarketStore();
+  const { selectedMarket, concludeMarket } = useMarketStore();
   const { mutate: concludeMutate } = useMarketConclude(
     String(selectedMarket?.MarketInfo.ProcessId) || ""
   );
@@ -34,7 +34,7 @@ const CountdownContent = memo(() => {
 
     if (milliseconds <= 0) {
       setIsEnded(true);
-      concludeSelectedMarket();
+      concludeMarket();
       concludeMutate();
 
       return "Ended";

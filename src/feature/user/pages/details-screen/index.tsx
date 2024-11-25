@@ -16,7 +16,6 @@ const DetailsScreen = () => {
   const form = useForm();
   const isMobile = useIsMobile();
   const { setSelectedMarket } = useMarketStore();
-
   const { data: marketResult } = useFetchMarketById(marketID || "");
 
   useEffect(() => {
@@ -29,12 +28,12 @@ const DetailsScreen = () => {
     <section className="w-full min-h-full relative">
       <Topbar />
       <div className="mt-24 flex flex-col lg:grid lg:grid-cols-[auto_32%]">
-        <div className="p-4 w-full relative ">
+        <div className="p-4 w-full relative">
           <BarChart />
 
           {isMobile ? (
-            <div className=" justify-center items-center mt-4 w-full mx-auto">
-              <XStack className="gap-4 w-full  flex justify-center items-center">
+            <div className="justify-center items-center mt-4 w-full mx-auto">
+              <XStack className="gap-4 w-full flex justify-center items-center">
                 <CountdownMarket />
                 <ConcludeButton />
               </XStack>

@@ -83,10 +83,8 @@ const VotingMarketFaq = () => {
     // Check if user has seen FAQ before
     const hasSeenFaqVote = getItem();
 
-    // Only open dialog automatically if user hasn't seen it before
     if (hasSeenFaqVote !== "true") {
       setOpen(true);
-      // Mark FAQ as seen immediately
       setItem("true");
     }
   }, []);

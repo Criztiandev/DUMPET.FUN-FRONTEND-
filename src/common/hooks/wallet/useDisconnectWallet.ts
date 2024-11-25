@@ -2,6 +2,7 @@ import { useConnection } from "arweave-wallet-kit";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "../utils/use-toast";
 import { useAccountStore } from "@/feature/user/store/account-store";
+import useLocalStorage from "../utils/useLocalStorage";
 
 // Define response type
 interface DisconnectResponse {
@@ -21,6 +22,7 @@ const useDisconnectWallet = () => {
   const { disconnect, connected } = useConnection();
   const { disconnect: disconnectStore, resetError } = useAccountStore();
   const queryClient = useQueryClient();
+  const { removeItem } = useLocalStorage("market-store");
 
   return useMutation({
     mutationKey: ["disconnect-wallet"],
@@ -58,6 +60,7 @@ const useDisconnectWallet = () => {
     onSuccess: async ({ message }) => {
       disconnectStore();
       resetError();
+      removeItem();
 
       // Invalidate relevant queries
       await Promise.all([

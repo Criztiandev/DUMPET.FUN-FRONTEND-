@@ -112,6 +112,8 @@ const useWithdrawBalance = () => {
           (tag) => tag.name === "Error"
         );
 
+        console.log(errorTag);
+
         if (errorTag) {
           errorCause = WithdrawError.PROCESS_ERROR;
           throw new Error(messageResponse.Data);
