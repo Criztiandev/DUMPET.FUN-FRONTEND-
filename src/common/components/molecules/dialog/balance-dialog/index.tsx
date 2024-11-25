@@ -22,7 +22,6 @@ import { toast } from "sonner";
 import useBalanceStore from "@/feature/user/store/balance-store";
 import { useEffect, useState } from "react";
 import useFetchAccountBalance from "@/feature/balance/hooks/use-fetch-account-balance";
-import BigNumber from "bignumber.js";
 import { VariantProps } from "class-variance-authority";
 import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
 import { Badge } from "@/common/components/atoms/ui/badge";

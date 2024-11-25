@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/common/components/atoms/ui/button";
 import {
   Dialog,
@@ -79,18 +79,23 @@ const steps = [
 const CreateMarketFAQ = () => {
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [initialized, setInitialized] = useState(false);
   const { setItem, getItem } = useLocalStorage("hasSeenFaqCreate");
 
+  // Separate initialization effect
   useEffect(() => {
-    // Check if user has seen FAQ before
-    const hasSeenFaqCreate = getItem();
+    const timer = setTimeout(() => {
+      const value = getItem();
 
-    // Only open dialog automatically if user hasn't seen it before
-    if (hasSeenFaqCreate !== "true") {
-      setOpen(true);
-      // Mark FAQ as seen immediately
-      setItem("true");
-    }
+      const hasSeenFaq = value === "true" || value === (true as any);
+
+      if (!hasSeenFaq) {
+        setOpen(true);
+      }
+      setInitialized(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleNext = () => {
@@ -105,10 +110,19 @@ const CreateMarketFAQ = () => {
     }
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
+    try {
+      setItem("true");
+    } catch (error) {
+      console.error("Error saving FAQ state:", error);
+    }
     setOpen(false);
     setCurrentStep(0);
-  };
+  }, [setItem]);
+
+  if (!initialized) {
+    return null;
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

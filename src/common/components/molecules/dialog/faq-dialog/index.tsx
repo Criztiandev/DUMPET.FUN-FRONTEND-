@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/common/components/atoms/ui/button";
 import {
   Dialog,
@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from "@/common/components/atoms/ui/dialog";
 import { YStack } from "@/common/components/atoms/ui/stack";
 import { CircleHelp, ArrowLeft, ArrowRight } from "lucide-react";
@@ -68,18 +67,23 @@ const steps = [
 const FaqDialog = () => {
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [initialized, setInitialized] = useState(false);
   const { setItem, getItem } = useLocalStorage("hasSeenFaq");
 
+  // Separate initialization effect
   useEffect(() => {
-    // Check if user has seen FAQ before
-    const hasSeenFaq = getItem();
+    const timer = setTimeout(() => {
+      const value = getItem();
 
-    // Only open dialog automatically if user hasn't seen it before
-    if (hasSeenFaq !== "true") {
-      setOpen(true);
-      // Mark FAQ as seen immediately
-      setItem("true");
-    }
+      const hasSeenFaq = value === "true" || value === (true as any);
+
+      if (!hasSeenFaq) {
+        setOpen(true);
+      }
+      setInitialized(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleNext = () => {
@@ -94,13 +98,28 @@ const FaqDialog = () => {
     }
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
+    try {
+      setItem("true");
+    } catch (error) {
+      console.error("Error saving FAQ state:", error);
+    }
     setOpen(false);
     setCurrentStep(0);
-  };
+  }, [setItem]);
+
+  if (!initialized) {
+    return null;
+  }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(newOpen) => {
+        if (!newOpen) handleClose();
+        setOpen(newOpen);
+      }}
+    >
       <DialogTrigger asChild>
         <Button size="icon" variant="ghost">
           <CircleHelp size={18} />
@@ -136,11 +155,9 @@ const FaqDialog = () => {
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             ) : (
-              <DialogClose asChild>
-                <Button type="button" onClick={handleClose}>
-                  Get Started
-                </Button>
-              </DialogClose>
+              <Button type="button" onClick={handleClose}>
+                Get Started
+              </Button>
             )}
           </div>
         </DialogFooter>

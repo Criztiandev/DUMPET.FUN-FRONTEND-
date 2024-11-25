@@ -98,7 +98,7 @@ const useCreateMarket = () => {
         const createTags = createMarketTags(payload);
 
         const mutateResult = await message({
-          process: "jIRuxblllcBIDUmYbrbbEI90nJs40duNA6wR6NkYVvI",
+          process: process.env.VITE_DEV_MAIN_PROCESS_ID || "",
           tags: createTags,
           signer: createDataItemSigner(window.arweaveWallet),
         });
@@ -106,7 +106,7 @@ const useCreateMarket = () => {
         // Get result
         const response = await result({
           message: mutateResult,
-          process: "jIRuxblllcBIDUmYbrbbEI90nJs40duNA6wR6NkYVvI",
+          process: process.env.VITE_DEV_MAIN_PROCESS_ID || "",
         });
 
         if (!response) {

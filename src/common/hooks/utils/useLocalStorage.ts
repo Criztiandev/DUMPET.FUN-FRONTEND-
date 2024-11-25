@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 
 type SetItemFunction = <T>(value: T) => void;
 type GetItemFunction = () => string | null;
@@ -14,21 +13,16 @@ interface UseLocalStorageReturn {
 }
 
 const useLocalStorage = (key: string): UseLocalStorageReturn => {
-  const [storedValue, setStoredValue] = useState<string | null>(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? item : null;
-    } catch (error) {
-      console.error("Error reading from localStorage:", error);
-      return null;
-    }
-  });
-
   const setItem: SetItemFunction = useCallback(
-    (value: any) => {
+    <T>(value: T) => {
       try {
-        window.localStorage.setItem(key, value);
-        setStoredValue(value);
+        // Ensure clean string storage without extra quotes
+        const valueToStore =
+          typeof value === "string"
+            ? value.replace(/^"|"$/g, "") // Remove surrounding quotes if present
+            : JSON.stringify(value).replace(/^"|"$/g, ""); // Convert to string and remove quotes
+
+        window.localStorage.setItem(key, valueToStore);
       } catch (error) {
         console.error("Error writing to localStorage:", error);
       }
@@ -37,13 +31,19 @@ const useLocalStorage = (key: string): UseLocalStorageReturn => {
   );
 
   const getItem: GetItemFunction = useCallback(() => {
-    return storedValue;
-  }, [storedValue]);
+    try {
+      const value = window.localStorage.getItem(key);
+      // Return clean string without extra quotes
+      return value?.replace(/^"|"$/g, "") ?? null;
+    } catch (error) {
+      console.error("Error reading from localStorage:", error);
+      return null;
+    }
+  }, [key]);
 
   const removeItem: RemoveItemFunction = useCallback(() => {
     try {
       window.localStorage.removeItem(key);
-      setStoredValue(null);
     } catch (error) {
       console.error("Error removing item from localStorage:", error);
     }
@@ -54,9 +54,9 @@ const useLocalStorage = (key: string): UseLocalStorageReturn => {
       try {
         const currentValue = window.localStorage.getItem(key);
         if (currentValue !== null) {
-          const newValue = updater(currentValue);
+          // Ensure clean string storage for updates too
+          const newValue = updater(currentValue).replace(/^"|"$/g, "");
           window.localStorage.setItem(key, newValue);
-          setStoredValue(newValue);
         }
       } catch (error) {
         console.error("Error updating item in localStorage:", error);

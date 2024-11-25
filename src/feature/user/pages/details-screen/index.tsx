@@ -11,6 +11,24 @@ import useMarketStore from "@/feature/market/store/market.store";
 import ConcludeButton from "@/common/components/atoms/button/conclude-button";
 import CountdownMarket from "@/common/components/molecules/timer/countdown-market";
 
+const INITIAL_MARKET_STATE: any = {
+  MainProcessId: "",
+  MarketInfo: {
+    AoTokenProcessId: "",
+    Concluded: false,
+    Creator: "",
+    Duration: "",
+    OptionA: "",
+    OptionB: "",
+    ProcessId: 0,
+    Timestamp: 0,
+    Title: "",
+    TokenTxId: "",
+  },
+  BalancesVoteA: {},
+  BalancesVoteB: {},
+} as const;
+
 const DetailsScreen = () => {
   const { id: marketID } = useParams();
   const form = useForm();
@@ -18,11 +36,10 @@ const DetailsScreen = () => {
   const { setSelectedMarket } = useMarketStore();
   const { data: marketResult } = useFetchMarketById(marketID || "");
 
+  // In your component
   useEffect(() => {
-    if (marketResult) {
-      setSelectedMarket(marketResult);
-    }
-  }, [marketResult]);
+    setSelectedMarket(marketResult || INITIAL_MARKET_STATE);
+  }, [marketResult, setSelectedMarket]);
 
   return (
     <section className="w-full min-h-full relative">

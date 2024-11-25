@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/common/components/atoms/ui/button";
 import {
   Dialog,
@@ -77,16 +77,23 @@ const steps = [
 const VotingMarketFaq = () => {
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [initialized, setInitialized] = useState(false);
   const { setItem, getItem } = useLocalStorage("hasSeenFaqVote");
 
+  // Separate initialization effect
   useEffect(() => {
-    // Check if user has seen FAQ before
-    const hasSeenFaqVote = getItem();
+    const timer = setTimeout(() => {
+      const value = getItem();
 
-    if (hasSeenFaqVote !== "true") {
-      setOpen(true);
-      setItem("true");
-    }
+      const hasSeenFaq = value === "true" || value === (true as any);
+
+      if (!hasSeenFaq) {
+        setOpen(true);
+      }
+      setInitialized(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleNext = () => {
@@ -101,10 +108,19 @@ const VotingMarketFaq = () => {
     }
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
+    try {
+      setItem("true");
+    } catch (error) {
+      console.error("Error saving FAQ state:", error);
+    }
     setOpen(false);
     setCurrentStep(0);
-  };
+  }, [setItem]);
+
+  if (!initialized) {
+    return null;
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

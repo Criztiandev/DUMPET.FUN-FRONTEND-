@@ -13,8 +13,6 @@ const ConcludeButton = () => {
     Number(selectedMarket?.MarketInfo.Duration)
   );
 
-  console.log(isConcluded);
-
   const handleConclude = () => {
     mutate();
   };
