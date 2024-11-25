@@ -1,17 +1,19 @@
 import { Button } from "../../ui/button";
 import useMarketStore from "@/feature/market/store/market.store";
 import useMarketConclude from "@/feature/market/hooks/market/user-market-conclude";
-import { isMarketDeadlineValid } from "@/common/utils/time.utilts";
+import { isMarketConcluded } from "@/common/utils/time.utilts";
 const ConcludeButton = () => {
   const { selectedMarket } = useMarketStore();
-  const { mutate } = useMarketConclude(
+  const { mutate, isPending } = useMarketConclude(
     String(selectedMarket?.MarketInfo.ProcessId) || ""
   );
   const currentDate = new Date();
-  const isConcluded = isMarketDeadlineValid(
+  const isConcluded = isMarketConcluded(
     currentDate,
     Number(selectedMarket?.MarketInfo.Duration)
   );
+
+  console.log(isConcluded);
 
   const handleConclude = () => {
     mutate();
@@ -22,9 +24,9 @@ const ConcludeButton = () => {
       <Button
         onClick={handleConclude}
         className="relative"
-        disabled={!isConcluded}
+        disabled={!isConcluded || isPending}
       >
-        <span>Conclude</span>
+        {isPending ? "Loading..." : <span>Conclude</span>}
       </Button>
     </>
   );

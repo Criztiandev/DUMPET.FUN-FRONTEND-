@@ -5,7 +5,6 @@ import { createDataItemSigner, message, result } from "@permaweb/aoconnect";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAccountStore } from "@/feature/user/store/account-store";
-import { formatArweaveTokenAmount } from "@/common/utils/format.utils";
 import useConnectWallet from "@/common/hooks/wallet/useConnectWallet";
 
 // Define response and error types
@@ -42,11 +41,16 @@ const useWithdrawBalance = () => {
 
   // Validation helpers
   const validateAmount = (withdrawAmount: string): void => {
-    const formattedAmount = formatArweaveTokenAmount(Number(withdrawAmount));
-
-    if (formattedAmount <= 0 || Number.isNaN(formattedAmount)) {
+    // Check if the amount is a valid number
+    if (isNaN(Number(withdrawAmount))) {
       errorCause = WithdrawError.INVALID_AMOUNT;
-      throw new Error("Invalid withdrawal amount");
+      throw new Error("Invalid withdrawal amount: Must be a number");
+    }
+
+    // Check if the amount is positive
+    if (Number(withdrawAmount) <= 0) {
+      errorCause = WithdrawError.INVALID_AMOUNT;
+      throw new Error("Invalid withdrawal amount: Must be greater than 0");
     }
 
     // Check if user has sufficient balance
@@ -150,7 +154,7 @@ const useWithdrawBalance = () => {
           case WithdrawError.NOT_CONNECTED:
             return "Please connect your wallet to withdraw";
           case WithdrawError.INVALID_AMOUNT:
-            return "Invalid withdrawal amount";
+            return error.message || "Invalid withdrawal amount";
           case WithdrawError.INSUFFICIENT_BALANCE:
             return "Insufficient balance for withdrawal";
           case WithdrawError.MARKET_ERROR:

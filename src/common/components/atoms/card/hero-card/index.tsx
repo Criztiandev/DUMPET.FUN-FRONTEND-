@@ -38,9 +38,9 @@ const HeroCard = ({
                 <XStack className="gap-2 opacity-60">
                   <span className="text-sm ">Created by</span>
                   <span className="text-purple-400  text-sm">
-                    {Creator.substring(0, 15) +
+                    {Creator?.substring(0, 15) +
                       "..." +
-                      Creator.substring(15, 32) || "Joe Doe"}
+                      Creator?.substring(15, 32) || "Joe Doe"}
                   </span>
                 </XStack>
               </div>

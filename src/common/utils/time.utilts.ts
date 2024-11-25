@@ -312,3 +312,35 @@ export const formatTimestamp = (timestamp: number): string => {
   const day = String(date.getDate()).padStart(2, "0");
   return `${month}/${day}/${year} `;
 };
+
+export function isMarketConcluded(
+  currentTime: Date,
+  marketDeadlineUnix: number
+): boolean {
+  try {
+    if (!(currentTime instanceof Date) || isNaN(currentTime.getTime())) {
+      throw new TimeValidationError("Invalid current time provided");
+    }
+
+    if (typeof marketDeadlineUnix !== "number" || marketDeadlineUnix <= 0) {
+      throw new TimeValidationError("Invalid market deadline timestamp");
+    }
+
+    const marketDeadline = new Date(
+      marketDeadlineUnix * TIME_CONSTANTS.MILLISECONDS_IN_SECOND
+    );
+
+    // Convert to Unix timestamp (seconds) for comparison
+    const currentUnix = Math.floor(
+      currentTime.getTime() / TIME_CONSTANTS.MILLISECONDS_IN_SECOND
+    );
+    const deadlineUnix = Math.floor(
+      marketDeadline.getTime() / TIME_CONSTANTS.MILLISECONDS_IN_SECOND
+    );
+
+    return deadlineUnix <= currentUnix;
+  } catch (error) {
+    console.error("Error in isMarketConcluded:", error);
+    return false;
+  }
+}

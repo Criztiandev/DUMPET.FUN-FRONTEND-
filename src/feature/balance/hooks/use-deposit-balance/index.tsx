@@ -37,11 +37,26 @@ const useDepositBalance = (tokenID: string) => {
 
   const selectedMarketInfo = selectedMarket?.MarketInfo as MarketInfo;
 
+  const validateBalance = (balance: string): void => {
+    // Check if the balance is a valid number
+    if (isNaN(Number(balance))) {
+      errorCause = DepositError.INVALID_AMOUNT;
+      throw new Error("Invalid balance format: Must be a number");
+    }
+
+    // Additional validation for negative or zero values
+    if (Number(balance) <= 0) {
+      errorCause = DepositError.INVALID_AMOUNT;
+      throw new Error("Invalid balance: Must be greater than 0");
+    }
+  };
+
   const validateMarketDeadline = (): void => {
     const currentDate = new Date();
     const marketTimeUnix = selectedMarketInfo?.Duration;
 
     if (!isMarketDeadlineValid(currentDate, Number(marketTimeUnix))) {
+      errorCause = DepositError.MARKET_CONCLUDED;
       throw new Error("Invalid Action: Market has already concluded");
     }
   };
@@ -58,6 +73,9 @@ const useDepositBalance = (tokenID: string) => {
     ],
 
     mutationFn: async (balance: string): Promise<DepositResponse> => {
+      // Validate balance format first
+      validateBalance(balance);
+
       // Connect wallet if needed
       if (!isOnline) {
         try {
@@ -92,6 +110,7 @@ const useDepositBalance = (tokenID: string) => {
         );
 
         if (errorTag) {
+          errorCause = DepositError.PROCESS_ERROR;
           throw new Error(errorTag.value);
         }
 

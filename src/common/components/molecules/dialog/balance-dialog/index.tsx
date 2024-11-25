@@ -38,7 +38,11 @@ const balanceFormSchema = z.object({
     .min(1, "Balance is required")
     .refine((val) => !isNaN(Number(val)), "Must be a valid number")
     .refine((val) => Number(val) > 0, "Balance must be greater than 0")
-    .refine((val) => Number(val) <= 250, "Balance must not exceed 250"),
+    .refine((val) => Number(val) <= 250, "Balance must not exceed 250")
+    .refine(
+      (val) => Number.isInteger(Number(val)) && !val.includes("."),
+      "Balance must be a whole number without decimals"
+    ),
   transactionType: z.enum(["deposit", "withdraw"], {
     required_error: "Please select a transaction type",
   }),

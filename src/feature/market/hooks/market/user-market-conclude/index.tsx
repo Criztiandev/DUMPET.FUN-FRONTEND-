@@ -39,15 +39,7 @@ const useMarketConclude = (marketId: string) => {
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        predicate: (query) => {
-          const queryKey = query.queryKey as string[];
-          return (
-            queryKey.includes(`/GET /market/${marketId}`) ||
-            queryKey.includes(`/GET /account/balance/${marketId}`)
-          );
-        },
-      });
+      queryClient.invalidateQueries();
 
       subtractBalanceFromField("BalanceVoteA", "0");
       subtractBalanceFromField("BalanceVoteB", "0");

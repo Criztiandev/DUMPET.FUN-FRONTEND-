@@ -30,8 +30,15 @@ const MarketActionControlls = () => {
   const onSubmit: SubmitHandler<MarketActionValue> = (values) => {
     const { selection, amount } = values;
 
-    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
-      toast.error("Please enter a valid amount.");
+    // Check if amount is valid and is a whole number
+    if (
+      !amount ||
+      isNaN(Number(amount)) ||
+      Number(amount) <= 0 ||
+      !Number.isInteger(Number(amount)) ||
+      amount.includes(".")
+    ) {
+      toast.error("Please enter a valid whole number without decimals.");
       return;
     }
 
@@ -39,6 +46,7 @@ const MarketActionControlls = () => {
       toast.error("Please select a valid option.");
       return;
     }
+
     const balanceRn = Number(amount) * Math.pow(10, 12);
 
     const distinguishOption =
