@@ -9,7 +9,7 @@ interface MarketState {
   searchTerm: string;
 }
 
-interface MarketActions {
+export interface MarketActions {
   searchMarket: (keyword: string) => void;
   clearSearch: () => void;
 
@@ -18,6 +18,8 @@ interface MarketActions {
 
   setMarkets: (markets: Market[]) => void;
   setSelectedMarket: (market: Market) => void;
+
+  concludeSelectedMarket: () => void; // New action
 
   getRandomMarket: () => void;
   getAllMarket: () => Market[];
@@ -117,6 +119,41 @@ const useMarketStore = create<MarketStore>()(
           };
         }),
 
+      concludeSelectedMarket: () => {
+        set((state) => {
+          if (!state.selectedMarket) return state;
+
+          // Create updated selected market with concluded set to true
+          const updatedSelectedMarket = {
+            ...state.selectedMarket,
+            concluded: true,
+          };
+
+          // Update the market in the markets array
+          const updatedMarkets = state.markets.map((market) =>
+            market.MarketInfo.ProcessId ===
+            state.selectedMarket?.MarketInfo.ProcessId
+              ? updatedSelectedMarket
+              : market
+          );
+
+          // Update filtered markets if search is active
+          const updatedFilteredMarket = state.filteredMarket.map((market) =>
+            market.MarketInfo.ProcessId ===
+            state.selectedMarket?.MarketInfo.ProcessId
+              ? updatedSelectedMarket
+              : market
+          );
+
+          return {
+            ...state,
+            markets: updatedMarkets,
+            filteredMarket: updatedFilteredMarket,
+            selectedMarket: updatedSelectedMarket,
+          };
+        });
+      },
+
       clearSearch: () => {
         set({ searchTerm: "", filteredMarket: get().markets });
       },
@@ -162,5 +199,7 @@ const useMarketStore = create<MarketStore>()(
 export const useMarkets = () => useMarketStore((state) => state.markets);
 export const useSelectedMarket = () =>
   useMarketStore((state) => state.selectedMarket);
+export const useConcludeMarket = () =>
+  useMarketStore((state) => state.concludeSelectedMarket);
 
 export default useMarketStore;

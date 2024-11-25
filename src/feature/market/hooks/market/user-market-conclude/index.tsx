@@ -5,7 +5,6 @@ import { toast } from "sonner";
 
 const useMarketConclude = (marketId: string) => {
   const queryClient = useQueryClient();
-
   const { subtractBalanceFromField } = useBalanceStore();
 
   return useMutation({
@@ -24,15 +23,18 @@ const useMarketConclude = (marketId: string) => {
         process: marketId,
       });
 
-      const hasError = response.Messages[0]?.Tags.find(
-        (tag: { name: string }) => tag.name === "Error"
+      // Check for errors in response
+      const messageResponse = response.Messages[0];
+      const errorTag = messageResponse?.Tags?.find(
+        (tag: any) => tag.name === "Error"
       );
 
-      if (hasError) {
-        throw new Error(response.Messages[0]?.Data);
+      if (errorTag) {
+        throw new Error(messageResponse.Data);
       }
 
       const payload = JSON.parse(response.Messages[0]?.Data);
+
       return payload;
     },
 

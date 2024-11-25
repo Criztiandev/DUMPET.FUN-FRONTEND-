@@ -1,20 +1,9 @@
 import { buttonVariants } from "@/common/components/atoms/ui/button";
 import { cn } from "@/common/lib/utils";
+import useMarketConclude from "@/feature/market/hooks/market/user-market-conclude";
 import useMarketStore from "@/feature/market/store/market.store";
 import { Clock } from "lucide-react";
 import { Suspense, useEffect, useState, memo } from "react";
-
-interface MarketInfo {
-  Duration: number;
-}
-
-interface Market {
-  MarketInfo: MarketInfo;
-}
-
-interface MarketStore {
-  selectedMarket: Market | null;
-}
 
 // Separate Timer component to isolate frequent updates
 const Timer = memo(({ seconds }: { seconds: number }) => (
@@ -29,14 +18,25 @@ Timer.displayName = "Timer";
 const TimerFallback = () => <span className="text-gray-500 ml-1">(00s)</span>;
 
 const CountdownContent = memo(() => {
-  const { selectedMarket } = useMarketStore() as MarketStore;
+  const { selectedMarket, concludeSelectedMarket } = useMarketStore();
+  const { mutate: concludeMutate } = useMarketConclude(
+    String(selectedMarket?.MarketInfo.ProcessId) || ""
+  );
   const [timeLeft, setTimeLeft] = useState<string>("");
   const [seconds, setSeconds] = useState<number>(0);
   const [isEnded, setIsEnded] = useState<boolean>(false);
 
   const formatTimeDuration = (milliseconds: number): string => {
+    if (selectedMarket?.MarketInfo.Concluded) {
+      setIsEnded(true);
+      return "Ended";
+    }
+
     if (milliseconds <= 0) {
       setIsEnded(true);
+      concludeSelectedMarket();
+      concludeMutate();
+
       return "Ended";
     }
 
@@ -83,7 +83,7 @@ const CountdownContent = memo(() => {
     let isMounted = true;
 
     const calculateTimeLeft = (): string | undefined => {
-      const currentDuration = selectedMarket?.MarketInfo.Duration;
+      const currentDuration: any = selectedMarket?.MarketInfo.Duration;
 
       if (!currentDuration) return;
 
@@ -138,7 +138,7 @@ const CountdownContent = memo(() => {
 CountdownContent.displayName = "CountdownContent";
 
 const CountdownMarket = (): JSX.Element => {
-  const { selectedMarket } = useMarketStore() as MarketStore;
+  const { selectedMarket } = useMarketStore();
 
   // Render nothing if no market is selected
   if (!selectedMarket) return null as any;

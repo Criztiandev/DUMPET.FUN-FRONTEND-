@@ -1,34 +1,31 @@
-import { toast } from "sonner";
 import { Button } from "../../ui/button";
 import useMarketStore from "@/feature/market/store/market.store";
-import { Market } from "@/feature/market/interface/market.interface";
+import useMarketConclude from "@/feature/market/hooks/market/user-market-conclude";
+import { isMarketDeadlineValid } from "@/common/utils/time.utilts";
 const ConcludeButton = () => {
   const { selectedMarket } = useMarketStore();
-
-  const currentMarket = selectedMarket as Market;
+  const { mutate } = useMarketConclude(
+    String(selectedMarket?.MarketInfo.ProcessId) || ""
+  );
+  const currentDate = new Date();
+  const isConcluded = isMarketDeadlineValid(
+    currentDate,
+    Number(selectedMarket?.MarketInfo.Duration)
+  );
 
   const handleConclude = () => {
-    toast("Invalid Action", {
-      position: "top-center",
-      description: "The time is not yet concluded",
-      style: {
-        background: "#E43E3F",
-        color: "white",
-      },
-    });
+    mutate();
   };
 
   return (
     <>
-      {!currentMarket?.Concluded && (
-        <Button
-          onClick={handleConclude}
-          className="relative"
-          disabled={!currentMarket?.Concluded}
-        >
-          <span>Conclude</span>
-        </Button>
-      )}
+      <Button
+        onClick={handleConclude}
+        className="relative"
+        disabled={!isConcluded}
+      >
+        <span>Conclude</span>
+      </Button>
     </>
   );
 };

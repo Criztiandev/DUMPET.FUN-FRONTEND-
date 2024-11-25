@@ -92,7 +92,7 @@ const useDepositBalance = (tokenID: string) => {
         );
 
         if (errorTag) {
-          throw new Error("Insufficient Balance");
+          throw new Error(errorTag.value);
         }
 
         return {
