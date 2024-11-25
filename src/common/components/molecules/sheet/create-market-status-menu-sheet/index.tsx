@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Sheet,
   SheetTrigger,
@@ -19,10 +20,10 @@ import { ScrollArea } from "@/common/components/atoms/ui/scroll-area";
 import { useAccountStore } from "@/feature/user/store/account-store";
 
 const CreateMarketStatusMenuSheet = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const { address } = useAccountStore();
   const { data: createdMarket } = useFetchAllCreatedMarket(address);
   const { data: pendingMarket } = useFetchPendingMarket();
-
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -32,8 +33,13 @@ const CreateMarketStatusMenuSheet = () => {
     });
   }, [pendingMarket]);
 
+  const handleNavigate = (marketId: string) => {
+    setIsOpen(false);
+    navigate(`/market/${marketId}`);
+  };
+
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <div className="flex space-x-3 px-2 py-2 cursor-pointer hover:bg-secondary rounded-[5px]">
           <Store size={22} />
@@ -77,7 +83,7 @@ const CreateMarketStatusMenuSheet = () => {
                     <Card
                       key={MarketProcessId}
                       className="bg-transparent border border-green-500 cursor-pointer"
-                      onClick={() => navigate(`/market/${MarketProcessId}`)}
+                      onClick={() => handleNavigate(MarketProcessId)}
                     >
                       <CardHeader>
                         <h2 className="break-words">{Title}</h2>
